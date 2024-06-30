@@ -4,7 +4,6 @@ import TitleSection from "../components/Elements/TitleSection";
 import CardKegiatan from "../components/Fragments/Cards/HomeCardKegiatan";
 import CardSitusHome from "../components/Fragments/Cards/HomeCardSitus";
 import CardArtikel from "../components/Fragments/Cards/HomeCardArtikel";
-import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 export default function HomePage() {
     return (
@@ -102,8 +101,6 @@ export default function HomePage() {
 
             <section id="footer" className=" bg-primary">
                 <Footer />
-
-
             </section>
         </>
     );
