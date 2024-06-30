@@ -4,10 +4,12 @@ import TitleSection from "../components/Elements/TitleSection";
 import CardKegiatan from "../components/Fragments/Cards/HomeCardKegiatan";
 import CardSitusHome from "../components/Fragments/Cards/HomeCardSitus";
 import CardArtikel from "../components/Fragments/Cards/HomeCardArtikel";
+import { Link } from "react-router-dom";
+import Footer from "../components/Footer";
 export default function HomePage() {
     return (
         <>
-            <section id="#hero">
+            <section id="hero">
                 <div className="h-screen relative">
                     <div className={`bg-[url('/images/hero-img.png')] h-full bg-cover bg-center flex px-4 brightness-[.30]`}>
                     </div>
@@ -19,7 +21,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            <section id="#about" className="py-12 lg:pt-24 lg:pb-0 bg-tan">
+            <section id="about" className="py-12 lg:pt-24 lg:pb-0 bg-tan">
                 <div className="container mx-auto w-11/12">
                     <div className="flex flex-wrap">
                         <div className="w-full px-6 lg:w-1/2">
@@ -45,10 +47,10 @@ export default function HomePage() {
                 </div>
             </section>
 
-            <section id="#situs" className="py-10 bg-tan">
+            <section id="situs" className="py-10 bg-tan">
                 <div className="container mx-auto ">
                     <div className="flex flex-wrap">
-                        <div className="w-full mb-5 ">
+                        <div className="w-full mb-5 text-center">
                             <TitleSection>Situs</TitleSection>
                         </div >
                         <div className="flex flex-wrap gap-7 lg:gap-10 lg:w-10/12 w-11/12 mx-auto">
@@ -60,10 +62,10 @@ export default function HomePage() {
                 </div>
             </section>
 
-            <section id="#kegiatan" className="py-10 bg-tan">
+            <section id="kegiatan" className="py-10 bg-tan">
                 <div className="container mx-auto ">
                     <div className="flex flex-wrap justify-center">
-                        <div className="w-full mb-10 md:mb-0">
+                        <div className="w-full mb-10 md:mb-0 text-center">
                             <TitleSection>Kegiatan</TitleSection>
                         </div >
                         <div className="flex flex-wrap w-8/12 mx-auto lg:w-full gap-10 lg:justify-center">
@@ -72,26 +74,37 @@ export default function HomePage() {
                             <CardKegiatan to={'/'} img={`/images/hero-img.png`} date={`Tanggal`} title={` Judul yuhuuu `} />
                         </div>
                         <div className="mt-8 w-8/12">
-                            <ButtonLink className={`mx-auto border-[3px] border-primary lg:w-6/12`}>Lihat Semua Kegiatan</ButtonLink>
+                            <ButtonLink className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="artikel" className="py-12 bg-tan">
+            <section id="artikel" className="py-12 ">
                 <div className="container mx-auto">
-                    <div className="flex flex-wrap">
-                        <div className="w-full">
+                    <div className="flex flex-wrap ">
+                        <div className="w-full mb-10 lg:mb-0 text-center lg:text-start lg:w-10/12 mx-auto">
                             <TitleSection>Artikel & Berita</TitleSection>
                         </div>
 
-                        <div className="flex flex-wrap w-10/12 mx-auto shadow-xl">
-                            <CardArtikel img={'/images/hero-img.png'} to={'/'} title={'title'} date={"date"} views={"views"}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam maiores minus fugiat expedita unde. Blanditiis dolorum praesentium optio atque, quaerat accusamus veritatis laborum id natus quia a soluta quos ullam labore est tenetur eos, obcaecati repellendus eveniet repudiandae magni deleniti quae illum odio. Consequuntur architecto aperiam laudantium fugiat unde quasi modi doloribus? Veniam, maiores ipsa quo sed voluptatibus maxime atque quibusdam? Atque aut corporis hic. Consequatur quaerat eligendi dolores soluta explicabo, animi recusandae veritatis facere, obcaecati aliquam fugit laboriosam consectetur error ex dicta voluptate suscipit unde optio corrupti, voluptatum quo labore? Mollitia aperiam explicabo necessitatibus nihil deserunt nesciunt quo vero.</CardArtikel>
+                        <div className="flex flex-wrap w-10/12 mx-auto gap-5 lg:w-full  justify-center">
+                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
+                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
+                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
+                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
+                        </div>
+                        <div className="mt-8 w-10/12 mx-auto lg:w-8/12">
+                            <ButtonLink className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
                         </div>
                     </div>
                 </div>
             </section >
 
+            <section id="footer" className=" bg-primary">
+                <Footer />
+
+
+            </section>
         </>
     );
 }

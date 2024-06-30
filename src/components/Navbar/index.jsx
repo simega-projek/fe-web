@@ -15,7 +15,7 @@ export function NavbarDashboard() {
                 <div className="flex relative items-center justify-between py-2 lg:py-0">
                     <div className="px-4">
                         <Link to={"/"}>
-                            <img src="/images/logo-hitam.svg" width={"80%"} className="lg:3/4" alt="" />
+                            <img src="/icons/logo-hitam.svg" width={"80%"} className="lg:3/4" alt="" />
                         </Link>
                     </div>
                     <div className="px-4 flex items-center ">
