@@ -52,7 +52,7 @@ export default function HomePage() {
                         <div className="w-full mb-5 text-center">
                             <TitleSection>Situs</TitleSection>
                         </div >
-                        <div className="flex flex-wrap gap-7 lg:gap-10 lg:w-10/12 w-11/12 mx-auto">
+                        <div className="flex flex-wrap gap-7 md:gap-10 lg:gap-10 lg:w-10/12 w-11/12 mx-auto">
                             <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita.</CardSitusHome>
                             <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita.</CardSitusHome>
                             <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita.</CardSitusHome>
