@@ -1,11 +1,13 @@
 import { Outlet } from "react-router-dom";
-import { NavbarDashboard } from "../Navbar";
+import { NavbarDashboard } from "../Fragments/Navbar";
+import Footer from "../Fragments/Footer/Footer";
 
 export default function MainLayout() {
     return (
-        <div className="">
+        <div className="relative">
             <NavbarDashboard />
             <Outlet />
+            <Footer />
         </div>
     );
 }

@@ -10,7 +10,7 @@ export default function CardSitusHome(props) {
             </div>
 
             <div className="w-full px-6 lg:w-1/2 ">
-                <h1 className="text-xl font-bold text-primary pt-4 md:text-3xl lg:text-3xl">{title}</h1>
+                <h1 className="text-xl font-bold text-primary pt-4 md:text-2xl lg:text-3xl">{title}</h1>
 
                 <p className="text-base md:text-lg md:mb-5 leading-relaxed font-medium md:leading-normal  mb-2 lg:py-4">{children.substring(0, 350)}...</p>
                 <ButtonLink to={to} className={`bg-primary text-white lg:w-1/3 md:w-1/3`}>
