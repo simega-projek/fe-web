@@ -5,19 +5,19 @@ import CardKegiatan from "../components/Fragments/Cards/HomeCardKegiatan";
 import CardSitusHome from "../components/Fragments/Cards/HomeCardSitus";
 import CardArtikel from "../components/Fragments/Cards/HomeCardArtikel";
 import Footer from "../components/Fragments/Footer/Footer";
+
+import artikelData from "../data/artikel.json";
+import situsData from "../data/situs.json";
+import kegiatanData from "../data/kegiatan.json";
+import { HeroSection } from "../components/Fragments/Sections/Hero";
+
 export default function HomePage() {
     return (
         <>
-            <section id="hero" className="">
-                <div className="h-screen relative">
-                    <div className={`bg-[url('/images/hero-img.png')] h-full bg-cover bg-center flex px-4 brightness-[.30]`}>
-                    </div>
-                    <div className="container mx-auto ">
-                        <div className="absolute top-1/2 max-w-xl px-6 ">
-                            <p className="text-xl font-semibold m-auto md:text-2xl text-white">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
-                        </div>
-                    </div>
-                </div>
+            <section id="hero" className="h-1/2">
+                <HeroSection>
+                    <p className="text-xl font-semibold m-auto md:text-2xl text-white">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
+                </HeroSection>
             </section>
 
             <section id="about" className="py-12 lg:py-24 bg-[url('/images/bg2.svg')] bg-tan bg-no-repeat">
@@ -52,9 +52,9 @@ export default function HomePage() {
                             <TitleSection>Situs</TitleSection>
                         </div >
                         <div className="flex flex-wrap gap-3 md:gap-5 lg:gap-0 lg:w-full w-10/12 mx-auto justify-center">
-                            <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis vero commodi repellendus beatae fuga dolore esse possimus quod maiores, ducimus officia suscipit odit labore, expedita nulla rem. Eos est ea veniam, dolorem sunt temporibus asperiores, delectus quas itaque sint corrupti, adipisci ab modi omnis. Doloremque architecto nisi facilis tempore modi.</CardSitusHome>
-                            <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita.</CardSitusHome>
-                            <CardSitusHome title={"Megalit"} img={`/images/hero-img.png`} to={'/'}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente reprehenderit eum sequi. Nemo aliquid voluptatibus suscipit, cumque quod optio laboriosam perferendis vitae esse vero dicta? Repudiandae laudantium maiores doloribus expedita.</CardSitusHome>
+                            {situsData.slice(0, 3).map(situs => (
+                                <CardSitusHome key={situs._id} title={situs.title} to={`/situs/${situs._id}`}>{situs.content}</CardSitusHome>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -67,13 +67,14 @@ export default function HomePage() {
                             <TitleSection>Kegiatan</TitleSection>
                         </div >
                         <div className="flex flex-wrap w-8/12 mx-auto md:w-full lg:w-full gap-10 md:justify-center">
-                            <CardKegiatan to={'/'} img={`/images/hero-img.png`} date={`Tanggal`} title={` Judul yuhuuu `} />
-                            <CardKegiatan to={'/'} img={`/images/hero-img.png`} date={`Tanggal`} title={` Judul yuhuuu `} />
-                            <CardKegiatan to={'/'} img={`/images/hero-img.png`} date={`Tanggal`} title={` Judul yuhuuu `} />
+                            {kegiatanData.slice(0, 3).map(keg => (
+                                <CardKegiatan key={keg._id} date={keg.date} title={keg.title} />
+                            ))}
+
 
                         </div>
                         <div className="mt-8 w-8/12">
-                            <ButtonLink className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
+                            <ButtonLink to={`/kegiatan`} className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
                         </div>
                     </div>
                 </div>
@@ -87,13 +88,13 @@ export default function HomePage() {
                         </div>
 
                         <div className="flex flex-wrap w-10/12 mx-auto gap-5 lg:w-full  justify-center">
-                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
-                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
-                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
-                            <CardArtikel to={'/'} title={'Judul Baru'} date={`12/12/2024`} views={`400`}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae consequuntur quam magni, qui amet, dolor facilis sapiente odio delectus voluptatibus consectetur repellat sequi minima laborum sit quisquam adipisci voluptate error. Ducimus voluptatibus molestias obcaecati nostrum cumque magni itaque in quam, placeat sit numquam harum repellendus officiis. Fugit sint deleniti quod.</CardArtikel>
+                            {artikelData.slice(0, 4).map(artikel => (
+                                <CardArtikel to={`/artikel/${artikel._id}`} image={artikel.image} key={artikel._id} title={artikel.title} date={artikel.date}>{artikel.content}</CardArtikel>
+                            ))}
+
                         </div>
                         <div className="mt-8 w-10/12 mx-auto lg:w-8/12">
-                            <ButtonLink className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
+                            <ButtonLink to={`/artikel`} className={`mx-auto border-[3px] border-primary lg:w-6/12 hover:bg-primary hover:text-white transition-all duration-300`}>Lihat Semua Kegiatan</ButtonLink>
                         </div>
                     </div>
                 </div>
