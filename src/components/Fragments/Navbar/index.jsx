@@ -10,7 +10,7 @@ export function NavbarDashboard() {
         setIsDropdownMenu(!isDropdownMenu);
     };
     return (
-        <header className="fixed left-0 top-0 z-10 flex w-full items-center justify-center text-poppins bg-white/70 ">
+        <header className="fixed left-0 top-0 z-10 flex w-full items-center justify-center text-poppins bg-white/70">
             <div className="container mx-auto">
                 <div className="flex relative items-center justify-between py-2 lg:py-0">
                     <div className="px-4">

@@ -14,13 +14,11 @@ import { HeroSection } from "../components/Fragments/Sections/Hero";
 export default function HomePage() {
     return (
         <>
-            <section id="hero" className="h-1/2">
-                <HeroSection>
-                    <p className="text-xl font-semibold m-auto md:text-2xl text-white">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
-                </HeroSection>
-            </section>
+            <HeroSection>
+                <p className="text-xl font-semibold m-auto md:text-2xl text-white max-w-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
+            </HeroSection>
 
-            <section id="about" className="py-12 lg:py-24 bg-[url('/images/bg2.svg')] bg-tan bg-no-repeat">
+            <section id="about" className="py-12 bg-[url('/images/bg2.svg')] bg-tan bg-no-repeat">
                 <div className="container mx-auto w-11/12">
                     <div className="flex flex-wrap">
                         <div className="w-full px-6 lg:w-1/2">
