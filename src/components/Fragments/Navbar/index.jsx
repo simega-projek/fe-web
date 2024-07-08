@@ -19,11 +19,16 @@ export function NavbarDashboard() {
                         </Link>
                     </div>
                     <div className="px-4 flex items-center ">
-                        <button type="button" className={`group hover:bg-dark px-2 rounded-lg py-2 lg:py-0 hover:text-white block lg:hidden ${isHamburgerActive ? 'hamburger-active' : ''}`} onClick={handleHamburgerClick}>
-                            <span className={`fill-current transition-all duration-300 block h-[2px] w-8 my-2 bg-black ${isHamburgerActive ? 'origin-left' : ''}`}></span>
-                            <span className={`transition-all duration-300 block h-[2px] w-8 my-2 bg-black ${isHamburgerActive ? 'w-0' : ''}`}></span>
-                            <span className={`transition-all duration-300 block h-[2px] w-8 my-2 bg-black ${isHamburgerActive ? 'origin-left' : ''}`}></span>
+                        <button
+                            type="button"
+                            className={`group hover:bg-dark px-2 rounded-lg py-2 lg:py-0 hover:text-white block lg:hidden ${isHamburgerActive ? 'hamburger-active' : ''}`}
+                            onClick={handleHamburgerClick}
+                        >
+                            <span className={`fill-current transition-all duration-300 block h-[2px] w-8 my-2 bg-black group-hover:bg-white ${isHamburgerActive ? 'origin-left' : ''}`}></span>
+                            <span className={`transition-all duration-300 block h-[2px] w-8 my-2 bg-black group-hover:bg-white ${isHamburgerActive ? 'w-0' : ''}`}></span>
+                            <span className={`transition-all duration-300 block h-[2px] w-8 my-2 bg-black group-hover:bg-white ${isHamburgerActive ? 'origin-left' : ''}`}></span>
                         </button>
+
 
                         <nav
                             id="nav-menu"

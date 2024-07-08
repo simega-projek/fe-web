@@ -15,7 +15,9 @@ export default function HomePage() {
     return (
         <>
             <HeroSection>
-                <p className="text-xl font-semibold m-auto md:text-2xl text-white max-w-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
+                <div className="px-6 md:justify-self-start absolute left-0">
+                    <p className="text-xl md:text-start font-semibold md:text-2xl text-white max-w-xl">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, harum?, sed.</p>
+                </div>
             </HeroSection>
 
             <section id="about" className="py-12 bg-[url('/images/bg2.svg')] bg-tan bg-no-repeat">
@@ -79,16 +81,17 @@ export default function HomePage() {
             </section>
 
             <section id="artikel" className="py-20 bg-[url('/images/bg2.svg')] bg-no-repeat">
-                <div className="container mx-auto">
+                <div className="">
                     <div className="flex flex-wrap ">
                         <div className="w-full mb-10  text-center lg:text-start lg:w-10/12 mx-auto">
                             <TitleSection>Artikel & Berita</TitleSection>
                         </div>
 
-                        <div className="flex flex-wrap w-10/12 mx-auto gap-5 lg:w-full  justify-center">
+                        <div className="flex flex-wrap w-10/12 mx-auto gap-5 lg:w-full  justify-center ">
                             {artikelData.slice(0, 4).map(artikel => (
                                 <CardArtikel to={`/artikel/${artikel._id}`} image={artikel.image} key={artikel._id} title={artikel.title} date={artikel.date}>{artikel.content}</CardArtikel>
                             ))}
+
 
                         </div>
                         <div className="mt-8 w-10/12 mx-auto lg:w-8/12">
