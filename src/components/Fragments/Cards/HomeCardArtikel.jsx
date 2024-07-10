@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { formatDate } from "../../../utils/formatDate";
+// import { formatDate } from "../../../utils/formatDate";
 
 export default function CardArtikel(props) {
 
-    const { to, img = "/images/hero-img.png", title, children, date } = props;
+    const { to, img = "/images/hero-img.png", title, children, date, className } = props;
     return (
         // <div className="w-full lg:w-5/12 shadow-xl border-[2px] border-white">
         //     <Link to={to}>
@@ -22,7 +22,7 @@ export default function CardArtikel(props) {
         //     </Link>
         // </div>
 
-        <Link to={to} className="md:max-w-xl bg-white border rounded-xl shadow-sm sm:flex dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70">
+        <Link to={to} className={`md:max-w-xl bg-white border rounded-xl shadow-sm sm:flex dark:bg-neutral-900 dark:border-neutral-700 dark:shadow-neutral-700/70  ${className}`}>
 
 
             <div to={to} className="flex-shrink-1 relative w-full rounded-t-xl overflow-hidden pt-[40%] sm:rounded-s-xl sm:max-w-60 md:rounded-se-none md:max-w-xs">
@@ -41,7 +41,7 @@ export default function CardArtikel(props) {
 
                     <div className="mt-5 sm:mt-auto">
                         <p className="text-xs text-gray-500 dark:text-neutral-500">
-                            {formatDate(date)}
+                            {/* {formatDate(date)} */} {date}
                         </p>
                     </div>
                 </div>

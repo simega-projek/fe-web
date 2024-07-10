@@ -1,7 +1,12 @@
+import Loading from "../components/Elements/Loading/Loading";
+import { Detail } from "../components/Fragments/Detail/Detail";
+
 export default function ArtikelPage() {
     return (
         <>
-            <h1 className="font-inter"> artikel page</h1>
+            <div className="p-10 pt-20">
+                <Loading />
+            </div>
         </>
     );
 }
