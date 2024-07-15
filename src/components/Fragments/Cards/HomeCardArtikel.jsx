@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 // import { formatDate } from "../../../utils/formatDate";
 
-export default function CardArtikel(props) {
+export default function CardArtikelHome(props) {
 
     const { to, img = "/images/hero-img.png", title, children, date, className } = props;
     return (

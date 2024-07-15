@@ -12,7 +12,7 @@ export const Detail = (props) => {
         <div className="flex flex-col">
             <TitleSection>{title}</TitleSection>
             <span className="mt-5 mb-2">{date} </span>
-            <div className="max-w-2xl md:max-w-xs">
+            <div className="max-w-2xl md:max-w-md">
 
                 <img src={img} alt={title} className="w-full h-full object-cover object-center" />
             </div>

@@ -10,7 +10,7 @@ export function NavbarDashboard() {
         setIsDropdownMenu(!isDropdownMenu);
     };
     return (
-        <header className="fixed left-0 top-0 z-10 flex w-full items-center justify-center text-poppins bg-white/70">
+        <header className="fixed left-0 top-0 z-50 flex w-full items-center justify-center text-poppins bg-white/70">
             <div className="container mx-auto">
                 <div className="flex relative items-center justify-between py-2 lg:py-0">
                     <div className="px-4">
@@ -18,7 +18,7 @@ export function NavbarDashboard() {
                             <img src="/icons/logo-hitam.svg" width={"80%"} className="lg:3/4" alt="" />
                         </Link>
                     </div>
-                    <div className="px-4 flex items-center ">
+                    <div className="px-4 flex items-center">
                         <button
                             type="button"
                             className={`group hover:bg-dark px-2 rounded-lg py-2 lg:py-0 hover:text-white block lg:hidden ${isHamburgerActive ? 'hamburger-active' : ''}`}
@@ -50,7 +50,6 @@ export function NavbarDashboard() {
                                     </button>
                                 </li>
                                 <div className={` relative ${isDropdownMenu ? 'block' : 'hidden'}`}>
-
                                     <ul className="lg:bg-white/70 lg:backdrop-blur-lg lg:absolute lg:shadow-lg lg:top-full right-full lg:flex lg:mr-8 lg:flex-col lg:rounded-lg">
                                         <li className={`group my-2 text-start `}>
                                             <Link to="/artikel" className={`menu-list lg:pr-4 `}>Artikel</Link>

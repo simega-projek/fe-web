@@ -1,7 +1,7 @@
 export default function SitusPage() {
     return (
         <>
-            situs Page
+            <section className="mt-20"></section>
         </>
     );
 }

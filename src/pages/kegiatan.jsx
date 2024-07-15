@@ -7,6 +7,7 @@ import { HeroSection } from "../components/Fragments/Sections/Hero";
 import { getAllArticles } from "../services/artikel.service";
 import kegiatanData from '../data/kegiatan.json';
 import Loading from "../components/Elements/Loading/Loading";
+import TextBlink from "../components/Elements/TextBlink/TextBlink";
 export default function KegiatanPage() {
     const [kegiatan, setKegiatan] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ export default function KegiatanPage() {
             <HeroSection className="h-80 md:h-96">
                 <div className="text-center text-white">
                     <h2 className="text-xl font-semibold md:text-2xl max-w-xl mb-5">Kegiatan</h2>
-                    <p className="text-base max-w-sm">Pantau berbagai kegiatan menarik terkait Negeri 1000 Megalit di Sulawesi Tengah</p>
+                    <TextBlink className="text-base max-w-sm">Pantau berbagai kegiatan menarik terkait Negeri 1000 Megalit di Sulawesi Tengah</TextBlink>
                 </div>
             </HeroSection>
 

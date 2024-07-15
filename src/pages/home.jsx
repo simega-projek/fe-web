@@ -89,7 +89,7 @@ export default function HomePage() {
 
                         <div className="flex flex-wrap w-10/12 mx-auto gap-5 lg:w-full  justify-center ">
                             {artikelData.slice(0, 4).map(artikel => (
-                                <CardArtikel to={`/artikel/${artikel._id}`} image={artikel.image} key={artikel._id} title={artikel.title} date={artikel.date}>{artikel.content}</CardArtikel>
+                                <CardArtikel to={`/artikel`} image={artikel.image} key={artikel._id} title={artikel.title} date={artikel.date}>{artikel.content}</CardArtikel>
                             ))}
 
 

@@ -4,9 +4,11 @@ import Footer from "../Fragments/Footer/Footer";
 
 export default function MainLayout() {
     return (
-        <div className="relative">
+        <div className="flex flex-col min-h-screen">
             <NavbarDashboard />
-            <Outlet />
+            <div className="flex-grow">
+                <Outlet />
+            </div>
             <Footer />
         </div>
     );
