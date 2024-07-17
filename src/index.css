@@ -5,7 +5,21 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+.leaflet-container {
+  width: 100%;
+  height: 600px;
+  background-color: aquamarine;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply w-80;
+}
+.leaflet-popup-content {
+  @apply mx-auto;
+}
+
+.leaflet-top {
+  top: 80%;
 }
 
 .hamburger-line {
@@ -23,5 +37,5 @@ body {
 }
 
 .menu-list {
-  @apply text-dark group-hover:text-primary group-hover:border-b-primary mx-8 text-lg font-semibold transition-all ease-linear group-hover:border-b-4;
+  @apply mx-8 text-lg font-semibold text-dark transition-all ease-linear group-hover:border-b-4 group-hover:border-b-primary group-hover:text-primary;
 }

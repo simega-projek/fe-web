@@ -10,7 +10,7 @@ export function NavbarDashboard() {
         setIsDropdownMenu(!isDropdownMenu);
     };
     return (
-        <header className="fixed left-0 top-0 z-50 flex w-full items-center justify-center text-poppins bg-white/70">
+        <header className="fixed left-0 top-0 z-[999] flex w-full items-center justify-center text-poppins bg-white/70 backdrop-blur-sm">
             <div className="container mx-auto">
                 <div className="flex relative items-center justify-between py-2 lg:py-0">
                     <div className="px-4">
@@ -50,7 +50,7 @@ export function NavbarDashboard() {
                                     </button>
                                 </li>
                                 <div className={` relative ${isDropdownMenu ? 'block' : 'hidden'}`}>
-                                    <ul className="lg:bg-white/70 lg:backdrop-blur-lg lg:absolute lg:shadow-lg lg:top-full right-full lg:flex lg:mr-8 lg:flex-col lg:rounded-lg">
+                                    <ul className="lg:bg-white lg:backdrop-blur-lg lg:absolute lg:shadow-lg lg:top-full right-full lg:flex lg:mr-8 lg:flex-col lg:rounded-lg">
                                         <li className={`group my-2 text-start `}>
                                             <Link to="/artikel" className={`menu-list lg:pr-4 `}>Artikel</Link>
                                         </li>
