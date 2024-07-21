@@ -2,7 +2,7 @@ import axios from "axios";
 export const getAllMaps = async () => {
   try {
     const res = await axios.get(
-      "https://api-sekolah-indonesia.vercel.app/sekolah?provinsi=180000&page=1&perPage=10",
+      "https://api-sekolah-indonesia.vercel.app/sekolah?provinsi=180000&page=1&perPage=100",
     );
     return res.data.dataSekolah;
   } catch (err) {

@@ -8,5 +8,4 @@ export default function ButtonLink(props) {
             <span className={`block px-4 py-2 rounded-lg shadow-lg  text-center  font-semibold text-lg ${className}  `}>{children}</span>
         </Link>
     );
-
 }
