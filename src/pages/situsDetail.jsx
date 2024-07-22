@@ -1,3 +1,4 @@
+import ReactPlayer from "react-player/lazy";
 import { useParams } from "react-router-dom";
 import { getArticle, getTechCrunch } from "../services/artikel.service";
 import { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ export default function SitusDetail() {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openImage, setOpenImage] = useState(false);
+  const [indexImage, setIndexImage] = useState(0);
 
   const fetchData = async () => {
     setLoading(true);
@@ -20,9 +23,10 @@ export default function SitusDetail() {
       setSitus(situsData);
       const imageData = await getTechCrunch();
       setImages(imageData);
-      setVideos(videosData.videos);
+
+      setVideos(videosData);
     } catch (err) {
-      throw err;
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -31,6 +35,26 @@ export default function SitusDetail() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleOpenImage = (index) => {
+    setIndexImage(index);
+    setOpenImage(true);
+  };
+
+  const handleCloseImage = () => {
+    setOpenImage(false);
+  };
+
+  const handleNextImage = () => {
+    setIndexImage((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handlePrevImage = () => {
+    setIndexImage(
+      (prevIndex) => (prevIndex - 1 + images.length) % images.length,
+    );
+  };
+
   return (
     <>
       <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-start">
@@ -48,40 +72,60 @@ export default function SitusDetail() {
         </div>
       </div>
 
-      <TitleSection className="p-3">Gambar</TitleSection>
-      <div className="flex justify-center gap-5 overflow-x-scroll px-5">
-        {images.map((i) => (
-          <div className="aspect-video w-80 flex-shrink-0" key={i.source.id}>
+      <TitleSection className="p-5">Gambar</TitleSection>
+      <div className="scrollbar overflow-x-scroll">
+        <div className="flex gap-5">
+          {images.map((i, index) => (
             <img
               src={i.urlToImage}
               alt={i.title}
-              className="h-full w-full max-w-none object-cover"
+              key={index}
+              className="max-w-xs cursor-pointer object-cover"
+              onClick={() => handleOpenImage(index)}
             />
-          </div>
-        ))}
-        {images.length === 0 && (
-          <div className="w-60 flex-shrink-0 text-red-500">
-            Tidak Ada gambar
-          </div>
-        )}
+          ))}
+          {images.length === 0 && (
+            <div className="w-full text-center text-red-500">
+              Tidak Ada gambar
+            </div>
+          )}
+        </div>
       </div>
 
+      {openImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 pt-20">
+          <button
+            className={`absolute right-5 top-20 flex items-center justify-center rounded-full bg-white/70 px-4 py-2 text-2xl text-white`}
+            onClick={() => handleCloseImage()}
+          >
+            &times;
+          </button>
+          <button
+            className="absolute left-5 flex items-center justify-center rounded-full bg-white/70 px-3 py-2 text-2xl hover:text-white"
+            onClick={() => handlePrevImage()}
+          >
+            &larr;
+          </button>
+          <img
+            src={images[indexImage].urlToImage}
+            className={`max-h-full max-w-full object-cover py-5`}
+          />
+          <button
+            className="absolute right-5 flex items-center justify-center rounded-full bg-white/70 px-3 py-2 text-2xl hover:text-white"
+            onClick={() => handleNextImage()}
+          >
+            &rarr;
+          </button>
+        </div>
+      )}
+
       <TitleSection className="p-5">Video</TitleSection>
-      <div className="flex justify-center gap-5 overflow-x-scroll px-5">
-        {videos.map((v) => (
-          <div className="w-60 flex-shrink-0" key={v.id}>
-            <iframe
-              iframe
-              width="420"
-              height="345"
-              src={v.videos}
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
+      <div className="flex flex-wrap justify-center gap-5 px-5 pb-5">
+        {videos.slice(0, 3).map((v) => (
+          <ReactPlayer url={v.url} key={v.id} controls={true} />
         ))}
-        {images.length === 0 && (
-          <div className="w-60 flex-shrink-0 text-red-500">Tidak Ada video</div>
+        {videos.length === 0 && (
+          <div className="w-full text-center text-red-500">Tidak Ada video</div>
         )}
       </div>
     </>

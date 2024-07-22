@@ -5,6 +5,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar::-webkit-scrollbar {
+  @apply h-2 bg-tan pt-2;
+}
+.scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-white;
+}
 .leaflet-container {
   width: 100%;
   height: 600px;

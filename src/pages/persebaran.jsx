@@ -15,6 +15,7 @@ export default function PersebaranPage() {
   const [loading, setLoading] = useState(true);
   const [maps, setMaps] = useState([]);
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
   const [resultSearch, setResultSearch] = useState([]);
 
   const [debounced] = useDebounce(search, 1000);
@@ -31,20 +32,25 @@ export default function PersebaranPage() {
       setLoading(false);
     }
   };
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const result = maps.filter((m) =>
-      m.sekolah.toLowerCase().includes(debounced.toLowerCase()),
-    );
+
+  const handleSearch = () => {
+    const result = maps.filter((m) => {
+      const resulSearch =
+        m.kecamatan.toLowerCase().includes(debounced.toLowerCase()) ||
+        m.sekolah.toLowerCase().includes(debounced.toLowerCase());
+
+      let resultFilter = filter === "all" || m.bentuk.toLowerCase() === filter;
+      if (!filter) {
+        return (resultFilter = m.bentuk.toLowerCase().includes(filter));
+      }
+      return resulSearch && resultFilter;
+    });
     setResultSearch(result);
   };
 
   useEffect(() => {
-    const result = maps.filter((m) =>
-      m.sekolah.toLowerCase().includes(debounced.toLowerCase()),
-    );
-    setResultSearch(result);
-  }, [debounced, maps]);
+    handleSearch();
+  }, [debounced, filter, maps]);
 
   useEffect(() => {
     fecthData();
@@ -79,14 +85,26 @@ export default function PersebaranPage() {
         </div>
       </div>
 
-      <div className="mx-auto flex w-10/12 justify-center gap-2 md:max-w-md lg:max-w-xl">
+      <div className="mx-auto flex w-10/12 justify-center md:max-w-md lg:max-w-xl">
+        <select
+          id="filter"
+          placeholder="Filter"
+          className="rounded-s"
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">ALL</option>
+          <option value="sd">SD</option>
+          <option value="smp">SMP</option>
+          <option value="sma">SMA</option>
+          <option value="smk">SMK</option>
+        </select>
         <input
           type="text"
           onChange={(e) => setSearch(e.target.value)}
-          className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow"
+          className="focus:shadow-outline w-full appearance-none border px-3 py-2 leading-tight text-gray-700 shadow"
           placeholder="Cari Megalit"
         />
-        <ButtonFunc className="flex items-center justify-center pe-5">
+        <ButtonFunc className="flex items-center justify-center rounded-s-none pe-5">
           <i className="">
             <svg
               className="text-white"
@@ -115,7 +133,7 @@ export default function PersebaranPage() {
             <Loading />
           </div>
         )}
-        <div className="flex size-auto flex-wrap justify-center gap-5 px-5">
+        <div className="flex size-auto flex-wrap justify-center gap-5 px-5 pb-5">
           {resultSearch.map((m) => (
             <CardSitus
               key={m.id}
