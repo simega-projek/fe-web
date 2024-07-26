@@ -1,11 +1,11 @@
 import ReactPlayer from "react-player/lazy";
 import { useParams } from "react-router-dom";
-import { getArticle, getTechCrunch } from "../services/artikel.service";
+import { getArticle, getTechCrunch } from "../../services/artikel.service";
 import { useEffect, useState } from "react";
-import Loading from "../components/Elements/Loading/Loading";
-import { Detail } from "../components/Fragments/Detail/Detail";
-import videosData from "../data/videos.json";
-import TitleSection from "../components/Elements/TitleSection";
+import Loading from "../../components/Elements/Loading/Loading";
+import { Detail } from "../../components/Fragments/Detail/Detail";
+import videosData from "../../data/videos.json";
+import TitleSection from "../../components/Elements/TitleSection";
 
 export default function SitusDetail() {
   const { id } = useParams();

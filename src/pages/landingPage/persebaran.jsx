@@ -1,14 +1,14 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Button, Modal } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
-import CardArtikel from "../components/Fragments/Cards/CardArtikel";
-import CardSitus from "../components/Fragments/Cards/CardSitus";
-import { getAllMaps } from "../services/maps.service";
-import mapsData from "../data/map.json";
-import { PopupMap } from "../components/Fragments/Cards/PopupMap";
-import Loading from "../components/Elements/Loading/Loading";
-import { ButtonFunc } from "../components/Elements/Buttons/ButtonFunc";
+import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
+import CardSitus from "../../components/Fragments/Cards/CardSitus";
+import { getAllMaps } from "../../services/maps.service";
+import mapsData from "../../data/map.json";
+import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
+import Loading from "../../components/Elements/Loading/Loading";
+import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -33,7 +33,7 @@ export default function PersebaranPage() {
     }
   };
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const result = maps.filter((m) => {
       const resulSearch =
         m.kecamatan.toLowerCase().includes(debounced.toLowerCase()) ||
@@ -46,7 +46,7 @@ export default function PersebaranPage() {
       return resulSearch && resultFilter;
     });
     setResultSearch(result);
-  };
+  }, [debounced, filter, maps]);
 
   useEffect(() => {
     handleSearch();
@@ -55,6 +55,22 @@ export default function PersebaranPage() {
   useEffect(() => {
     fecthData();
   }, []);
+
+  const markers = useMemo(
+    () =>
+      resultSearch.map((m) => (
+        <Marker position={[m.lintang, m.bujur]} key={m.id}>
+          <Popup>
+            <PopupMap
+              id={m.id}
+              titleObject={m.sekolah}
+              titleSitus={m.propinsi}
+            />
+          </Popup>
+        </Marker>
+      )),
+    [resultSearch],
+  );
 
   return (
     <>
@@ -67,18 +83,7 @@ export default function PersebaranPage() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
-                {resultSearch.map((m) => (
-                  <Marker position={[m.lintang, m.bujur]} key={m.id}>
-                    <Popup>
-                      <PopupMap
-                        id={m.id}
-                        titleObject={m.sekolah}
-                        titleSitus={m.propinsi}
-                      />
-                    </Popup>
-                  </Marker>
-                ))}
+                {markers}
               </MapContainer>
             </div>
           </div>
@@ -117,7 +122,7 @@ export default function PersebaranPage() {
             >
               <path
                 stroke="currentColor"
-                strokeLineCap="round"
+                strokeLinecap="round"
                 strokeWidth="2"
                 d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
               />

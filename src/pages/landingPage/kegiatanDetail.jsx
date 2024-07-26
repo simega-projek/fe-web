@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import { getAllArticles, getArticle } from "../services/artikel.service";
-import TitleSection from "../components/Elements/TitleSection";
+import { getAllArticles, getArticle } from "../../services/artikel.service";
+import TitleSection from "../../components/Elements/TitleSection";
 import { useEffect, useState } from "react";
-import Loading from "../components/Elements/Loading/Loading";
-import { Detail } from "../components/Fragments/Detail/Detail";
-import CardArtikel from "../components/Fragments/Cards/HomeCardArtikel";
-import CardKegiatan from "../components/Fragments/Cards/HomeCardKegiatan";
+import Loading from "../../components/Elements/Loading/Loading";
+import { Detail } from "../../components/Fragments/Detail/Detail";
+import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
+import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
 
 export default function KegiatanDetail() {
   const { id } = useParams();
@@ -37,13 +37,13 @@ export default function KegiatanDetail() {
           {loading ? (
             <Loading />
           ) : (
-            Object.keys(artikel).length > 0 && (
+            Object.keys(kegiatan).length > 0 && (
               <>
                 <Detail
                   date="20,0202"
-                  title={artikel.title}
-                  img={artikel.image}
-                  desc={artikel.description}
+                  title={kegiatan.title}
+                  img={kegiatan.image}
+                  desc={kegiatan.description}
                 />
               </>
             )

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import TitleSection from "../components/Elements/TitleSection";
-import CardArtikel from "../components/Fragments/Cards/HomeCardArtikel";
-import CardKegiatan from "../components/Fragments/Cards/HomeCardKegiatan";
-import { Pagination } from "../components/Fragments/Pagination";
-import { HeroSection } from "../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../services/artikel.service";
-import kegiatanData from "../data/kegiatan.json";
-import Loading from "../components/Elements/Loading/Loading";
-import TextBlink from "../components/Elements/TextBlink/TextBlink";
+import TitleSection from "../../components/Elements/TitleSection";
+import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
+import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
+import { Pagination } from "../../components/Fragments/Pagination";
+import { HeroSection } from "../../components/Fragments/Sections/Hero";
+import { getAllArticles } from "../../services/artikel.service";
+import kegiatanData from "../../data/kegiatan.json";
+import Loading from "../../components/Elements/Loading/Loading";
+import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 export default function KegiatanPage() {
   const [kegiatan, setKegiatan] = useState([]);
   const [loading, setLoading] = useState(true);
