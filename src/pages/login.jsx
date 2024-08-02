@@ -13,6 +13,10 @@ export default function Login() {
 
   const handleSubmit = async (username, password) => {
     try {
+      if (!username || !password || (!username && !password)) {
+        return setErrorLogin("Isi Username atau password");
+      }
+
       const token = await authLogin(username, password);
       if (token) {
         localStorage.setItem("token", token);

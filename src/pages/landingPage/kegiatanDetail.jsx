@@ -41,9 +41,9 @@ export default function KegiatanDetail() {
               <>
                 <Detail
                   date="20,0202"
-                  title={kegiatan.title}
-                  img={kegiatan.image}
-                  desc={kegiatan.description}
+                  title={kegiatan?.title}
+                  img={kegiatan?.image}
+                  desc={kegiatan?.description}
                 />
               </>
             )

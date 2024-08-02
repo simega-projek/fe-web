@@ -10,13 +10,13 @@ export const LoginForm = ({ onSubmit }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleS = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(username, password);
   };
 
   return (
-    <form className="w-full max-w-md pt-5" onSubmit={handleS}>
+    <form className="w-full max-w-md pt-5" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
         <div>
           <div className="mb-2 flex items-center gap-[5px]">
