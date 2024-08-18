@@ -12,7 +12,7 @@ export const useLogin = () => {
       const data = payload(token);
       setUsername(data.user);
     } else {
-      navigation("/login");
+      navigation("admin/login");
     }
   }, []);
 

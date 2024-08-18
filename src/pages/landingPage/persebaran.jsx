@@ -36,12 +36,12 @@ export default function PersebaranPage() {
   const handleSearch = useCallback(() => {
     const result = maps.filter((m) => {
       const resulSearch =
-        m.kecamatan.toLowerCase().includes(debounced.toLowerCase()) ||
-        m.sekolah.toLowerCase().includes(debounced.toLowerCase());
+        m?.kecamatan.toLowerCase().includes(debounced.toLowerCase()) ||
+        m?.sekolah.toLowerCase().includes(debounced.toLowerCase());
 
-      let resultFilter = filter === "all" || m.bentuk.toLowerCase() === filter;
+      let resultFilter = filter === "all" || m?.bentuk.toLowerCase() === filter;
       if (!filter) {
-        return (resultFilter = m.bentuk.toLowerCase().includes(filter));
+        return (resultFilter = m?.bentuk.toLowerCase().includes(filter));
       }
       return resulSearch && resultFilter;
     });
@@ -59,12 +59,12 @@ export default function PersebaranPage() {
   const markers = useMemo(
     () =>
       resultSearch.map((m) => (
-        <Marker position={[m.lintang, m.bujur]} key={m.id}>
+        <Marker position={[m?.lintang, m?.bujur]} key={m?.id}>
           <Popup>
             <PopupMap
-              id={m.id}
-              titleObject={m.sekolah}
-              titleSitus={m.propinsi}
+              id={m?.id}
+              titleObject={m?.sekolah}
+              titleSitus={m?.propinsi}
             />
           </Popup>
         </Marker>
@@ -141,10 +141,10 @@ export default function PersebaranPage() {
         <div className="flex size-auto flex-wrap justify-center gap-5 px-5 pb-5">
           {resultSearch.map((m) => (
             <CardSitus
-              key={m.id}
-              title={m.sekolah}
-              desc={m.propinsi}
-              to={`/situs/${m.id}`}
+              key={m?.id}
+              title={m?.sekolah}
+              desc={m?.propinsi}
+              to={`/situs/${m?.id}`}
             />
           ))}
         </div>
