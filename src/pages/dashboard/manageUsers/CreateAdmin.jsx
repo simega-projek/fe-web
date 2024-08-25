@@ -44,7 +44,7 @@ export default function CreateAdmin({ isOpenCreate }) {
         </CountenerInput>
       </div>
 
-      <ButtonFunc className="m-3">Simpan</ButtonFunc>
+      <ButtonFunc className="m-3 bg-primary text-white">Simpan</ButtonFunc>
       <ButtonFunc className="bg-tan">Reset</ButtonFunc>
     </div>
   );

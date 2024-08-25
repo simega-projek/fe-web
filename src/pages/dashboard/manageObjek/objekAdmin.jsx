@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "flowbite-react";
 
-import { FaFileWaveform } from "react-icons/fa6";
+import { FaFileInvoice } from "react-icons/fa6";
 import { GiColombianStatue } from "react-icons/gi";
 
 import JoditEditor from "jodit-react";
@@ -85,8 +85,8 @@ export default function ObjekAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData.length > 0 &&
-                articleData.map((a, index) => (
+              {articleData?.length > 0 &&
+                articleData?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
@@ -107,8 +107,9 @@ export default function ObjekAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
-                        icon={FaFileWaveform}
+                        icon={FaFileInvoice}
                         to={`/artikel/${a.id}`}
+                        className={"hover:"}
                       />
                       <ButtonControls icon={FaEdit} />
                       <ButtonControls icon={MdDeleteForever} />

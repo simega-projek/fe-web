@@ -80,6 +80,7 @@ export const Asidebars = () => {
           icon={GiColombianStatue}
           isOpen={isSidebarOpen}
         />
+
         <SidebarItem
           label={"Kelola Artikel"}
           to={"kelola-artikel"}

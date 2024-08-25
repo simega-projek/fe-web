@@ -13,17 +13,17 @@ import {
   TableRow,
 } from "flowbite-react";
 
-import { FaFileWaveform } from "react-icons/fa6";
+import { FaFileInvoice } from "react-icons/fa6";
 import { MdArticle } from "react-icons/md";
 
-import { FaSearch, FaPlus, FaEdit, FaUser } from "react-icons/fa";
+import { FaSearch, FaEdit, FaUsers } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 import { useDispatch, useSelector } from "react-redux";
 import { fecthArticleData } from "../../../redux/actions/articleAction";
 
 import Loading from "../../../components/Elements/Loading/Loading";
-import CreateAdmin from "./createAdmin";
+import CreateAdmin from "./CreateAdmin";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -48,7 +48,7 @@ export default function UserAdmin() {
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
-        <FaUser /> User Admin
+        <FaUsers /> User Admin
       </TitleSection>
       <hr />
 
@@ -80,8 +80,8 @@ export default function UserAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData.length > 0 &&
-                articleData.map((a, index) => (
+              {articleData?.length > 0 &&
+                articleData?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
@@ -98,7 +98,7 @@ export default function UserAdmin() {
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
-                        icon={FaFileWaveform}
+                        icon={FaFileInvoice}
                         to={`/artikel/${a.id}`}
                       />
                       <ButtonControls icon={FaEdit} />

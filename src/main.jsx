@@ -22,6 +22,7 @@ import ObjekAdmin from "./pages/dashboard/manageObjek/objekAdmin.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import ActivityAdmin from "./pages/dashboard/manageActivities/activityAdmin.jsx";
 import UserAdmin from "./pages/dashboard/manageUsers/userAdmin.jsx";
+import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
 
 const route = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ const route = createBrowserRouter([
       {
         path: "kelola-user",
         element: <UserAdmin />,
+      },
+      {
+        path: "profil",
+        element: <ProfileAdmin />,
       },
     ],
   },

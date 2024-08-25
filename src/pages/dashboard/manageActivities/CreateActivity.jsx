@@ -29,7 +29,7 @@ export default function CreateActivity({ isOpenCreate }) {
             className="mb-2 block text-base"
           />
 
-          <TextInput autoFocus id="title" type="text" sizing="md" />
+          <TextInput autoFocus required id="title" type="text" sizing="md" />
         </CountenerInput>
 
         <CountenerInput>
@@ -39,7 +39,7 @@ export default function CreateActivity({ isOpenCreate }) {
             className="mb-2 block text-base"
           />
 
-          <TextInput id="linkPendaftaran" type="text" sizing="md" />
+          <TextInput id="linkPendaftaran" required type="text" sizing="md" />
         </CountenerInput>
 
         <CountenerInput>
@@ -49,7 +49,12 @@ export default function CreateActivity({ isOpenCreate }) {
             className="mb-2 block text-base"
           />
 
-          <Datepicker id="tanggalPelaksanaan" type="text" sizing="md" />
+          <Datepicker
+            id="tanggalPelaksanaan"
+            required
+            type="text"
+            sizing="md"
+          />
         </CountenerInput>
 
         <CountenerInput>
@@ -59,7 +64,12 @@ export default function CreateActivity({ isOpenCreate }) {
             className="mb-2 block text-base"
           />
 
-          <Datepicker id="tanggalPendaftaran" type="text" sizing="md" />
+          <Datepicker
+            id="tanggalPendaftaran"
+            required
+            type="text"
+            sizing="md"
+          />
         </CountenerInput>
 
         <CountenerInput>
@@ -100,7 +110,7 @@ export default function CreateActivity({ isOpenCreate }) {
         <JoditEditor ref={editor} value={content} />
       </div>
 
-      <ButtonFunc className="m-3">Simpan</ButtonFunc>
+      <ButtonFunc className="m-3 bg-primary text-white">Simpan</ButtonFunc>
       <ButtonFunc className="bg-tan">Reset</ButtonFunc>
     </div>
   );

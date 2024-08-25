@@ -53,8 +53,9 @@ export default function KegiatanPage() {
               <Loading />
             </div>
           ) : (
+            kegiatan?.length > 0 &&
             kegiatan
-              .slice(0, 6)
+              ?.slice(0, 6)
               .map((item) => (
                 <CardKegiatan
                   to={`/kegiatan/${item.id}`}

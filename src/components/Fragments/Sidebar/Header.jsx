@@ -16,7 +16,7 @@ export default function Header() {
 
   function handleLogout() {
     localStorage.clear();
-    navigasi("admin/login");
+    navigasi("/admin/login");
   }
 
   function handleisDropdown() {
@@ -102,7 +102,7 @@ const Dropdowns = forwardRef(({ isDropdown, setisModal }, ref) => {
       >
         <li>
           <Link
-            to="#"
+            to="profil"
             className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
           >
             Profil

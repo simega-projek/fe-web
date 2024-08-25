@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "flowbite-react";
 
-import { FaFileWaveform } from "react-icons/fa6";
+import { FaFileInvoice } from "react-icons/fa6";
 import { MdArticle } from "react-icons/md";
 
 import JoditEditor from "jodit-react";
@@ -81,8 +81,8 @@ export default function ArticleAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData.length > 0 &&
-                articleData.map((a, index) => (
+              {articleData?.length > 0 &&
+                articleData?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
@@ -103,7 +103,7 @@ export default function ArticleAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
-                        icon={FaFileWaveform}
+                        icon={FaFileInvoice}
                         to={`/artikel/${a.id}`}
                       />
                       <ButtonControls icon={FaEdit} />

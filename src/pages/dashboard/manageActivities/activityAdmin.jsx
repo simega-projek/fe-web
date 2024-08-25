@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
   TextInput,
   Table,
   TableBody,
@@ -13,31 +11,58 @@ import {
   TableRow,
 } from "flowbite-react";
 
-import { FaFileWaveform } from "react-icons/fa6";
-import { FaBookmark } from "react-icons/fa";
-
-import JoditEditor from "jodit-react";
-import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
+import {
+  FaFileInvoice,
+  FaBookmark,
+  FaSearch,
+  FaPlus,
+  FaEdit,
+} from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 import { useDispatch, useSelector } from "react-redux";
 import { fecthArticleData } from "../../../redux/actions/articleAction";
+import { useDebounce } from "use-debounce";
 import CreateActivity from "./CreateActivity";
+import { useSearchParams } from "react-router-dom";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const { articleData } = useSelector((state) => state.article);
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  // const querySearch = searchParams.get("search")
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [resultActivity, setResultActivity] = useState([]);
+  const [debouncedSearch] = useDebounce(searchTerm, 1000);
+
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData } = useSelector((state) => state.article);
-  const dispatch = useDispatch();
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   useEffect(() => {
     dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
   }, [dispatch]);
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      const result = articleData.filter(
+        (act) =>
+          act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          act.category
+            .toLowerCase()
+            .includes(debouncedSearch.toLocaleLowerCase()),
+      );
+      setResultActivity(result);
+    } else {
+      setResultActivity(articleData);
+    }
+  }, [debouncedSearch, articleData]);
 
   return (
     <>
@@ -54,7 +79,12 @@ export default function ActivityAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Kegiatan..." />
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Kegiatan..."
+              onChange={handleSearch}
+              value={searchTerm}
+            />
           </div>
           <div className="ml-2">
             <Button
@@ -78,8 +108,8 @@ export default function ActivityAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
             <TableBody className="divide-y">
-              {articleData.length > 0 &&
-                articleData.map((a, index) => (
+              {resultActivity?.length > 0 &&
+                resultActivity?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
@@ -100,7 +130,7 @@ export default function ActivityAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
-                        icon={FaFileWaveform}
+                        icon={FaFileInvoice}
                         to={`/artikel/${a.id}`}
                       />
                       <ButtonControls icon={FaEdit} />
