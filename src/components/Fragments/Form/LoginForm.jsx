@@ -13,6 +13,7 @@ export const LoginForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(username, password);
+    console.log(username, password);
   };
 
   return (

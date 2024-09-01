@@ -4,6 +4,7 @@ import { setArticleData, setIsLoading } from "../slices/articleSlice";
 export const fecthArticleData = () => async (dispatch) => {
   try {
     const data = await getAllArticles();
+    console.log("------", data);
 
     dispatch(setArticleData(data));
   } catch (err) {

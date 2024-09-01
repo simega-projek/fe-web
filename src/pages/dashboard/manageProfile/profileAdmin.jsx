@@ -64,7 +64,7 @@ export const ProfileAdmin = () => {
         </CountenerInput>
 
         <CountenerInput>
-          <Label htmlFor="nik" value="Nik" className="mb-2 block text-base" />
+          <Label htmlFor="nik" value="NIK" className="mb-2 block text-base" />
 
           <TextInput id="nik" disabled={!formEdit} type="text" sizing="md" />
         </CountenerInput>
@@ -92,7 +92,7 @@ export const ProfileAdmin = () => {
         <CountenerInput>
           <Label htmlFor="role" value="Role" className="mb-2 block text-base" />
 
-          <TextInput id="role" disabled={!formEdit} type="email" sizing="md" />
+          <TextInput id="role" disabled type="email" sizing="md" />
         </CountenerInput>
 
         <CountenerInput>

@@ -31,7 +31,7 @@ export default function Header() {
     <>
       <div className="fixed z-30 flex h-16 w-full items-center justify-center bg-tan p-2 px-10 dark:bg-[#0F172A]">
         <div
-          className={`logo ${isSidebarOpen ? "-ml-20" : "ml-12"} flex h-full flex-none transform items-center justify-center duration-500 ease-in-out dark:text-white`}
+          className={`logo ${isSidebarOpen ? "-ml-20" : "ml-20"} flex h-full flex-none transform items-center justify-center duration-500 ease-in-out dark:text-white`}
         >
           Sistem Informasi Megalitikum
         </div>

@@ -23,6 +23,9 @@ import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import ActivityAdmin from "./pages/dashboard/manageActivities/activityAdmin.jsx";
 import UserAdmin from "./pages/dashboard/manageUsers/userAdmin.jsx";
 import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
+import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
+import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
+import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
 
 const route = createBrowserRouter([
   {
@@ -88,6 +91,18 @@ const route = createBrowserRouter([
       {
         path: "kelola-objek",
         element: <ObjekAdmin />,
+      },
+      {
+        path: "kelola-kategori",
+        element: <CategoryAdmin />,
+      },
+      {
+        path: "kelola-situs",
+        element: <SitusAdmin />,
+      },
+      {
+        path: "kelola-lembah",
+        element: <LembahAdmin />,
       },
       {
         path: "kelola-artikel",

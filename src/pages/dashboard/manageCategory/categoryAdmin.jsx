@@ -14,7 +14,8 @@ import {
 } from "flowbite-react";
 
 import { FaFileInvoice } from "react-icons/fa6";
-import { GiStoneBust } from "react-icons/gi";
+import { GiColombianStatue } from "react-icons/gi";
+import { BiLibrary } from "react-icons/bi";
 
 import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -23,9 +24,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fecthArticleData } from "../../../redux/actions/articleAction";
 
 import Loading from "../../../components/Elements/Loading/Loading";
-import CreateObjek from "./CreateObjek";
+import CreateObjek from "./CreateCategory";
 
-export default function ObjekAdmin() {
+export default function CategoryAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -48,7 +49,7 @@ export default function ObjekAdmin() {
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
-        <GiStoneBust /> Data Objek Megalit
+        <BiLibrary /> Data Kategori
       </TitleSection>
       <hr />
 
@@ -56,10 +57,7 @@ export default function ObjekAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput
-              icon={FaSearch}
-              placeholder="Cari Objek, Situs, Lembah..."
-            />
+            <TextInput icon={FaSearch} placeholder="Cari Kategori..." />
           </div>
           <div className="ml-2">
             <Button
@@ -76,11 +74,11 @@ export default function ObjekAdmin() {
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
-              <TableHeadCell className="w-2/5">Objek</TableHeadCell>
-              <TableHeadCell className="w-1/5">Kategori</TableHeadCell>
-              <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
-              <TableHeadCell className="w-1/5">Situs</TableHeadCell>
-              <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
+              <TableHeadCell className="w-1/2">Nama Kategori</TableHeadCell>
+
+              <TableHeadCell className="w-1/5 text-center">
+                Kontrol
+              </TableHeadCell>
             </TableHead>
 
             <TableBody className="divide-y">
@@ -93,23 +91,8 @@ export default function ObjekAdmin() {
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
                       {a.title ?? "-"}
                     </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <a href={a.fileUrl} download target="_blank">
-                        {a.fileName ?? "-"}
-                      </a>
-                    </TableCell>
+
                     <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
-                        className={"hover:"}
-                      />
                       <ButtonControls icon={FaEdit} />
                       <ButtonControls icon={MdDeleteForever} />
                     </TableCell>

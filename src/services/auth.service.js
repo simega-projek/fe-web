@@ -3,12 +3,14 @@ import { jwtDecode } from "jwt-decode";
 
 export const authLogin = async (username, password) => {
   try {
-    const res = await axios.post("https://fakestoreapi.com/auth/login", {
+    const res = await axios.post("http://34.101.227.131:8000/login", {
       username,
       password,
     });
-    return res.data.token;
-  } catch (err) {}
+    return res.data;
+  } catch (err) {
+    console.log(err.message);
+  }
 };
 
 const token = localStorage.getItem("token");

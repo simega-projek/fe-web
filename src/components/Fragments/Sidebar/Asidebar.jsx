@@ -1,17 +1,21 @@
 import { Children, useState } from "react";
-import { FaHome, FaUsers, FaBookmark } from "react-icons/fa";
-import { GiColombianStatue } from "react-icons/gi";
+import { FaHome, FaUsers, FaBookmark, FaSitemap } from "react-icons/fa";
+import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
+import { BiLibrary } from "react-icons/bi";
+
 import { MdArticle } from "react-icons/md";
 import { Link } from "react-router-dom";
 export const Asidebars = () => {
+  // const isSidebarOpen = useSelector((state) => state.sidebar.status);
   const isSidebarOpen = useSelector((state) => state.sidebar.status);
   const dispatch = useDispatch();
   const [isDark, setIsDark] = useState(false);
+  const [onListMenageObject, setOnListMenageObject] = useState(false);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
+  const toggleOnListMenageObject = () => {
+    setOnListMenageObject(!onListMenageObject);
   };
 
   const toggleSidebar = () => {
@@ -19,26 +23,12 @@ export const Asidebars = () => {
   };
   return (
     <aside
-      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-48"} fixed z-50 flex h-screen w-60 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
+      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} fixed z-50 flex h-screen w-60 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
     >
       {/* <!-- open sidebar button --> */}
       <div
         className={`max-toolbar ${isSidebarOpen ? "translate-x-0" : "translate-x-24 scale-x-0"} absolute -right-6 top-2 flex h-12 w-full transform items-center justify-between rounded-full border-4 border-white bg-primary transition duration-300 ease-in dark:border-[#0F172A]`}
       >
-        {/* <div className="flex items-center space-x-2 pl-4">
-          <div className="">
-            <div
-              onClick={toggleTheme}
-              className={`text-white hover:text-blue-500 dark:hover:text-[#38BDF8]`}
-            >
-              {isDark && <FaHeadphones />}
-              <FaCloudMeatball />
-            </div>
-          </div>
-          <div className="text-white hover:text-blue-500 dark:hover:text-[#38BDF8]">
-            <FaCity />
-          </div>
-        </div> */}
         <div className="group flex items-center rounded-full py-1 pl-10 pr-2 text-white dark:from-cyan-500 dark:to-blue-500">
           <div className="mr-12 transform text-2xl duration-300 ease-in-out">
             BPK XVIII
@@ -66,7 +56,7 @@ export const Asidebars = () => {
       </div>
       {/* <!-- MAX SIDEBAR--> */}
       <div
-        className={`${isSidebarOpen ? "flex" : "hidden"} mt-20 h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
+        className={`mt-20 flex ${!isSidebarOpen ? "translate-x-40" : ""} h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
       >
         <SidebarItem
           label={"Dashboard"}
@@ -74,13 +64,41 @@ export const Asidebars = () => {
           icon={FaHome}
           isOpen={isSidebarOpen}
         />
-        <SidebarItem
-          label={"Kelola Objek"}
-          to={"kelola-objek"}
-          icon={GiColombianStatue}
-          isOpen={isSidebarOpen}
-        />
 
+        <p
+          className={`flex ${!isSidebarOpen ? "w-fit" : "w-full"} transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4`}
+          onClick={toggleOnListMenageObject}
+        >
+          <GiColombianStatue /> {isSidebarOpen && <span>Kelola Objek</span>}
+        </p>
+        {onListMenageObject && (
+          <>
+            <SidebarItem
+              label={"Lembah"}
+              to={"kelola-lembah"}
+              icon={GiValley}
+              isOpen={isSidebarOpen}
+            />
+            <SidebarItem
+              label={"Situs"}
+              to={"kelola-situs"}
+              icon={FaSitemap}
+              isOpen={isSidebarOpen}
+            />
+            <SidebarItem
+              label={"Kategori"}
+              to={"kelola-kategori"}
+              icon={BiLibrary}
+              isOpen={isSidebarOpen}
+            />
+            <SidebarItem
+              label={"Objek"}
+              to={"kelola-objek"}
+              icon={GiStoneBust}
+              isOpen={isSidebarOpen}
+            />
+          </>
+        )}
         <SidebarItem
           label={"Kelola Artikel"}
           to={"kelola-artikel"}
@@ -100,38 +118,18 @@ export const Asidebars = () => {
           isOpen={isSidebarOpen}
         />
       </div>
-      <div
-        className={` ${isSidebarOpen ? "hidden" : "flex"} mt-20 h-[calc(100vh)] w-full flex-col space-y-2`}
-      >
-        <LogoSidebar to={"dashboard"} icon={FaHome} />
-        <LogoSidebar to={"kelola-objek"} icon={GiColombianStatue} />
-        <LogoSidebar to={"kelola-artikel"} icon={MdArticle} />
-        <LogoSidebar to={"kelola-kegiatan"} icon={FaBookmark} />
-        <LogoSidebar to={"kelola-user"} icon={FaUsers} />
-      </div>
     </aside>
   );
 };
 
-const SidebarItem = ({ label, to, icon: Icon, isOpen }) => {
+const SidebarItem = ({ label, to = "#", icon: Icon, isOpen, className }) => {
   return (
     <Link
       to={to}
-      className="flex w-full transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4"
+      className={`flex ${!isOpen ? "w-fit" : "w-full"} transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4 ${className}`}
     >
       <Icon />
       {isOpen && <span>{label}</span>}
-    </Link>
-  );
-};
-
-const LogoSidebar = ({ to, icon: Icon }) => {
-  return (
-    <Link
-      to={to}
-      className="flex w-full transform justify-end rounded-full bg-primary p-3 text-white duration-300 ease-in-out hover:ml-5 hover:text-purple-500 dark:hover:text-blue-500"
-    >
-      <Icon />
     </Link>
   );
 };

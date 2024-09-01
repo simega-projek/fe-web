@@ -29,12 +29,17 @@ export default function CreateObjek({ isOpenCreate }) {
 
         <CountenerInput>
           <Label
-            htmlFor="jenisObjek"
-            value="Jenis Objek"
+            htmlFor="kategori"
+            value="Kategori"
             className="mb-2 block text-base"
           />
-
-          <InputDropdown id={"jenisObjek"} data={categoryObject} />
+          <select
+            id="kategori"
+            placeholder="Pilih Kategori"
+            className="w-full rounded-md"
+          >
+            <option>Pilih Kategori</option>
+          </select>
         </CountenerInput>
 
         <CountenerInput>
@@ -59,62 +64,32 @@ export default function CreateObjek({ isOpenCreate }) {
 
         <CountenerInput>
           <Label
-            htmlFor="provinsi"
-            value="Provinsi"
-            className="mb-2 block text-base"
-          />
-
-          <InputDropdown id={"provinsi"} data={categoryObject} />
-        </CountenerInput>
-
-        <CountenerInput>
-          <Label
-            htmlFor="kota"
-            value="Kabupaten/Kota"
-            className="mb-2 block text-base"
-          />
-
-          <InputDropdown id={"kota"} data={categoryObject} />
-        </CountenerInput>
-
-        <CountenerInput>
-          {" "}
-          <Label
-            htmlFor="kecamatan"
-            value="Kecamatan"
-            className="mb-2 block text-base"
-          />
-          <InputDropdown id={"kecamatan"} data={categoryObject} />
-        </CountenerInput>
-
-        <CountenerInput>
-          {" "}
-          <Label
-            htmlFor="kelurahan"
-            value="Kelurahan"
-            className="mb-2 block text-base"
-          />
-          <InputDropdown id={"kelurahan"} data={categoryObject} />
-        </CountenerInput>
-
-        <CountenerInput>
-          <Label
             htmlFor="lembah"
-            value="Nama Lembah"
+            value="Lembah"
             className="mb-2 block text-base"
           />
-
-          <InputDropdown id={"lembah"} data={categoryObject} />
+          <select
+            id="lembah"
+            placeholder="Pilih Lembah"
+            className="w-full rounded-md"
+          >
+            <option>Pilih Lembah</option>
+          </select>
         </CountenerInput>
 
         <CountenerInput>
           <Label
             htmlFor="situs"
-            value="Nama Situs"
+            value="Situs"
             className="mb-2 block text-base"
           />
-
-          <InputDropdown id={"situs"} data={categoryObject} />
+          <select
+            id="situs"
+            placeholder="Pilih Situs"
+            className="w-full rounded-md"
+          >
+            <option>Pilih Situs</option>
+          </select>
         </CountenerInput>
 
         <CountenerInput>

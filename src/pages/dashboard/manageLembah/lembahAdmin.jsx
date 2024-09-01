@@ -14,18 +14,19 @@ import {
 } from "flowbite-react";
 
 import { FaFileInvoice } from "react-icons/fa6";
-import { GiStoneBust } from "react-icons/gi";
 
-import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
+import { GiValley } from "react-icons/gi";
+
+import { FaSearch, FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 import { useDispatch, useSelector } from "react-redux";
 import { fecthArticleData } from "../../../redux/actions/articleAction";
 
 import Loading from "../../../components/Elements/Loading/Loading";
-import CreateObjek from "./CreateObjek";
+import CreateObjek from "./CreateLembah";
 
-export default function ObjekAdmin() {
+export default function LembahAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -48,7 +49,7 @@ export default function ObjekAdmin() {
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
-        <GiStoneBust /> Data Objek Megalit
+        <GiValley /> Data Lembah
       </TitleSection>
       <hr />
 
@@ -56,10 +57,7 @@ export default function ObjekAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput
-              icon={FaSearch}
-              placeholder="Cari Objek, Situs, Lembah..."
-            />
+            <TextInput icon={FaSearch} placeholder="Cari Lembah..." />
           </div>
           <div className="ml-2">
             <Button
@@ -76,10 +74,10 @@ export default function ObjekAdmin() {
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
-              <TableHeadCell className="w-2/5">Objek</TableHeadCell>
-              <TableHeadCell className="w-1/5">Kategori</TableHeadCell>
-              <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
-              <TableHeadCell className="w-1/5">Situs</TableHeadCell>
+              <TableHeadCell className="w-2/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-1/5">Provinsi</TableHeadCell>
+              <TableHeadCell className="w-1/5">Kabupaten</TableHeadCell>
+              <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
