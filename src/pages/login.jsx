@@ -1,55 +1,8 @@
-import axios from "axios";
+import { Link } from "react-router-dom";
 import TitleSection from "../components/Elements/TitleSection";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { authLogin } from "../services/auth.service";
-import { HiInformationCircle } from "react-icons/hi";
-import { Alert } from "flowbite-react";
 import { LoginForm } from "../components/Fragments/Form/LoginForm";
 
 export default function Login() {
-  const [errorLogin, setErrorLogin] = useState(null);
-  const navigation = useNavigate();
-
-  // const handleSubmit = async (username, password) => {
-  //   try {
-  //     if (!username || !password || (!username && !password)) {
-  //       return setErrorLogin("Isi Username atau password");
-  //     }
-
-  //     const token = await authLogin(username, password);
-
-  //     if (token) {
-  //       localStorage.setItem("token", token);
-  //       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  //       navigation("/admin/dashboard");
-  //     } else {
-  //       setErrorLogin("Username atau password salah");
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  const handleSubmit = async (username, password) => {
-    try {
-      if (!username || !password || (!username && !password)) {
-        return setErrorLogin("Isi Username atau password");
-      }
-
-      const token = await authLogin(username, password);
-      if (token) {
-        localStorage.setItem("token", token);
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        navigation("/admin/dashboard");
-      } else {
-        setErrorLogin("Username atau password salah");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <>
       <section className="flex h-screen flex-col items-center justify-center px-10">
@@ -57,18 +10,7 @@ export default function Login() {
           Login Admin Explorer Megalit
         </TitleSection>
 
-        {errorLogin && (
-          <Alert
-            color="failure"
-            icon={HiInformationCircle}
-            onDismiss={() => setErrorLogin(null)}
-            className="mt-5"
-          >
-            <span className="font-medium">{errorLogin}</span>
-          </Alert>
-        )}
-
-        <LoginForm onSubmit={handleSubmit} />
+        <LoginForm />
 
         <Link to={"/"} className="group flex">
           <i>

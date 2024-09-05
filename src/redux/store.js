@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sidebarSlice from "./slices/sidebarSlice";
-import slice from "./slices/_index";
 
-const store = configureStore({
+import slice from "./slice";
+
+export const store = configureStore({
   reducer: slice,
 });
 
-console.log("oncreate store :", store.getState());
+console.log("Oncreate store: ", store.getState());
 
-store.subscribe(() => console.log("store change: ", store.getState()));
-export default store;
+store.subscribe(() => {
+  console.log("Store change : ", store.getState());
+});

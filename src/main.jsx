@@ -16,8 +16,7 @@ import MainLayout from "./components/Layouts/MainLayout.jsx";
 import Login from "./pages/login.jsx";
 import AdminLayout from "./components/Layouts/AdminLayout.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx";
-import { Provider } from "react-redux";
-import store from "./redux/store.js";
+
 import ObjekAdmin from "./pages/dashboard/manageObjek/objekAdmin.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import ActivityAdmin from "./pages/dashboard/manageActivities/activityAdmin.jsx";
@@ -26,6 +25,11 @@ import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
+import { Provider } from "react-redux";
+import { store } from "./redux/store.js";
+import axios from "axios";
+
+axios.defaults.withCredentials= true
 
 const route = createBrowserRouter([
   {

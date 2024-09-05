@@ -1,5 +1,4 @@
-"use client";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLogin } from "../../../useHooks/useLogin";
 import { forwardRef, useEffect, useRef, useState } from "react";
 import { Button, Dropdown, Modal } from "flowbite-react";
@@ -7,13 +6,20 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const isSidebarOpen = useSelector((state) => state.sidebar.status);
-  const username = useLogin();
-  const navigasi = useNavigate();
   const [isModal, setisModal] = useState(false);
   const [isDropdown, setisDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const navigasi = useNavigate();
+  const dispatch = useDispatch();
 
+  const { user } = useSelector((state) => state.auth);
+  const { isSidebarOpen } = useSelector((state) => state.aside);
+  console.log({ isSidebarOpen });
+
+  console.log(user?.username);
+  // useEffect(() => {
+
+  // },[dispatch, user])
   function handleLogout() {
     localStorage.clear();
     navigasi("/admin/login");
@@ -23,15 +29,11 @@ export default function Header() {
     setisDropdown(!isDropdown);
   }
 
-  // document.addEventListener("click", function () {
-  //   handleisDropdown();
-  // });
-
   return (
     <>
       <div className="fixed z-30 flex h-16 w-full items-center justify-center bg-tan p-2 px-10 dark:bg-[#0F172A]">
         <div
-          className={`logo ${isSidebarOpen ? "-ml-20" : "ml-20"} flex h-full flex-none transform items-center justify-center duration-500 ease-in-out dark:text-white`}
+          className={`${isSidebarOpen ? "-ml-20" : "ml-10"} flex h-full flex-none transform items-center justify-center duration-500 ease-in-out dark:text-white`}
         >
           Sistem Informasi Megalitikum
         </div>
@@ -49,11 +51,12 @@ export default function Header() {
                   alt="profile"
                   className="rounded-full object-cover shadow"
                 />
+                <p>{user && user.username}</p>
               </div>
             </div>
 
             <div className="md:text-md hidden text-sm text-black dark:text-white md:block">
-              {username}
+              {/* {username} */}
             </div>
           </div>
 

@@ -1,17 +1,16 @@
-import { Children, useState } from "react";
-import { FaHome, FaUsers, FaBookmark, FaSitemap } from "react-icons/fa";
+import { useState } from "react";
+import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
+
 import { BiLibrary } from "react-icons/bi";
 
 import { MdArticle } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { setIsSidebarOpen } from "../../../redux/slice/asideSlice";
 export const Asidebars = () => {
-  // const isSidebarOpen = useSelector((state) => state.sidebar.status);
-  const isSidebarOpen = useSelector((state) => state.sidebar.status);
+  const { isSidebarOpen } = useSelector((state) => state.aside);
   const dispatch = useDispatch();
-  const [isDark, setIsDark] = useState(false);
   const [onListMenageObject, setOnListMenageObject] = useState(false);
 
   const toggleOnListMenageObject = () => {
@@ -19,7 +18,7 @@ export const Asidebars = () => {
   };
 
   const toggleSidebar = () => {
-    dispatch(setIsSidebar(!isSidebarOpen));
+    dispatch(setIsSidebarOpen(!isSidebarOpen));
   };
   return (
     <aside
@@ -56,7 +55,7 @@ export const Asidebars = () => {
       </div>
       {/* <!-- MAX SIDEBAR--> */}
       <div
-        className={`mt-20 flex ${!isSidebarOpen ? "translate-x-40" : ""} h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
+        className={`absolute mt-20 flex ${!isSidebarOpen ? "translate-x-40" : "translate-x-0"} h-[calc(100vh)] w-full flex-col space-y-2 pl-3 text-white`}
       >
         <SidebarItem
           label={"Dashboard"}

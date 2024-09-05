@@ -20,16 +20,14 @@ import {
 } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
+
 import { useDebounce } from "use-debounce";
 import CreateActivity from "./CreateActivity";
 import { useSearchParams } from "react-router-dom";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const { articleData } = useSelector((state) => state.article);
-  const dispatch = useDispatch();
+
   const [searchParams] = useSearchParams();
   // const querySearch = searchParams.get("search")
 
@@ -45,24 +43,20 @@ export default function ActivityAdmin() {
     setSearchTerm(e.target.value);
   };
 
-  useEffect(() => {
-    dispatch(fecthArticleData());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (debouncedSearch) {
-      const result = articleData.filter(
-        (act) =>
-          act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-          act.category
-            .toLowerCase()
-            .includes(debouncedSearch.toLocaleLowerCase()),
-      );
-      setResultActivity(result);
-    } else {
-      setResultActivity(articleData);
-    }
-  }, [debouncedSearch, articleData]);
+  // useEffect(() => {
+  //   if (debouncedSearch) {
+  //     const result = articleData.filter(
+  //       (act) =>
+  //         act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+  //         act.category
+  //           .toLowerCase()
+  //           .includes(debouncedSearch.toLocaleLowerCase()),
+  //     );
+  //     setResultActivity(result);
+  //   } else {
+  //     setResultActivity(articleData);
+  //   }
+  // }, [debouncedSearch, articleData]);
 
   return (
     <>
@@ -108,7 +102,7 @@ export default function ActivityAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
             <TableBody className="divide-y">
-              {resultActivity?.length > 0 &&
+              {/* {resultActivity?.length > 0 &&
                 resultActivity?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
@@ -137,7 +131,7 @@ export default function ActivityAdmin() {
                       <ButtonControls icon={MdDeleteForever} />
                     </TableCell>
                   </TableRow>
-                ))}
+                ))} */}
             </TableBody>
           </Table>
         </div>

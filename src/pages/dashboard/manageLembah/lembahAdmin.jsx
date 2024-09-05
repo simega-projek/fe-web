@@ -20,8 +20,6 @@ import { GiValley } from "react-icons/gi";
 import { FaSearch, FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 
 import Loading from "../../../components/Elements/Loading/Loading";
 import CreateObjek from "./CreateLembah";
@@ -31,16 +29,6 @@ export default function LembahAdmin() {
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
   };
-
-  const { articleData, isLoading } = useSelector((state) => state.article);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
 
   return (
     <>
@@ -82,7 +70,7 @@ export default function LembahAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
+              {/* {articleData?.length > 0 &&
                 articleData?.map((a, index) => (
                   <TableRow key={a.id}>
                     <TableCell className="whitespace-normal">
@@ -112,7 +100,7 @@ export default function LembahAdmin() {
                       <ButtonControls icon={MdDeleteForever} />
                     </TableCell>
                   </TableRow>
-                ))}
+                ))} */}
             </TableBody>
           </Table>
         </div>

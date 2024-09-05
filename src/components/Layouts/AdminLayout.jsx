@@ -5,7 +5,7 @@ import Header from "../Fragments/Sidebar/Header";
 import { useLogin } from "../../useHooks/useLogin";
 
 export default function AdminLayout() {
-  const username = useLogin();
+  // const username = useLogin();
   return (
     <div>
       <Header />
