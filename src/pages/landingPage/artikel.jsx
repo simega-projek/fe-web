@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../../services/artikel.service";
+import { getAllArticles } from "../../services/article.service";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
 import CardArtikelHome from "../../components/Fragments/Cards/HomeCardArtikel";
 
@@ -40,8 +40,8 @@ export default function ArtikelPage() {
         <Loading />
       ) : (
         <div className="my-12 flex flex-wrap justify-center gap-5 px-10 md:justify-evenly md:px-0 lg:justify-center">
-          {articles.length > 0 &&
-            articles.map((article) => (
+          {articles?.length > 0 &&
+            articles?.map((article) => (
               <>
                 <CardArtikel
                   key={article.id}

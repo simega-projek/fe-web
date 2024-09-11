@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Detail } from "../../components/Fragments/Detail/Detail";
-import { getArticle } from "../../services/artikel.service";
+import { getOneArticle } from "../../services/article.service";
 import { useParams } from "react-router-dom";
 import Loading from "../../components/Elements/Loading/Loading";
 export default function ArtikelDetail() {
@@ -12,7 +12,7 @@ export default function ArtikelDetail() {
     setLoading(true);
     const fecthData = async () => {
       try {
-        const articleDetail = await getArticle(id);
+        const articleDetail = await getOneArticle(id);
         setArticle(articleDetail);
       } catch (err) {
         console.log(err);

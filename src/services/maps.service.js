@@ -10,7 +10,7 @@ export const getAllMaps = async () => {
   }
 };
 
-export const getArticle = async (id) => {
+export const getOneArticle = async (id) => {
   try {
     const res = await axios.get(`https://fakestoreapi.com/products/${id}`);
     return res.data;

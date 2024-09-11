@@ -1,0 +1,110 @@
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+  TextInput,
+} from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
+
+import { BiLibrary } from "react-icons/bi";
+
+import { FaEdit, FaSearch } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
+
+import { getAllCategory } from "../../../services/category.service";
+import CreateObjek from "./CreateCategory";
+
+export default function CategoryAdmin() {
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const handleOpenCreateForm = () => {
+    setIsOpenCreate(!isOpenCreate);
+  };
+
+  const [categoryData, setCategoryData] = useState([]);
+
+  const fetchCategory = async () => {
+    try {
+      const category = await getAllCategory();
+      setCategoryData(category.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+
+  console.log(categoryData);
+
+  return (
+    <>
+      <CreateObjek isOpenCreate={isOpenCreate} />
+
+      {/* table data */}
+      <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
+      <TitleSection className="my-5 flex px-3 underline">
+        <BiLibrary /> Data Kategori
+      </TitleSection>
+      <hr />
+
+      <div className="mt-5 w-full px-3">
+        {/* search & button create */}
+        <div className="flex justify-between">
+          <div className="w-full lg:w-1/3">
+            <TextInput icon={FaSearch} placeholder="Cari Kategori..." />
+          </div>
+          <div className="ml-2">
+            <Button
+              onClick={handleOpenCreateForm}
+              className="bg-primary text-xl font-bold focus:ring-blackboard"
+            >
+              +
+            </Button>
+          </div>
+        </div>
+
+        {/* table */}
+        <div className="mt-5 overflow-x-auto">
+          <Table hoverable>
+            <TableHead>
+              <TableHeadCell className="w-1/12">No</TableHeadCell>
+              <TableHeadCell className="w-1/2 text-center">
+                Nama Kategori
+              </TableHeadCell>
+
+              <TableHeadCell className="w-1/5 text-center">
+                Kontrol
+              </TableHeadCell>
+            </TableHead>
+
+            <TableBody className="divide-y">
+              {categoryData?.length > 0 &&
+                categoryData?.map((category, index) => (
+                  <TableRow key={category.ID}>
+                    <TableCell className="whitespace-normal">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+                      {category.category ?? "-"}
+                    </TableCell>
+
+                    <TableCell className="mx-auto items-center justify-center lg:flex">
+                      <ButtonControls icon={FaEdit} />
+                      <ButtonControls icon={MdDeleteForever} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+    </>
+  );
+}

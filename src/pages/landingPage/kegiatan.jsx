@@ -4,7 +4,7 @@ import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
 import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
 import { Pagination } from "../../components/Fragments/Pagination";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../../services/artikel.service";
+import { getAllArticles } from "../../services/article.service";
 import kegiatanData from "../../data/kegiatan.json";
 import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
@@ -53,8 +53,9 @@ export default function KegiatanPage() {
               <Loading />
             </div>
           ) : (
+            kegiatan?.length > 0 &&
             kegiatan
-              .slice(0, 6)
+              ?.slice(0, 6)
               .map((item) => (
                 <CardKegiatan
                   to={`/kegiatan/${item.id}`}

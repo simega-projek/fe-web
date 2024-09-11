@@ -16,6 +16,16 @@ import MainLayout from "./components/Layouts/MainLayout.jsx";
 import Login from "./pages/login.jsx";
 import AdminLayout from "./components/Layouts/AdminLayout.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx";
+import { Provider } from "react-redux";
+import store from "./redux/store.js";
+import ObjekAdmin from "./pages/dashboard/manageObjek/objekAdmin.jsx";
+import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
+import ActivityAdmin from "./pages/dashboard/manageActivities/activityAdmin.jsx";
+import UserAdmin from "./pages/dashboard/manageUsers/userAdmin.jsx";
+import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
+import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
+import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
+import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
 
 const route = createBrowserRouter([
   {
@@ -67,21 +77,55 @@ const route = createBrowserRouter([
     ],
   },
   {
-    path: "/",
+    path: "admin/login",
+    element: <Login />,
+  },
+  {
+    path: "/admin",
     element: <AdminLayout />,
     children: [
       {
-        path: "login",
-        element: <Login />,
+        path: "dashboard",
+        element: <Dashboard />,
       },
       {
-        path: "admin/dashboard",
-        element: <Dashboard />,
+        path: "kelola-objek",
+        element: <ObjekAdmin />,
+      },
+      {
+        path: "kelola-kategori",
+        element: <CategoryAdmin />,
+      },
+      {
+        path: "kelola-situs",
+        element: <SitusAdmin />,
+      },
+      {
+        path: "kelola-lembah",
+        element: <LembahAdmin />,
+      },
+      {
+        path: "kelola-artikel",
+        element: <ArticleAdmin />,
+      },
+      {
+        path: "kelola-kegiatan",
+        element: <ActivityAdmin />,
+      },
+      {
+        path: "kelola-user",
+        element: <UserAdmin />,
+      },
+      {
+        path: "profil",
+        element: <ProfileAdmin />,
       },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={route} />,
+  <Provider store={store}>
+    <RouterProvider router={route} />,
+  </Provider>,
 );

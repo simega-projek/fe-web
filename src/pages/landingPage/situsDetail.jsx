@@ -1,6 +1,6 @@
 import ReactPlayer from "react-player/lazy";
 import { useParams } from "react-router-dom";
-import { getArticle, getTechCrunch } from "../../services/artikel.service";
+import { getOneArticle, getTechCrunch } from "../../services/article.service";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
@@ -19,7 +19,7 @@ export default function SitusDetail() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const situsData = await getArticle(1);
+      const situsData = await getOneArticle(1);
       setSitus(situsData);
       const imageData = await getTechCrunch();
       setImages(imageData);

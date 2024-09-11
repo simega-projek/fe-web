@@ -12,6 +12,7 @@ export default {
         tan: "#C09F80",
         secondary: "#64748b",
         dark: "#0f172a",
+        gran: "#D7CEC7",
       },
     },
     fontFamily: {
