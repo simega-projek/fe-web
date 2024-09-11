@@ -1,8 +1,9 @@
 import React from "react";
 import { Alert } from "flowbite-react";
+import { HiInformationCircle } from "react-icons/hi";
 
 export const FailAllert = ({
-  setFailSubmit,
+  setMessageError,
   children = "Data gagal disimpan",
 }) => {
   return (
@@ -10,7 +11,7 @@ export const FailAllert = ({
       <Alert
         color="failure"
         icon={HiInformationCircle}
-        onDismiss={() => setFailSubmit(false)}
+        onDismiss={() => setMessageError(null)}
       >
         <span className="font-medium">Gagal!</span> {children}
       </Alert>

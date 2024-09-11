@@ -34,23 +34,24 @@ export default function CreateActivity({ isOpenCreate }) {
 
         <CountenerInput>
           <Label
-            htmlFor="linkPendaftaran"
+            htmlFor="startDate"
             value="Link Pendaftaran"
             className="mb-2 block text-base"
           />
 
-          <TextInput id="linkPendaftaran" required type="text" sizing="md" />
+          <TextInput id="startDate" name="start_date" required type="text" sizing="md" />
         </CountenerInput>
 
         <CountenerInput>
           <Label
-            htmlFor="tanggalPelaksanaan"
+            htmlFor="endDate"
             value="Tanggal Pelaksanaan"
             className="mb-2 block text-base"
           />
 
           <Datepicker
-            id="tanggalPelaksanaan"
+            id="endDate"
+            name="end_date"
             required
             type="text"
             sizing="md"

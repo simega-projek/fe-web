@@ -1,29 +1,25 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
-
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { AiOutlineFolderView } from "react-icons/ai";
 import { FaFileInvoice } from "react-icons/fa6";
 import { MdArticle } from "react-icons/md";
 
-import JoditEditor from "jodit-react";
-import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
+import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 import CreateArticle from "./CreateArticle";
-import Loading from "../../../components/Elements/Loading/Loading";
+import { getAllArticles } from "../../../services/article.service";
+import { formatDate } from "../../../utils/formatDate";
 
 export default function ArticleAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -31,19 +27,30 @@ export default function ArticleAdmin() {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
+  const [articleData, setArticleData] = useState([]);
 
-  const dispatch = useDispatch();
+  const fetchArticle = async () => {
+    try {
+      const article = await getAllArticles();
+      setArticleData(article.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSuccess = () => {
+    fetchArticle();
+  };
 
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchArticle();
+  }, []);
+
+  console.log(articleData);
 
   return (
     <>
-      <CreateArticle isOpenCreate={isOpenCreate} />
+      <CreateArticle isOpenCreate={isOpenCreate} onSuccess={handleSuccess} />
 
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
@@ -82,29 +89,37 @@ export default function ArticleAdmin() {
 
             <TableBody className="divide-y">
               {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+                articleData?.map((article, index) => (
+                  <TableRow key={article.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {article.title ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
+                      {formatDate(article.CreatedAt) ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="h-10"
+                      />
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <a href={a.fileUrl} download target="_blank">
-                        {a.fileName ?? "-"}
+                      <a
+                        href={article.file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <AiOutlineFolderView />
                       </a>
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
+                        to={`/artikel/${article.id}`}
                       />
                       <ButtonControls icon={FaEdit} />
                       <ButtonControls icon={MdDeleteForever} />

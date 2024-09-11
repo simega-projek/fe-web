@@ -1,47 +1,47 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
-
+import React, { useEffect, useState } from "react";
+import { FaEdit, FaSearch } from "react-icons/fa";
 import { FaFileInvoice } from "react-icons/fa6";
+import { MdDeleteForever } from "react-icons/md";
+import TitleSection from "../../../components/Elements/TitleSection";
 
 import { GiValley } from "react-icons/gi";
 
-import { FaSearch, FaEdit } from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
-
-import Loading from "../../../components/Elements/Loading/Loading";
+import { getAllValley } from "../../../services/valley.service";
 import CreateObjek from "./CreateLembah";
 
 export default function LembahAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [valleyData, setValleyData] = useState([]);
+
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
-
-  const dispatch = useDispatch();
+  const fetchValley = async () => {
+    try {
+      const valley = await getAllValley();
+      setValleyData(valley.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchValley();
+  }, []);
 
+  console.log(valleyData);
   return (
     <>
       <CreateObjek isOpenCreate={isOpenCreate} />
@@ -82,30 +82,28 @@ export default function LembahAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {valleyData?.length > 0 &&
+                valleyData?.map((valley, index) => (
+                  <TableRow key={valley.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {valley.lembah ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
+                      {valley.provinsi ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
+                      {valley.kabupaten_kota ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <a href={a.fileUrl} download target="_blank">
-                        {a.fileName ?? "-"}
-                      </a>
+                      {valley.kecamatan ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
+                        to={`/artikel/${valley.id}`}
                         className={"hover:"}
                       />
                       <ButtonControls icon={FaEdit} />

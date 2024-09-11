@@ -55,6 +55,16 @@ export function NavbarDashboard() {
                     Persebaran
                   </Link>
                 </li>
+                <li className="group my-2">
+                  <button
+                    className="menu-list flex items-center"
+                    type="button"
+                    onClick={handleDropdownClick}
+                  >
+                    Informasi
+                    <span className="ml-3 inline-block h-3 w-3 rotate-45 border-b-2 border-r-2 border-dark"></span>
+                  </button>
+                </li>
 
                 <div
                   className={`relative ${isDropdownMenu ? "block" : "hidden"}`}

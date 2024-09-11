@@ -60,8 +60,6 @@ export default function CreateLembah({ isOpenCreate }) {
         setSuccessSubmit(true);
         setIsDisabled(false);
       }, 3000);
-
-      console.log(resultLembah);
     } else {
       setFailSubmit(true);
       setMassages("Semua kolom harus diisi");
@@ -113,6 +111,7 @@ export default function CreateLembah({ isOpenCreate }) {
     setDistricts([]);
     setVillages([]);
   };
+
   return (
     <>
       <div className={isOpenCreate ? "block" : "hidden"}>
@@ -202,28 +201,6 @@ export default function CreateLembah({ isOpenCreate }) {
               {districts?.map((district) => (
                 <option key={district.id} value={district.name}>
                   {district.name}
-                </option>
-              ))}
-            </select>
-          </CountenerInput>
-
-          <CountenerInput>
-            <Label
-              htmlFor="kelurahan"
-              value="Nama Kelurahan"
-              className="mb-2 block text-base"
-            />
-            <select
-              id="kelurahan"
-              placeholder="Pilih Kelurahan"
-              className="w-full rounded-md"
-              value={villages?.length > 0 ? villages.name : ""}
-              onChange={(e) => e.target.value}
-            >
-              <option>Pilih Kelurahan</option>
-              {villages?.map((village) => (
-                <option key={village.id} value={village.name}>
-                  {village.name}
                 </option>
               ))}
             </select>

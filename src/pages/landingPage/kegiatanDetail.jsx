@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getAllArticles, getArticle } from "../../services/artikel.service";
+import { getAllArticles, getOneArticle } from "../../services/article.service";
 import TitleSection from "../../components/Elements/TitleSection";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Elements/Loading/Loading";
@@ -16,7 +16,7 @@ export default function KegiatanDetail() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const kegiatanData = await getArticle(id);
+      const kegiatanData = await getOneArticle(id);
       setKegiatan(kegiatanData);
       const otherKegiatanData = await getAllArticles();
       setOtherKegiatan(otherKegiatanData);

@@ -1,31 +1,30 @@
 "use client";
-import { useSelector } from "react-redux";
-import { useLogin } from "../../../useHooks/useLogin";
-import { forwardRef, useEffect, useRef, useState } from "react";
-import { Button, Dropdown, Modal } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
+import { forwardRef, useRef, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { sliceAuthLogout } from "../../../redux/actions/authAction";
 
 export default function Header() {
   const isSidebarOpen = useSelector((state) => state.sidebar.status);
-  const username = useLogin();
-  const navigasi = useNavigate();
   const [isModal, setisModal] = useState(false);
   const [isDropdown, setisDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+
+  const navigasi = useNavigate();
+
+  const userData = useSelector((state) => state.auth.userData);
 
   function handleLogout() {
-    localStorage.clear();
+    dispatch(sliceAuthLogout());
     navigasi("/admin/login");
   }
 
   function handleisDropdown() {
     setisDropdown(!isDropdown);
   }
-
-  // document.addEventListener("click", function () {
-  //   handleisDropdown();
-  // });
 
   return (
     <>
@@ -53,7 +52,7 @@ export default function Header() {
             </div>
 
             <div className="md:text-md hidden text-sm text-black dark:text-white md:block">
-              {username}
+              {userData?.info?.username || userData?.data?.username}
             </div>
           </div>
 
@@ -88,13 +87,16 @@ export default function Header() {
 }
 
 const Dropdowns = forwardRef(({ isDropdown, setisModal }, ref) => {
+  const userData = useSelector((state) => state.auth.userData);
   return (
     <div
       ref={ref}
       className={`${isDropdown ? "absolute" : "hidden"} top-14 w-48 divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
     >
       <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-        <div className="truncate">name@flowbite.com</div>
+        <div className="truncate">
+          {userData?.info?.users?.email || userData?.data?.users?.email}
+        </div>
       </div>
       <ul
         className="py-2 text-sm text-gray-700 dark:text-gray-200"

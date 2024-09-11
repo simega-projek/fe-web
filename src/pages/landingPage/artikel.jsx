@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../../services/artikel.service";
+import { getAllArticles } from "../../services/article.service";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
 import CardArtikelHome from "../../components/Fragments/Cards/HomeCardArtikel";
 

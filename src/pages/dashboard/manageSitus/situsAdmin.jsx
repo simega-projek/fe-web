@@ -1,26 +1,21 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
 
-import { FaSearch, FaEdit, FaSitemap } from "react-icons/fa";
+import { FaEdit, FaSearch, FaSitemap } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 
-import Loading from "../../../components/Elements/Loading/Loading";
-
+import { getAllSite } from "../../../services/site.service";
 import CreateSitus from "./CreateSitus";
 
 export default function SitusAdmin() {
@@ -29,16 +24,22 @@ export default function SitusAdmin() {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
+  const [siteData, setSiteData] = useState("");
 
-  const dispatch = useDispatch();
+  const fetchSite = async () => {
+    try {
+      const site = await getAllSite();
+      setSiteData(site.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchSite();
+  }, []);
 
+  console.log(siteData);
   return (
     <>
       <CreateSitus isOpenCreate={isOpenCreate} />
@@ -78,20 +79,20 @@ export default function SitusAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {siteData?.length > 0 &&
+                siteData?.map((site, index) => (
+                  <TableRow key={site.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {site.nama_situs ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
+                      {site.lembah.lembah ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
+                      {site.desa_kelurahan ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls icon={FaEdit} />

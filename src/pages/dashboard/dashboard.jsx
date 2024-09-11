@@ -1,10 +1,6 @@
+import { FaCity } from "react-icons/fa";
 import TitleSection from "../../components/Elements/TitleSection";
-import {
-  CardDashboard,
-  CardLength,
-} from "../../components/Fragments/Cards/CardLength";
-import { useLogin } from "../../useHooks/useLogin";
-import { FaHome, FaHeadphones, FaCloudMeatball, FaCity } from "react-icons/fa";
+import { CardDashboard } from "../../components/Fragments/Cards/CardLength";
 
 export const Dashboard = () => {
   return (

@@ -21,15 +21,16 @@ import {
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
+
 import { useDebounce } from "use-debounce";
 import CreateActivity from "./CreateActivity";
 import { useSearchParams } from "react-router-dom";
+import { getAllEvent } from "../../../services/event.service";
+import { formatDate } from "../../../utils/formatDate";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const { articleData } = useSelector((state) => state.article);
-  const dispatch = useDispatch();
+  const [eventData, setEventData] = useState([]);
   const [searchParams] = useSearchParams();
   // const querySearch = searchParams.get("search")
 
@@ -45,24 +46,35 @@ export default function ActivityAdmin() {
     setSearchTerm(e.target.value);
   };
 
-  useEffect(() => {
-    dispatch(fecthArticleData());
-  }, [dispatch]);
+  const fetchEvent = async () => {
+    try {
+      const events = await getAllEvent();
+      setEventData(events.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    if (debouncedSearch) {
-      const result = articleData.filter(
-        (act) =>
-          act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-          act.category
-            .toLowerCase()
-            .includes(debouncedSearch.toLocaleLowerCase()),
-      );
-      setResultActivity(result);
-    } else {
-      setResultActivity(articleData);
-    }
-  }, [debouncedSearch, articleData]);
+    fetchEvent();
+  }, []);
+
+  console.log(eventData);
+
+  // useEffect(() => {
+  //   if (debouncedSearch) {
+  //     const result = eventData.filter(
+  //       (act) =>
+  //         act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+  //         act.category
+  //           .toLowerCase()
+  //           .includes(debouncedSearch.toLocaleLowerCase()),
+  //     );
+  //     setResultActivity(result);
+  //   } else {
+  //     setResultActivity(eventData);
+  //   }
+  // }, [debouncedSearch, eventData]);
 
   return (
     <>
@@ -108,30 +120,30 @@ export default function ActivityAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
             <TableBody className="divide-y">
-              {resultActivity?.length > 0 &&
-                resultActivity?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {eventData?.length > 0 &&
+                eventData?.map((event, index) => (
+                  <TableRow key={event.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title}
+                      {event.title}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <a href={a.fileUrl} download>
-                        {a.fileName ?? "-"}
+                      <a href={event.registration_link}>
+                        {event.registration_link ?? "-"}
                       </a>
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
+                      {formatDate(event.start_date) ?? "-"}
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
+                      {event.status ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
+                        to={`/artikel/${event.id}`}
                       />
                       <ButtonControls icon={FaEdit} />
                       <ButtonControls icon={MdDeleteForever} />

@@ -1,19 +1,23 @@
-import { Children, useState } from "react";
-import { FaHome, FaUsers, FaBookmark, FaSitemap } from "react-icons/fa";
+import { useState } from "react";
+import { BiLibrary } from "react-icons/bi";
+import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
-import { BiLibrary } from "react-icons/bi";
 
 import { MdArticle } from "react-icons/md";
 import { Link } from "react-router-dom";
 export const Asidebars = () => {
-  // const isSidebarOpen = useSelector((state) => state.sidebar.status);
   const isSidebarOpen = useSelector((state) => state.sidebar.status);
+  const role = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
-  const [isDark, setIsDark] = useState(false);
   const [onListMenageObject, setOnListMenageObject] = useState(false);
 
+  let roleAuth = role?.info?.role;
+  let roleProfile = role?.data?.role;
+
+  // console.log({ roleAuth });
+  // console.log({ roleProfile });
   const toggleOnListMenageObject = () => {
     setOnListMenageObject(!onListMenageObject);
   };
@@ -23,7 +27,7 @@ export const Asidebars = () => {
   };
   return (
     <aside
-      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} fixed z-50 flex h-screen w-60 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
+      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} fixed z-50 flex h-screen w-64 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
     >
       {/* <!-- open sidebar button --> */}
       <div
@@ -56,7 +60,7 @@ export const Asidebars = () => {
       </div>
       {/* <!-- MAX SIDEBAR--> */}
       <div
-        className={`mt-20 flex ${!isSidebarOpen ? "translate-x-40" : ""} h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
+        className={`mt-20 flex ${!isSidebarOpen ? "ml-5 translate-x-40" : ""} h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
       >
         <SidebarItem
           label={"Dashboard"}
@@ -69,7 +73,7 @@ export const Asidebars = () => {
           className={`flex ${!isSidebarOpen ? "w-fit" : "w-full"} transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4`}
           onClick={toggleOnListMenageObject}
         >
-          <GiColombianStatue /> {isSidebarOpen && <span>Kelola Objek</span>}
+          <GiColombianStatue /> {isSidebarOpen && <span>Kelola Megalit</span>}
         </p>
         {onListMenageObject && (
           <>
@@ -78,24 +82,28 @@ export const Asidebars = () => {
               to={"kelola-lembah"}
               icon={GiValley}
               isOpen={isSidebarOpen}
+              classLabel={"ml-3"}
             />
             <SidebarItem
               label={"Situs"}
               to={"kelola-situs"}
               icon={FaSitemap}
               isOpen={isSidebarOpen}
+              classLabel={"ml-3"}
             />
             <SidebarItem
               label={"Kategori"}
               to={"kelola-kategori"}
               icon={BiLibrary}
               isOpen={isSidebarOpen}
+              classLabel={"ml-3"}
             />
             <SidebarItem
               label={"Objek"}
               to={"kelola-objek"}
               icon={GiStoneBust}
               isOpen={isSidebarOpen}
+              classLabel={"ml-3"}
             />
           </>
         )}
@@ -111,24 +119,33 @@ export const Asidebars = () => {
           icon={FaBookmark}
           isOpen={isSidebarOpen}
         />
-        <SidebarItem
-          label={"Kelola Admin"}
-          to={"kelola-user"}
-          icon={FaUsers}
-          isOpen={isSidebarOpen}
-        />
+        {(roleAuth === "superadmin" || roleProfile === "superadmin") && (
+          <SidebarItem
+            label={"Kelola Admin"}
+            to={"kelola-user"}
+            icon={FaUsers}
+            isOpen={isSidebarOpen}
+          />
+        )}
       </div>
     </aside>
   );
 };
 
-const SidebarItem = ({ label, to = "#", icon: Icon, isOpen, className }) => {
+const SidebarItem = ({
+  label,
+  to = "#",
+  icon: Icon,
+  isOpen,
+  className,
+  classLabel,
+}) => {
   return (
     <Link
       to={to}
       className={`flex ${!isOpen ? "w-fit" : "w-full"} transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4 ${className}`}
     >
-      <Icon />
+      <Icon className={classLabel} />
       {isOpen && <span>{label}</span>}
     </Link>
   );

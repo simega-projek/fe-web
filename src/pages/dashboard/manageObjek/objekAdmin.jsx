@@ -1,28 +1,24 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
 
 import { FaFileInvoice } from "react-icons/fa6";
 import { GiStoneBust } from "react-icons/gi";
 
-import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
+import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 
-import Loading from "../../../components/Elements/Loading/Loading";
+import { getAllObject } from "../../../services/object.service";
 import CreateObjek from "./CreateObjek";
 
 export default function ObjekAdmin() {
@@ -31,15 +27,22 @@ export default function ObjekAdmin() {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
+  const [objectData, setObjectData] = useState([]);
 
-  const dispatch = useDispatch();
+  const fetchObject = async () => {
+    try {
+      const objects = await getAllObject();
+      setObjectData(objects.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchObject();
+  }, []);
+
+  console.log(objectData);
 
   return (
     <>
@@ -84,30 +87,28 @@ export default function ObjekAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {objectData?.length > 0 &&
+                objectData?.map((objects, index) => (
+                  <TableRow key={objects.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {objects.nama_objek ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
+                      {objects.category.category ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
+                      {objects.site.lembah.lembah ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <a href={a.fileUrl} download target="_blank">
-                        {a.fileName ?? "-"}
-                      </a>
+                      {objects.site.nama_situs ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
+                        to={`/artikel/${objects.id}`}
                         className={"hover:"}
                       />
                       <ButtonControls icon={FaEdit} />

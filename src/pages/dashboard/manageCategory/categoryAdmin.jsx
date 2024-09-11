@@ -1,29 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
 
-import { FaFileInvoice } from "react-icons/fa6";
-import { GiColombianStatue } from "react-icons/gi";
 import { BiLibrary } from "react-icons/bi";
 
-import { FaSearch, FaPlus, FaEdit } from "react-icons/fa";
+import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 
-import Loading from "../../../components/Elements/Loading/Loading";
+import { getAllCategory } from "../../../services/category.service";
 import CreateObjek from "./CreateCategory";
 
 export default function CategoryAdmin() {
@@ -32,15 +26,22 @@ export default function CategoryAdmin() {
     setIsOpenCreate(!isOpenCreate);
   };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
+  const [categoryData, setCategoryData] = useState([]);
 
-  const dispatch = useDispatch();
+  const fetchCategory = async () => {
+    try {
+      const category = await getAllCategory();
+      setCategoryData(category.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchCategory();
+  }, []);
+
+  console.log(categoryData);
 
   return (
     <>
@@ -74,7 +75,9 @@ export default function CategoryAdmin() {
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
-              <TableHeadCell className="w-1/2">Nama Kategori</TableHeadCell>
+              <TableHeadCell className="w-1/2 text-center">
+                Nama Kategori
+              </TableHeadCell>
 
               <TableHeadCell className="w-1/5 text-center">
                 Kontrol
@@ -82,14 +85,14 @@ export default function CategoryAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {categoryData?.length > 0 &&
+                categoryData?.map((category, index) => (
+                  <TableRow key={category.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {category.category ?? "-"}
                     </TableCell>
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">

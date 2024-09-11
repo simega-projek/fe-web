@@ -1,49 +1,104 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
-  FileInput,
-  Label,
-  TextInput,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
+  TextInput,
 } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
 
-import { FaFileInvoice } from "react-icons/fa6";
-import { MdArticle } from "react-icons/md";
-
-import { FaSearch, FaEdit, FaUsers } from "react-icons/fa";
+import { FaEdit, FaSearch, FaUsers } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { useDispatch, useSelector } from "react-redux";
-import { fecthArticleData } from "../../../redux/actions/articleAction";
 
-import Loading from "../../../components/Elements/Loading/Loading";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import {
+  deleteAdmin,
+  getAllAdmin,
+  resetPassword,
+} from "../../../services/superAdmin.service";
 import CreateAdmin from "./CreateAdmin";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [adminData, setAdminData] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [isOpenModalReset, setIsOpenModalReset] = useState(false);
+
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
   };
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
+  };
 
-  const { articleData, isLoading } = useSelector((state) => state.article);
+  const handleOpenResetModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalReset(true);
+  };
 
-  const dispatch = useDispatch();
+  const fetchAdmin = async () => {
+    try {
+      const res = await getAllAdmin();
+      setAdminData(res?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  const handleDelete = async () => {
+    const res = await deleteAdmin(selectedId);
+    console.log(res);
+    if (res.error) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      setIsOpenModalDelete(false);
+    } else {
+      setMessageError(null);
+      setMessageSuccess(res.message);
+    }
+    setIsOpenModalDelete(false);
+    handleSuccess();
+  };
+
+  const handleResetPassword = async () => {
+    const res = await resetPassword(selectedId);
+    if (res.error) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      setIsOpenModalReset(false);
+    } else {
+      setMessageError(null);
+      setMessageSuccess(res.message);
+    }
+    setIsOpenModalReset(false);
+    handleSuccess();
+  };
+
+  const handleSuccess = () => {
+    fetchAdmin();
+  };
   useEffect(() => {
-    dispatch(fecthArticleData());
-    console.log("------");
-    console.log(articleData);
-  }, [dispatch]);
+    fetchAdmin();
+  }, []);
 
+  // console.log({ isOpenModalDelete });
+  // console.log(adminData);
+  // console.log({ selectedId });
   return (
     <>
-      <CreateAdmin isOpenCreate={isOpenCreate} />
+      <CreateAdmin isOpenCreate={isOpenCreate} onSuccess={handleSuccess} />
 
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
@@ -68,6 +123,19 @@ export default function UserAdmin() {
           </div>
         </div>
 
+        <div className="mt-5">
+          {(messageError && (
+            <FailAllert setMessageError={setMessageError}>
+              {messageError}
+            </FailAllert>
+          )) ||
+            (messageSuccess && (
+              <SuccessAlert setMessageSuccess={setMessageSuccess}>
+                {messageSuccess}
+              </SuccessAlert>
+            ))}
+        </div>
+
         {/* table */}
         <div className="mt-5 overflow-x-auto">
           <Table hoverable>
@@ -80,29 +148,31 @@ export default function UserAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((a, index) => (
-                  <TableRow key={a.id}>
+              {adminData?.length > 0 &&
+                adminData?.map((admin, index) => (
+                  <TableRow key={admin?.ID}>
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {a.title ?? "-"}
+                      {admin?.users?.fullname ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {a.date ?? "-"}
+                      {admin?.username ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={a.image} alt={a.title} className="h-10" />
+                      {admin?.users?.email ?? "-"}
                     </TableCell>
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
-                        icon={FaFileInvoice}
-                        to={`/artikel/${a.id}`}
+                        icon={FaEdit}
+                        onClick={() => handleOpenResetModal(admin?.ID)}
                       />
-                      <ButtonControls icon={FaEdit} />
-                      <ButtonControls icon={MdDeleteForever} />
+                      <ButtonControls
+                        icon={MdDeleteForever}
+                        onClick={() => handleOpenDeleteModal(admin?.ID)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -110,6 +180,24 @@ export default function UserAdmin() {
           </Table>
         </div>
       </div>
+
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus akun admin"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDelete}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
+
+      {isOpenModalReset && (
+        <PopupConfirm
+          title={"reset password"}
+          isOpen={isOpenModalReset}
+          onClick={handleResetPassword}
+          onClose={() => setIsOpenModalReset(false)}
+        />
+      )}
     </>
   );
 }
