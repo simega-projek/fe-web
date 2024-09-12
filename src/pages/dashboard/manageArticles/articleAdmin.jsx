@@ -18,24 +18,77 @@ import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 import CreateArticle from "./CreateArticle";
-import { getAllArticles } from "../../../services/article.service";
+import {
+  deleteArticle,
+  getAllArticles,
+} from "../../../services/article.service";
 import { formatDate } from "../../../utils/formatDate";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import UpdateArticle from "./UpdateArticle";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import Loading from "../../../components/Elements/Loading/Loading";
 
 export default function ArticleAdmin() {
+  const [selectedId, setSelectedId] = useState(null);
+
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
   const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [isOpenUpdate, setisOpenUpdate] = useState(false);
+  const [articleData, setArticleData] = useState([]);
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+  const [fetchLoading, setFetchLoading] = useState(false);
+
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
+    setisOpenUpdate(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const [articleData, setArticleData] = useState([]);
+  const handleOpenUpdate = (id) => {
+    setSelectedId(id);
+    setisOpenUpdate(true);
+    setIsOpenCreate(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
+  };
 
   const fetchArticle = async () => {
     try {
+      setFetchLoading(true);
       const article = await getAllArticles();
       setArticleData(article.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setFetchLoading(false);
     }
+  };
+
+  console.log(fetchLoading);
+
+  const handleDeleteArticle = async () => {
+    const res = await deleteArticle(selectedId);
+    console.log("delete = ", res);
+
+    if (res.error) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      setIsOpenModalDelete(false);
+    } else {
+      setMessageError(null);
+      setMessageSuccess(res.message);
+    }
+    setIsOpenModalDelete(false);
+    handleSuccess();
   };
 
   const handleSuccess = () => {
@@ -47,10 +100,18 @@ export default function ArticleAdmin() {
   }, []);
 
   console.log(articleData);
+  console.log(fetchArticle);
 
   return (
     <>
       <CreateArticle isOpenCreate={isOpenCreate} onSuccess={handleSuccess} />
+
+      <UpdateArticle
+        isOpenUpdate={isOpenUpdate}
+        onSuccess={handleSuccess}
+        id={selectedId}
+        onClose={() => setisOpenUpdate(false)}
+      />
 
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
@@ -73,6 +134,20 @@ export default function ArticleAdmin() {
               +
             </Button>
           </div>
+        </div>
+
+        {/* alert */}
+        <div className="mt-5">
+          {(messageError && (
+            <FailAllert setMessageError={setMessageError}>
+              {messageError}
+            </FailAllert>
+          )) ||
+            (messageSuccess && (
+              <SuccessAlert setMessageSuccess={setMessageSuccess}>
+                {messageSuccess}
+              </SuccessAlert>
+            ))}
         </div>
 
         {/* table */}
@@ -119,10 +194,16 @@ export default function ArticleAdmin() {
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${article.id}`}
+                        to={`/artikel/${article.ID}`}
                       />
-                      <ButtonControls icon={FaEdit} />
-                      <ButtonControls icon={MdDeleteForever} />
+                      <ButtonControls
+                        icon={FaEdit}
+                        onClick={() => handleOpenUpdate(article.ID)}
+                      />
+                      <ButtonControls
+                        icon={MdDeleteForever}
+                        onClick={() => handleOpenDeleteModal(article.ID)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -130,6 +211,21 @@ export default function ArticleAdmin() {
           </Table>
         </div>
       </div>
+
+      {fetchLoading ? (
+        <div className="mt-10">
+          <Loading />
+        </div>
+      ) : null}
+
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus akun admin"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDeleteArticle}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
     </>
   );
 }

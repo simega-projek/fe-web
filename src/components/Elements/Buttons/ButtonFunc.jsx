@@ -6,6 +6,7 @@ export const ButtonFunc = (props) => {
     onClick = () => {},
     disabled = false,
   } = props;
+
   return (
     <button
       type={type}

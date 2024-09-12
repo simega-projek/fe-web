@@ -28,7 +28,7 @@ export const createArticle = async (formData) => {
 
 export const updateArticle = async (id, formData) => {
   try {
-    return await fetchDataApi("POST", `articles/${id}`, formData);
+    return await fetchDataApi("PUT", `articles/${id}`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }

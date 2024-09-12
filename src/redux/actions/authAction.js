@@ -19,6 +19,7 @@ export const sliceAuthLogin = (username, password) => async (dispatch) => {
         `Bearer ${data.data.access_token}`;
 
       dispatch(setAuthData(data.data));
+      console.log({ data });
     } else {
       dispatch(setError("Login gagal. Cek username dan password Anda."));
     }

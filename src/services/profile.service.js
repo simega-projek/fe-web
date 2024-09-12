@@ -11,7 +11,7 @@ export const getProfile = async () => {
 
 export const updateProfile = async (formData) => {
   try {
-    return await fetchDataApi("POST", `auth/update-profile`, formData);
+    return await fetchDataApi("PUT", `auth/update-profile`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }
@@ -19,7 +19,7 @@ export const updateProfile = async (formData) => {
 
 export const changePassword = async (formData) => {
   try {
-    return await fetchDataApi("POST", `auth/change-password`, formData);
+    return await fetchDataApi("PUT", `auth/change-password`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }

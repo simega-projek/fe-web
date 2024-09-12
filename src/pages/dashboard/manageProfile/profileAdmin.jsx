@@ -5,10 +5,16 @@ import { useSelector } from "react-redux";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
+import { updateProfile } from "../../../services/profile.service";
+import { toTop } from "../../../utils/toTop";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
 export const ProfileAdmin = () => {
   const [formEdit, setFormEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
 
   const [fullname, setFullname] = useState("");
   const [nik, setNik] = useState("");
@@ -18,36 +24,33 @@ export const ProfileAdmin = () => {
   const [username, setUsername] = useState("");
 
   const dataProfile = useSelector((state) => state.auth.userData);
-  console.log(dataProfile);
+  console.log({ dataProfile });
 
-  const handleEnableEdit = () => {
+  const handleEnableEdit = (e) => {
+    e.preventDefault();
     setFormEdit(!formEdit);
   };
 
-  const handleSubmitForm = () => {
-    setFormEdit(!formEdit);
+  const handleEditProfile = async (e) => {
+    e.preventDefault();
+
+    if (
+      fullname.trim() === "" ||
+      nik.trim() === "" ||
+      email.trim() === "" ||
+      phone_number.trim() === ""
+    ) {
+      setMessageError("Isi semua kolom");
+      toTop();
+    }
+    try {
+      setLoading(true);
+      const res = await updateProfile();
+      console.log(res);
+    } catch (err) {
+    } finally {
+    }
   };
-
-  // const fetchProfile = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const profile = await getProfile();
-  //     setFullname(profile?.data?.users?.fullname);
-  //     setNik(profile?.data?.users?.nik);
-  //     setEmail(profile?.data?.users?.email);
-  //     setPhone_number(profile?.data?.users?.phone_number);
-  //     setRole(profile?.data?.role);
-  //     setUsername(profile?.data?.username);
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchProfile();
-  // }, []);
 
   useEffect(() => {
     setFullname(
@@ -65,7 +68,12 @@ export const ProfileAdmin = () => {
     setRole(dataProfile?.info?.role || dataProfile?.data?.role);
   }, [dataProfile]);
 
-  console.log(dataProfile);
+  console.log({ dataProfile });
+  console.log({ fullname });
+  console.log({ nik });
+  console.log({ email });
+  console.log({ phone_number });
+  console.log({ username });
 
   return (
     <>
@@ -75,7 +83,19 @@ export const ProfileAdmin = () => {
       </TitleSection>
       <hr />
 
-      <div className="flex flex-wrap">
+      {/* alert */}
+      {(messageError && (
+        <FailAllert setMessageError={setMessageError}>
+          {messageError}
+        </FailAllert>
+      )) ||
+        (messageSuccess && (
+          <SuccessAlert setMessageSuccess={setMessageSuccess}>
+            {messageSuccess}
+          </SuccessAlert>
+        ))}
+
+      <form className="flex flex-wrap" onSubmit={handleEditProfile}>
         <CountenerInput>
           <Label
             htmlFor="fullname"
@@ -90,7 +110,7 @@ export const ProfileAdmin = () => {
             name="fullname"
             type="text"
             sizing="md"
-            value={fullname ?? ""}
+            value={fullname ?? "loading..."}
             onChange={(e) => setFullname(e.target.value)}
           />
         </CountenerInput>
@@ -107,7 +127,7 @@ export const ProfileAdmin = () => {
             disabled
             type="text"
             sizing="md"
-            value={username ?? ""}
+            value={username ?? "loading..."}
             name="username"
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -123,7 +143,7 @@ export const ProfileAdmin = () => {
             type="text"
             sizing="md"
             onChange={(e) => setNik(e.target.value)}
-            value={nik ?? ""}
+            value={nik ?? "loading..."}
           />
         </CountenerInput>
 
@@ -140,7 +160,7 @@ export const ProfileAdmin = () => {
             type="email"
             name="email"
             sizing="md"
-            value={email ?? ""}
+            value={email ?? "loading..."}
             onChange={(e) => setEmail(e.target.value)}
           />
         </CountenerInput>
@@ -158,7 +178,7 @@ export const ProfileAdmin = () => {
             disabled={!formEdit}
             type="number"
             sizing="md"
-            value={phone_number ?? ""}
+            value={phone_number ?? "loading..."}
             onChange={(e) => setPhone_number(e.target.value)}
           />
         </CountenerInput>
@@ -171,11 +191,39 @@ export const ProfileAdmin = () => {
             disabled
             type="text"
             sizing="md"
-            value={role ?? ""}
+            value={role ?? "loading..."}
           />
         </CountenerInput>
 
-        {/* <CountenerInput>
+        {formEdit && (
+          <>
+            <ButtonFunc className="m-3 bg-primary text-white">
+              Simpan
+            </ButtonFunc>
+
+            <ButtonFunc
+              className="m-3 bg-primary text-white"
+              onClick={() => setFormEdit(false)}
+              type="button"
+            >
+              Batal
+            </ButtonFunc>
+          </>
+        )}
+      </form>
+
+      {!formEdit && (
+        <ButtonFunc
+          className="m-3 bg-tan text-black"
+          onClick={() => setFormEdit(true)}
+          type="button"
+        >
+          Edit
+        </ButtonFunc>
+      )}
+
+      {/* <form className="flex flex-wrap" onSubmit={handleEditProfile}>
+        <CountenerInput>
           <Label
             htmlFor="password"
             value="Password"
@@ -208,35 +256,8 @@ export const ProfileAdmin = () => {
           </CountenerInput>
         ) : (
           ""
-        )} */}
-      </div>
-
-      {formEdit ? (
-        <>
-          <ButtonFunc
-            className="m-3 bg-primary text-white"
-            onClick={handleSubmitForm}
-          >
-            Simpan
-          </ButtonFunc>
-
-          <ButtonFunc
-            className="m-3 bg-primary text-white"
-            onClick={handleEnableEdit}
-          >
-            Batal
-          </ButtonFunc>
-        </>
-      ) : (
-        <>
-          <ButtonFunc
-            className="m-3 bg-tan text-black"
-            onClick={handleEnableEdit}
-          >
-            Edit
-          </ButtonFunc>
-        </>
-      )}
+        )}
+      </form> */}
     </>
   );
 };

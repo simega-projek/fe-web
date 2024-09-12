@@ -6,6 +6,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createAdmin } from "../../../services/superAdmin.service";
+import { toTop } from "../../../utils/toTop";
 
 export default function CreateAdmin({ isOpenCreate, onSuccess }) {
   const [fullname, setFullname] = useState("");
@@ -17,17 +18,36 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleRegistration = async (e) => {
     e.preventDefault();
+
+    const trimmedFullname = fullname.trim();
+    const trimmedNik = nik.trim();
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
+
+    // Check for empty fields after trimming
+    if (
+      trimmedFullname === "" ||
+      trimmedNik === "" ||
+      trimmedUsername === "" ||
+      trimmedEmail === ""
+    ) {
+      setMessageError("Isi semua kolom");
+      toTop();
+      return;
+    }
 
     if (password !== confirmPassword) {
       setMessageError(null);
       setMessageError("Password tidak sama");
+      toTop();
       return;
     } else if (password.length < 8) {
       setMessageError(null);
       setMessageError("Password harus lebih dari atau sama dengan 8 karakter");
+      toTop();
       return;
     }
 
@@ -37,18 +57,30 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
-    const res = await createAdmin(formData);
-    if (res.error) {
-      setMessageError(res.message);
-      setMessageSuccess(null);
-    } else {
-      setMessageSuccess(res.message);
-      setMessageError(null);
-      handleReset();
+    try {
+      setIsLoading(true);
+      const res = await createAdmin(formData);
+      if (res.error) {
+        console.log("error", res);
+        setMessageError(res.message);
+        setMessageSuccess(null);
+        toTop();
+      } else {
+        console.log("success", res);
 
-      if (onSuccess) {
-        onSuccess();
+        setMessageSuccess(res.message);
+        setMessageError(null);
+        handleReset();
+        toTop();
+
+        if (onSuccess) {
+          onSuccess();
+        }
       }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -61,22 +93,26 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
     setConfirmPassword("");
   };
 
+  // console.log({ messageError });
+  // console.log(messageSuccess);
+
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
       <TitleSection className="underline">Tambah Akun Admin</TitleSection>
       <hr className="my-5" />
 
       {/* alert */}
-      {(messageError && (
+      {messageError && (
         <FailAllert setMessageError={setMessageError}>
           {messageError}
         </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      )}
+
+      {messageSuccess && (
+        <SuccessAlert setMessageSuccess={setMessageSuccess}>
+          {messageSuccess}
+        </SuccessAlert>
+      )}
 
       <form onSubmit={handleRegistration}>
         {/* create form */}
@@ -196,8 +232,8 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
           </CountenerInput>
         </div>
 
-        <ButtonFunc className="m-3 bg-primary text-white">
-          Registrasi
+        <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Register"}
         </ButtonFunc>
         <ButtonFunc className="bg-tan" onClick={handleReset}>
           Reset

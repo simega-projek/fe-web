@@ -64,8 +64,8 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
     formData.append("description", description);
     formData.append("image", image);
     formData.append("file", file);
-    setLoading(true);
     try {
+      setLoading(true);
       let res = await createArticle(formData);
       console.log(res);
       if (res.error) {
@@ -133,6 +133,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
                 sizing="md"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                disabled={loading}
               />
             </div>
           </div>
@@ -149,6 +150,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
                 onChange={handleChangeImage}
                 accept="image/*"
                 ref={imageInput}
+                disabled={loading}
               />
             </div>
           </div>
@@ -165,6 +167,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
                 onChange={handleChangeFile}
                 accept="application/pdf"
                 ref={pdfInput}
+                disabled={loading}
               />
             </div>
           </div>
@@ -178,6 +181,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
             ref={editorInput}
             value={debounceDescription}
             onChange={(newDescription) => setDescription(newDescription)}
+            disabled={loading}
           />
         </div>
 
@@ -197,7 +201,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
           />
         </div> */}
 
-        <ButtonFunc className="m-3 bg-primary text-white" disable={loading}>
+        <ButtonFunc className="m-3 bg-primary text-white" disabled={loading}>
           Simpan
         </ButtonFunc>
 

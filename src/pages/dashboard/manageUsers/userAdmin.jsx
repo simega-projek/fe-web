@@ -24,6 +24,8 @@ import {
   resetPassword,
 } from "../../../services/superAdmin.service";
 import CreateAdmin from "./CreateAdmin";
+import { toTop } from "../../../utils/toTop";
+import { setIsLoading } from "../../../redux/slices/authSlice";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -64,26 +66,37 @@ export default function UserAdmin() {
       setMessageError(res.message);
       setMessageSuccess(null);
       setIsOpenModalDelete(false);
+      toTop();
     } else {
       setMessageError(null);
       setMessageSuccess(res.message);
     }
     setIsOpenModalDelete(false);
     handleSuccess();
+    toTop();
   };
 
   const handleResetPassword = async () => {
-    const res = await resetPassword(selectedId);
-    if (res.error) {
-      setMessageError(res.message);
-      setMessageSuccess(null);
-      setIsOpenModalReset(false);
-    } else {
-      setMessageError(null);
-      setMessageSuccess(res.message);
+    setIsLoading(true);
+    try {
+      const res = await resetPassword(selectedId);
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+        setIsOpenModalReset(false);
+        setIsOpenModalReset(false);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+        setIsOpenModalReset(false);
+      }
+      handleSuccess();
+      toTop();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
-    setIsOpenModalReset(false);
-    handleSuccess();
   };
 
   const handleSuccess = () => {
@@ -123,6 +136,7 @@ export default function UserAdmin() {
           </div>
         </div>
 
+        {/* alert */}
         <div className="mt-5">
           {(messageError && (
             <FailAllert setMessageError={setMessageError}>
