@@ -1,8 +1,8 @@
 import { fetchDataApi } from "./service";
 
-export const getAllAdmin = async () => {
+export const getAllAdmin = async (content) => {
   try {
-    return await fetchDataApi("GET", "auth/users");
+    return await fetchDataApi("GET", "auth/users?content=" + content);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }

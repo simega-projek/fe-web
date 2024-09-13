@@ -55,7 +55,7 @@ export default function UserAdmin() {
   const fetchAdmin = async () => {
     setFetchLoading(true);
     try {
-      const res = await getAllAdmin();
+      const res = await getAllAdmin(50);
       setAdminData(res?.data);
     } catch (err) {
       console.log(err);
@@ -90,13 +90,15 @@ export default function UserAdmin() {
         setMessageSuccess(null);
         setIsOpenModalReset(false);
         setIsOpenModalReset(false);
+        toView("top");
       } else {
         setMessageError(null);
         setMessageSuccess(res.message);
         setIsOpenModalReset(false);
+        toView("top");
+
+        handleSuccess();
       }
-      handleSuccess();
-      toView("top");
     } catch (err) {
       console.log(err);
     } finally {
