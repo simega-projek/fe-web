@@ -6,7 +6,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createAdmin } from "../../../services/superAdmin.service";
-import { toTop } from "../../../utils/toTop";
+import { toView } from "../../../utils/toView";
 
 export default function CreateAdmin({ isOpenCreate, onSuccess }) {
   const [fullname, setFullname] = useState("");
@@ -35,19 +35,19 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
       trimmedEmail === ""
     ) {
       setMessageError("Isi semua kolom");
-      toTop();
+      toView("top");
       return;
     }
 
     if (password !== confirmPassword) {
       setMessageError(null);
       setMessageError("Password tidak sama");
-      toTop();
+      toView("top");
       return;
     } else if (password.length < 8) {
       setMessageError(null);
       setMessageError("Password harus lebih dari atau sama dengan 8 karakter");
-      toTop();
+      toView("top");
       return;
     }
 
@@ -64,14 +64,14 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
         console.log("error", res);
         setMessageError(res.message);
         setMessageSuccess(null);
-        toTop();
+        toView("top");
       } else {
         console.log("success", res);
 
         setMessageSuccess(res.message);
         setMessageError(null);
         handleReset();
-        toTop();
+        toView("top");
 
         if (onSuccess) {
           onSuccess();

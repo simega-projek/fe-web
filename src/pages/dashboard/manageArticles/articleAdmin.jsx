@@ -73,11 +73,9 @@ export default function ArticleAdmin() {
     }
   };
 
-  console.log(fetchLoading);
-
   const handleDeleteArticle = async () => {
     const res = await deleteArticle(selectedId);
-    console.log("delete = ", res);
+    // console.log("delete = ", res);
 
     if (res.error) {
       setMessageError(res.message);
@@ -99,8 +97,8 @@ export default function ArticleAdmin() {
     fetchArticle();
   }, []);
 
-  console.log(articleData);
-  console.log(fetchArticle);
+  // console.log(articleData);
+  // console.log(fetchArticle);
 
   return (
     <>

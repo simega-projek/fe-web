@@ -28,7 +28,7 @@ export const fetchDataApi = async (method, url, data = null, params = null) => {
       const statusCode = error.response.status; // Ambil status code
       throw { message: errorMessage, statusCode }; // Lempar pesan dan status code
     } else if (error.request) {
-      throw { message: "No response received from server", statusCode: null };
+      throw { message: error.message, statusCode: null };
     } else {
       throw { message: error.message, statusCode: null };
     }

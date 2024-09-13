@@ -5,14 +5,18 @@ import { useSelector } from "react-redux";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { updateProfile } from "../../../services/profile.service";
-import { toTop } from "../../../utils/toTop";
+import {
+  changePassword,
+  updateProfile,
+} from "../../../services/profile.service";
+import { toView } from "../../../utils/toView";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
 export const ProfileAdmin = () => {
   const [formEdit, setFormEdit] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [formPassword, setFormPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
 
@@ -23,14 +27,24 @@ export const ProfileAdmin = () => {
   const [role, setRole] = useState("");
   const [username, setUsername] = useState("");
 
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const dataProfile = useSelector((state) => state.auth.userData);
-  console.log({ dataProfile });
 
-  const handleEnableEdit = (e) => {
-    e.preventDefault();
-    setFormEdit(!formEdit);
+  const closeFormEditProfile = () => {
+    setFormEdit(false);
+    // toView("top")
   };
-
+  const openFormChangePassword = () => {
+    setFormPassword(true);
+    toView("bottom");
+  };
+  const closeFormChangePassword = () => {
+    setFormPassword(false);
+    toView("top");
+  };
   const handleEditProfile = async (e) => {
     e.preventDefault();
 
@@ -41,14 +55,86 @@ export const ProfileAdmin = () => {
       phone_number.trim() === ""
     ) {
       setMessageError("Isi semua kolom");
-      toTop();
+      toView("top");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("fullname", fullname);
+    formData.append("nik", nik);
+    formData.append("email", email);
+    formData.append("phone_number", phone_number);
+
     try {
-      setLoading(true);
-      const res = await updateProfile();
+      setIsLoading(true);
+      const res = await updateProfile(formData);
+
       console.log(res);
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+        toView("top");
+        setIsLoading(false);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+        closeFormEditProfile();
+        toView("top");
+        setIsLoading(false);
+      }
     } catch (err) {
+      console.log("error update profile: ", err);
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEditPassword = async (e) => {
+    e.preventDefault();
+
+    if (
+      password.trim() === "" ||
+      newPassword.trim() === "" ||
+      confirmPassword.trim() === ""
+    ) {
+      setMessageError("Isi semua kolom");
+      toView("top");
+      return;
+    } else if (newPassword !== confirmPassword) {
+      setMessageError("Password baru tidak sama");
+      toView("top");
+      return;
+    } else if (newPassword.length < 8) {
+      setMessageError("Password harus lebih dari atau sama dengan 8 karakter");
+      toView("top");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("old_password", password);
+    formData.append("new_password", newPassword);
+
+    try {
+      setIsLoading(true);
+      const res = await changePassword(formData);
+      console.log("change password res: ", res);
+
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+        toView("top");
+        setIsLoading(false);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+        closeFormChangePassword();
+        toView("top");
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,12 +154,7 @@ export const ProfileAdmin = () => {
     setRole(dataProfile?.info?.role || dataProfile?.data?.role);
   }, [dataProfile]);
 
-  console.log({ dataProfile });
-  console.log({ fullname });
-  console.log({ nik });
-  console.log({ email });
-  console.log({ phone_number });
-  console.log({ username });
+  // console.log({ dataProfile });
 
   return (
     <>
@@ -178,7 +259,7 @@ export const ProfileAdmin = () => {
             disabled={!formEdit}
             type="number"
             sizing="md"
-            value={phone_number ?? "loading..."}
+            value={phone_number ?? +"loading..."}
             onChange={(e) => setPhone_number(e.target.value)}
           />
         </CountenerInput>
@@ -197,13 +278,16 @@ export const ProfileAdmin = () => {
 
         {formEdit && (
           <>
-            <ButtonFunc className="m-3 bg-primary text-white">
-              Simpan
+            <ButtonFunc
+              className="m-3 bg-primary text-white"
+              disabled={isLoading}
+            >
+              {isLoading ? "loading..." : "Simpan"}
             </ButtonFunc>
 
             <ButtonFunc
               className="m-3 bg-primary text-white"
-              onClick={() => setFormEdit(false)}
+              onClick={closeFormEditProfile}
               type="button"
             >
               Batal
@@ -213,51 +297,95 @@ export const ProfileAdmin = () => {
       </form>
 
       {!formEdit && (
-        <ButtonFunc
-          className="m-3 bg-tan text-black"
-          onClick={() => setFormEdit(true)}
-          type="button"
-        >
-          Edit
-        </ButtonFunc>
+        <>
+          <ButtonFunc
+            className="m-3 bg-tan text-black"
+            onClick={() => setFormEdit(true)}
+          >
+            Edit Profile
+          </ButtonFunc>
+
+          {/* change password */}
+          {!formPassword && (
+            <ButtonFunc
+              className="m-3 bg-tan text-white"
+              onClick={openFormChangePassword}
+            >
+              Ganti Password
+            </ButtonFunc>
+          )}
+        </>
       )}
 
-      {/* <form className="flex flex-wrap" onSubmit={handleEditProfile}>
-        <CountenerInput>
-          <Label
-            htmlFor="password"
-            value="Password"
-            className="mb-2 block text-base"
-          />
-
-          <TextInput
-            id="password"
-            disabled={!formEdit}
-            type={`${formEdit ? "text" : "password"}`}
-            sizing="md"
-            value={`sadasdjh`}
-          />
-        </CountenerInput>
-
-        {formEdit ? (
+      {/* change password */}
+      {formPassword && (
+        <form className="flex flex-wrap" onSubmit={handleEditPassword}>
           <CountenerInput>
             <Label
-              htmlFor="confirmPassword"
-              value="Confirm Password"
+              htmlFor="password"
+              value="Password Lama"
               className="mb-2 block text-base"
             />
 
             <TextInput
-              id="confirmPassword"
-              disabled={!formEdit}
+              id="password"
               type="text"
               sizing="md"
+              onChange={(e) => setPassword(e.target.value)}
+              name="old_password"
+              autoComplete="off"
             />
           </CountenerInput>
-        ) : (
-          ""
-        )}
-      </form> */}
+
+          <CountenerInput>
+            <Label
+              htmlFor="newPassword"
+              value="Password Baru"
+              className="mb-2 block text-base"
+            />
+
+            <TextInput
+              id="newPassword"
+              type="text"
+              sizing="md"
+              name="new_password"
+              onChange={(e) => setNewPassword(e.target.value)}
+              autoComplete="off"
+            />
+          </CountenerInput>
+
+          <CountenerInput>
+            <Label
+              htmlFor="newPasswordConfirm"
+              value="Konfirmasi Password Baru"
+              className="mb-2 block text-base"
+            />
+
+            <TextInput
+              id="newPasswordConfirm"
+              type="text"
+              sizing="md"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete="off"
+            />
+          </CountenerInput>
+
+          <ButtonFunc
+            className="m-3 bg-primary text-white"
+            disabled={isLoading}
+          >
+            {isLoading ? "loading..." : "Simpan"}
+          </ButtonFunc>
+
+          <ButtonFunc
+            className="m-3 bg-primary text-white"
+            onClick={closeFormChangePassword}
+            type="button"
+          >
+            Batal
+          </ButtonFunc>
+        </form>
+      )}
     </>
   );
 };

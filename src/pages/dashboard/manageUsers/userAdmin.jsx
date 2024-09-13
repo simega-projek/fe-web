@@ -24,8 +24,9 @@ import {
   resetPassword,
 } from "../../../services/superAdmin.service";
 import CreateAdmin from "./CreateAdmin";
-import { toTop } from "../../../utils/toTop";
+import { toView } from "../../../utils/toView";
 import { setIsLoading } from "../../../redux/slices/authSlice";
+import Loading from "../../../components/Elements/Loading/Loading";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -36,6 +37,7 @@ export default function UserAdmin() {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
+  const [fetchLoading, setFetchLoading] = useState(false);
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -51,11 +53,14 @@ export default function UserAdmin() {
   };
 
   const fetchAdmin = async () => {
+    setFetchLoading(true);
     try {
       const res = await getAllAdmin();
       setAdminData(res?.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setFetchLoading(false);
     }
   };
 
@@ -66,14 +71,14 @@ export default function UserAdmin() {
       setMessageError(res.message);
       setMessageSuccess(null);
       setIsOpenModalDelete(false);
-      toTop();
+      toView("top");
     } else {
       setMessageError(null);
       setMessageSuccess(res.message);
     }
     setIsOpenModalDelete(false);
     handleSuccess();
-    toTop();
+    toView("top");
   };
 
   const handleResetPassword = async () => {
@@ -91,7 +96,7 @@ export default function UserAdmin() {
         setIsOpenModalReset(false);
       }
       handleSuccess();
-      toTop();
+      toView("top");
     } catch (err) {
       console.log(err);
     } finally {
@@ -194,6 +199,12 @@ export default function UserAdmin() {
           </Table>
         </div>
       </div>
+
+      {fetchLoading ? (
+        <div className="mt-10">
+          <Loading />
+        </div>
+      ) : null}
 
       {isOpenModalDelete && (
         <PopupConfirm
