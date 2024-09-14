@@ -1,7 +1,7 @@
 import { fetchDataApi } from "./service";
-export const getAllEvent = async () => {
+export const getAllEvent = async (content) => {
   try {
-    return await fetchDataApi("GET", "events");
+    return await fetchDataApi("GET", `events?content=${content}`);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
     throw err;

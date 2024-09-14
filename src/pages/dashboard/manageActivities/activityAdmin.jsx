@@ -48,11 +48,15 @@ export default function ActivityAdmin() {
 
   const fetchEvent = async () => {
     try {
-      const events = await getAllEvent();
+      const events = await getAllEvent(50);
       setEventData(events.data);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleSuccess = () => {
+    fetchEvent();
   };
 
   useEffect(() => {
@@ -78,7 +82,11 @@ export default function ActivityAdmin() {
 
   return (
     <>
-      <CreateActivity isOpenCreate={isOpenCreate} />
+      <CreateActivity
+        isOpenCreate={isOpenCreate}
+        onClose={handleOpenCreateForm}
+        onSuccess={handleSuccess}
+      />
 
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
@@ -115,10 +123,12 @@ export default function ActivityAdmin() {
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Kegiatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Link Pendaftaran</TableHeadCell>
+              <TableHeadCell className="w-1/5">Gambar</TableHeadCell>
               <TableHeadCell className="w-1/5">Tanggal Kegiatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Status</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
+
             <TableBody className="divide-y">
               {eventData?.length > 0 &&
                 eventData?.map((event, index) => (
@@ -129,10 +139,16 @@ export default function ActivityAdmin() {
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
                       {event.title}
                     </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <a href={event.registration_link}>
+                    <TableCell
+                      className="whitespace-normal break-words"
+                      style={{ tableLayout: "fixed" }}
+                    >
+                      <a href={event.registration_link} target="_blank">
                         {event.registration_link ?? "-"}
                       </a>
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
+                      <img src={event.image} alt={event.title} />
                     </TableCell>
                     <TableCell className="whitespace-normal">
                       {formatDate(event.start_date) ?? "-"}
