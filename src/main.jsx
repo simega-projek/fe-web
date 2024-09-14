@@ -51,7 +51,7 @@ const route = createBrowserRouter([
         element: <KegiatanPage />,
       },
       {
-        path: "/kegiatan/:id",
+        path: "/kegiatan/:id/:slug",
         element: <KegiatanDetail />,
       },
       {

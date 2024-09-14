@@ -26,7 +26,7 @@ export const createEvent = async (formData) => {
 
 export const updateEvent = async (id, formData) => {
   try {
-    return await fetchDataApi("POST", `events/${id}`, formData);
+    return await fetchDataApi("PUT", `events/${id}`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }

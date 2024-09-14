@@ -25,11 +25,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "use-debounce";
 import CreateActivity from "./CreateActivity";
 import { useSearchParams } from "react-router-dom";
-import { getAllEvent } from "../../../services/event.service";
+import { deleteEvent, getAllEvent } from "../../../services/event.service";
 import { formatDate } from "../../../utils/formatDate";
+import Loading from "../../../components/Elements/Loading/Loading";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { toView } from "../../../utils/toView";
+import UpdateActivity from "./UpdateActivity";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [isOpenUpdate, setIsOpenUpdate] = useState(false);
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+
+  const [selectedId, setSelectedId] = useState(null);
   const [eventData, setEventData] = useState([]);
   const [searchParams] = useSearchParams();
   // const querySearch = searchParams.get("search")
@@ -40,18 +54,58 @@ export default function ActivityAdmin() {
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
+    setIsOpenUpdate(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
+  };
+
+  const handleOpenUpdateForm = (id) => {
+    // alert("button update");
+    setSelectedId(id);
+    setIsOpenUpdate(true);
+    setIsOpenCreate(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
+  };
+
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  const handleDeleteEvent = async () => {
+    try {
+      const res = await deleteEvent(selectedId);
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+        setIsOpenModalDelete(false);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+      }
+      toView("top");
+      setIsOpenModalDelete(false);
+      handleSuccess();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const fetchEvent = async () => {
+    setFetchLoading(true);
     try {
       const events = await getAllEvent(50);
       setEventData(events.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setFetchLoading(false);
     }
   };
 
@@ -63,7 +117,7 @@ export default function ActivityAdmin() {
     fetchEvent();
   }, []);
 
-  console.log(eventData);
+  // console.log(eventData);
 
   // useEffect(() => {
   //   if (debouncedSearch) {
@@ -88,6 +142,12 @@ export default function ActivityAdmin() {
         onSuccess={handleSuccess}
       />
 
+      <UpdateActivity
+        isOpenUpdate={isOpenUpdate}
+        onSuccess={handleSuccess}
+        id={selectedId}
+        onClose={() => setIsOpenUpdate(false)}
+      />
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
@@ -116,6 +176,21 @@ export default function ActivityAdmin() {
           </div>
         </div>
 
+        {/* alert */}
+
+        <div className="mt-5">
+          {(messageError && (
+            <FailAllert setMessageError={setMessageError}>
+              {messageError}
+            </FailAllert>
+          )) ||
+            (messageSuccess && (
+              <SuccessAlert setMessageSuccess={setMessageSuccess}>
+                {messageSuccess}
+              </SuccessAlert>
+            ))}
+        </div>
+
         {/* table */}
         <div className="mt-5 overflow-x-auto">
           <Table hoverable>
@@ -137,32 +212,38 @@ export default function ActivityAdmin() {
                       {index + 1}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {event.title}
+                      {event?.title}
                     </TableCell>
                     <TableCell
                       className="whitespace-normal break-words"
                       style={{ tableLayout: "fixed" }}
                     >
-                      <a href={event.registration_link} target="_blank">
-                        {event.registration_link ?? "-"}
+                      <a href={event?.registration_link} target="_blank">
+                        {event?.registration_link ?? "-"}
                       </a>
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      <img src={event.image} alt={event.title} />
+                      <img src={event?.image} alt={event?.title} />
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {formatDate(event.start_date) ?? "-"}
+                      {formatDate(event?.start_date) ?? "-"}
                     </TableCell>
                     <TableCell className="whitespace-normal">
-                      {event.status ?? "-"}
+                      {event?.status ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${event.id}`}
+                        to={`/kegiatan/${event?.ID}/${event?.title}`}
                       />
-                      <ButtonControls icon={FaEdit} />
-                      <ButtonControls icon={MdDeleteForever} />
+                      <ButtonControls
+                        icon={FaEdit}
+                        onClick={() => handleOpenUpdateForm(event?.ID)}
+                      />
+                      <ButtonControls
+                        icon={MdDeleteForever}
+                        onClick={() => handleOpenDeleteModal(event?.ID)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -170,6 +251,23 @@ export default function ActivityAdmin() {
           </Table>
         </div>
       </div>
+
+      {/* loading fetching */}
+      {fetchLoading ? (
+        <div className="mt-10">
+          <Loading />
+        </div>
+      ) : null}
+
+      {/* delete modal */}
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus kegiatan"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDeleteEvent}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
     </>
   );
 }

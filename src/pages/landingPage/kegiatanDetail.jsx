@@ -6,6 +6,8 @@ import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
 import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
 import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
+import { getAllEvent, getOneEvent } from "../../services/event.service";
+import { formatDate } from "../../utils/formatDate";
 
 export default function KegiatanDetail() {
   const { id } = useParams();
@@ -16,16 +18,23 @@ export default function KegiatanDetail() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const kegiatanData = await getOneArticle(id);
-      setKegiatan(kegiatanData);
-      const otherKegiatanData = await getAllArticles();
-      setOtherKegiatan(otherKegiatanData);
+      const kegiatanData = await getOneEvent(id);
+      // console.log(kegiatanData.data);
+      setKegiatan(kegiatanData.data);
+      const otherKegiatanData = await getAllEvent();
+      // console.log(otherKegiatanData);
+      setOtherKegiatan(otherKegiatanData.data);
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
   };
+
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
   useEffect(() => {
     fetchData();
   }, [id]);
@@ -40,7 +49,7 @@ export default function KegiatanDetail() {
             Object.keys(kegiatan).length > 0 && (
               <>
                 <Detail
-                  date="20,0202"
+                  date={formatDate(kegiatan?.CreatedAt)}
                   title={kegiatan?.title}
                   img={kegiatan?.image}
                   desc={kegiatan?.description}
@@ -55,28 +64,28 @@ export default function KegiatanDetail() {
             Kegiatan lainnya
           </h3>
           <div className="flex w-full flex-wrap gap-3">
-            {otherKegiatan.length > 0 &&
-              otherKegiatan
-                .filter((item) => item.id !== +id)
+            {otherKegiatan?.length > 0 &&
+              shuffleArray(otherKegiatan)
+                ?.filter((item) => item?.ID !== +id)
                 .slice(0, 3)
                 .map((item) => (
                   <>
                     <CardKegiatan
-                      to={`/kegiatan/${item.id}`}
-                      key={item.id}
-                      title={item.title}
+                      to={`/kegiatan/${item?.ID}/${item?.title}`}
+                      key={item?.ID}
+                      title={item?.title}
                       className="lg:hidden"
                     >
-                      {item.description}
+                      {item?.description}
                     </CardKegiatan>
 
                     <div className="hidden lg:block">
                       <CardArtikel
-                        to={`/kegiatan/${item.id}`}
-                        key={item.id}
-                        title={item.title}
+                        to={`/kegiatan/${item?.ID}/${item?.title}`}
+                        key={item?.ID}
+                        title={item?.title}
                       >
-                        {item.description}
+                        {item?.description}
                       </CardArtikel>
                     </div>
                   </>

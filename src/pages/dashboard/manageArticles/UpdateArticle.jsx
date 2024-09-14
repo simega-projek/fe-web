@@ -184,7 +184,7 @@ export default function UpdateArticle({
               accept="image/*"
               onChange={handleChangeImage}
               ref={imageInput}
-              // helperText={`File asli: ${originalImage}`}
+              helperText={`File asli: ${originalImage}`}
             />
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import {
   Button,
@@ -12,16 +12,25 @@ import {
 import JoditEditor from "jodit-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
-import { createEvent } from "../../../services/event.service";
+import {
+  createEvent,
+  getOneEvent,
+  updateEvent,
+} from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
-export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
+export default function UpdateActivity({
+  isOpenUpdate,
+  onClose,
+  id,
+  onSuccess,
+}) {
   let controllerApi;
 
-  const editorInput = useRef(null);
-  const imageInput = useRef(null);
+  const editorInputRef = useRef(null);
+  const imageInputRef = useRef(null);
   const startDateRef = useRef(null);
   const endDateRef = useRef(null);
   const btnCancel = useRef(null);
@@ -37,14 +46,14 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState({});
+  const [originalImage, setOriginalImage] = useState(null);
+  const [originalStartDate, setOriginalStartDate] = useState(null);
+  const [originalEndDate, setOriginalEndDate] = useState(null);
 
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
-  };
-
-  const handleChangeStartDate = (date) => {
-    setStartDate(date);
   };
 
   const handleInputJodit = useCallback((newDescription) => {
@@ -52,14 +61,6 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   }, []);
 
   const handleResetForm = () => {
-    // if (btnCancel.current.value === "Batal") {
-    //   if (controllerApi) {
-    //     controllerApi.abort();
-    //     setMessageError("Simpan kegiatan dibatalkan");
-    //     setMessageSuccess(null);
-    //     return;
-    //   }
-    // } else {
     setTitle("");
     setDescription("");
     setRegisLink("");
@@ -67,93 +68,125 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     setImage(null);
     setStartDate(null);
     setEndDate(null);
-    if (editorInput.current) editorInput.current.value = null;
-    if (imageInput.current) imageInput.current.value = null;
+    if (editorInputRef.current) editorInputRef.current.value = null;
+    if (imageInputRef.current) imageInputRef.current.value = null;
+    if (endDateRef.current) endDateRef.current.value = null;
+    if (startDateRef.current) startDateRef.current.value = null;
   };
 
-  const handleCreateActivity = async (e) => {
-    e.preventDefault();
+  const handleUpdateActivity = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    controllerApi = new AbortController();
-    if (title.trim() === "" || !title) {
-      setMessageError("Judul kegiatan diisi");
-      toView("top");
-      return;
-    } else if (regisLink.trim() === "" || !title) {
-      setMessageError("Link pendaftaran diisi");
-      toView("top");
-      return;
-    } else if (!image) {
-      setMessageError("Gambar kegiatan diisi");
-      toView("top");
-      return;
-    } else if (description.trim() === "" || !description) {
-      setMessageError("Deskripsi kegiatan diisi");
-      toView("top");
-      return;
-    }
-
-    const currentDate = new Date().toISOString();
-    // const formattedStartDate = startDate
-    //   ? new Date(startDate).toISOString()
-    //   : currentDate;
-    // const formattedEndDate = endDate
-    //   ? new Date(endDate).toISOString()
-    //   : currentDate;
-
-    const formattedStartDate = startDate
-      ? new Date(startDate).toISOString()
-      : currentDate;
-    const formattedEndDate = endDate
-      ? new Date(endDate).toISOString()
-      : currentDate;
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("image", image);
-    formData.append("registration_link", regisLink);
-    formData.append("start_date", formattedStartDate);
-    formData.append("end_date", formattedEndDate);
-    formData.append("status", status);
-    console.log("form data: ", formData);
-    try {
-      setIsLoading(true);
-      const res = await createEvent(formData, { signal: controllerApi.signal });
-      console.log("response create event: ", res);
-      if (res.error) {
-        setMessageError(res.message);
-        setMessageSuccess(null);
+      controllerApi = new AbortController();
+      if (title.trim() === "" || !title) {
+        setMessageError("Judul kegiatan diisi");
         toView("top");
-      } else {
-        setMessageError(null);
-        setMessageSuccess(res.message);
+        return;
+      } else if (regisLink.trim() === "" || !title) {
+        setMessageError("Link pendaftaran diisi");
         toView("top");
-        handleResetForm();
+        return;
+      } else if (description.trim() === "" || !description) {
+        setMessageError("Deskripsi kegiatan diisi");
+        toView("top");
+        return;
       }
-      if (onSuccess) {
-        onSuccess();
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  // console.log("start date state: ", startDate.target.defaultValue);
-  console.log(
-    "start date state: ",
-    startDate ? new Date().toISOString() : null,
+      // const currentDate = new Date().toISOString();
+
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("image", image || originalImage);
+      formData.append("registration_link", regisLink);
+      formData.append("start_date", startDate || originalStartDate);
+      formData.append("end_date", endDate || originalEndDate);
+      formData.append("status", status);
+
+      console.log("data update: ", formData);
+
+      try {
+        setIsLoading(true);
+        const res = await updateEvent(id, formData);
+        console.log("response update event: ", res);
+        if (res.error) {
+          setMessageError(res.message);
+          setMessageSuccess(null);
+          toView("top");
+        } else {
+          setMessageError(null);
+          setMessageSuccess(res.message);
+          toView("top");
+
+          if (onSuccess) {
+            onSuccess();
+            setTimeout(() => {
+              onClose();
+              setMessageSuccess(null);
+            }, 2000);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      title,
+      description,
+      image,
+      regisLink,
+      startDate,
+      endDate,
+      status,
+      originalEndDate,
+      originalImage,
+      originalStartDate,
+      id,
+      onSuccess,
+      handleResetForm,
+    ],
   );
-  console.log("end date state: ", endDate);
-  console.log("start date ref: ", startDateRef.current);
-  console.log("end date ref: ", endDateRef.current);
+
+  const fetchOneEvent = useCallback(
+    async (id) => {
+      handleResetForm();
+      setIsLoading(true);
+      try {
+        const res = await getOneEvent(id);
+        const data = res.data;
+        setDataUpdate(data);
+        console.log("res fecth one event :", res);
+
+        setTitle(data?.title);
+        setDescription(data?.description);
+        setRegisLink(data?.registration_link);
+        setStatus(data?.status);
+        setOriginalImage(data?.image);
+        setOriginalStartDate(data?.start_date);
+        setOriginalEndDate(data?.end_date);
+        // console.log({ startDate, endDate });
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [id],
+  );
+
+  useEffect(() => {
+    if (id) {
+      fetchOneEvent(id);
+    }
+  }, [id, fetchOneEvent]);
 
   return (
-    <div className={isOpenCreate ? "block" : "hidden"}>
+    <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
-        <TitleSection className="underline">Tambah Kegiatan</TitleSection>
+        <TitleSection className="underline">Ubah Data Kegiatan</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
           X
@@ -173,7 +206,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
         ))}
 
       {/* create form */}
-      <form onSubmit={handleCreateActivity} className="flex flex-wrap">
+      <form onSubmit={handleUpdateActivity} className="flex flex-wrap">
         <CountenerInput>
           <Label
             htmlFor="title"
@@ -221,13 +254,12 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
 
           <Datepicker
             ref={startDateRef}
-            onSelect={(e) => setStartDate(e)}
             id="startDate"
             name="start_date"
             required
             type="text"
             sizing="md"
-            onChange={(date) => setStartDate(date)}
+            onChange={(date) => setStartDate(new Date(date).toISOString())}
             disabled={isLoading}
           />
         </CountenerInput>
@@ -246,8 +278,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             type="text"
             sizing="md"
             name="end_date"
-            // onChange={(date) => setEndDate(date.toISOString())}
-            onChange={(date) => setEndDate(date)}
+            onChange={(date) => setStartDate(new Date(date).toISOString())}
             disabled={isLoading}
           />
         </CountenerInput>
@@ -261,10 +292,10 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
 
           <FileInput
             id="picture"
-            helperText="File harus .jpg .jpeg .png"
+            helperText={originalImage}
             onChange={handleChangeImage}
             accept="image/*"
-            ref={imageInput}
+            ref={imageInputRef}
             disabled={isLoading}
           />
         </CountenerInput>
@@ -295,7 +326,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             Deskripsi
           </Label>
           <JoditEditor
-            ref={editorInput}
+            ref={editorInputRef}
             value={description}
             onChange={handleInputJodit}
           />
@@ -304,12 +335,8 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc
-          className="m-3 bg-tan"
-          useRef={btnCancel}
-          onClick={handleResetForm}
-        >
-          {isLoading ? "Batal" : "Reset"}
+        <ButtonFunc className="m-3 bg-tan" useRef={btnCancel} onClick={onClose}>
+          Batal
         </ButtonFunc>
       </form>
     </div>
