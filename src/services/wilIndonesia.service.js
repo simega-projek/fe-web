@@ -28,10 +28,17 @@ export const getKabupaten = async (id) => {
     const response = await fetch(
       `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`,
     );
+
+    if (!response.ok) {
+      console.log(`Error fetching kabupaten: ${response.status}`);
+      return null; // Handle non-200 responses (e.g., 404 Not Found)
+    }
+
     const data = await response.json();
     return data;
   } catch (err) {
-    console.log(err);
+    console.log("Error in getKabupaten:", err);
+    return null;
   }
 };
 
@@ -40,10 +47,17 @@ export const getKecamatan = async (id) => {
     const response = await fetch(
       `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`,
     );
+
+    if (!response.ok) {
+      console.log(`Error fetching kecamatan: ${response.status}`);
+      return null; // Handle non-200 responses
+    }
+
     const data = await response.json();
     return data;
   } catch (err) {
-    console.log(err);
+    console.log("Error in getKecamatan:", err);
+    return null;
   }
 };
 
@@ -52,9 +66,28 @@ export const getKelurahan = async (id) => {
     const response = await fetch(
       `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`,
     );
+
+    if (!response.ok) {
+      console.log(`Error fetching kelurahan: ${response.status}`);
+      return null; // Handle non-200 responses
+    }
+
     const data = await response.json();
     return data;
   } catch (err) {
-    console.log(err);
+    console.log("Error in getKelurahan:", err);
+    return null;
   }
 };
+
+// export const getKelurahan = async (id) => {
+//   try {
+//     const response = await fetch(
+//       `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`,
+//     );
+//     const data = await response.json();
+//     return data;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };

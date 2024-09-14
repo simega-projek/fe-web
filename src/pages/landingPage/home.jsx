@@ -16,9 +16,11 @@ export default function HomePage() {
       <HeroSection>
         <div className="absolute left-0 px-6 md:justify-self-start">
           <p className="max-w-xl text-xl font-semibold text-white md:text-start md:text-2xl">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla,
-            harum?, sed.
+            Selamat datang di Ba-Kultur, platform digital yang memperkenalkan
+            warisan megalitikum Sulawesi Tengah. Jelajahi sejarah peradaban
+            kuno, temukan jejak budaya megalit yang tersebar di berbagai
+            wilayah, dan kenali kekayaan peninggalan arkeologi yang masih
+            lestari hingga saat ini.
           </p>
         </div>
       </HeroSection>

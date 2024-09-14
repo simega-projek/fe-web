@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useDebugValue,
+} from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { TextInput, Label, Button } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
@@ -13,10 +19,17 @@ import {
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { toView } from "../../../utils/toView";
-import { createValley } from "../../../services/valley.service";
+import {
+  createValley,
+  getOneValley,
+  updateValley,
+} from "../../../services/valley.service";
+import { getDataByIndex } from "../../../utils/getDataByIndex";
 
-export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
+export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   const regencyRef = useRef(null);
+
+  const [dataUpdate, setDataUpdate] = useState({});
 
   const [lembah, setLembah] = useState("");
   const [province, setProvince] = useState("");
@@ -31,67 +44,132 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateValley = async (e) => {
-    e.preventDefault();
+  const handleReset = () => {
+    setLembah("");
+    setProvince("");
+    setRegencies([]);
+    setDistricts([]);
+    setVillages([]);
+    setSelectedRegency("");
+    setSelectedDistrict("");
+  };
 
-    if (
-      !lembah ||
-      !province ||
-      !regencies.length > 0 ||
-      !districts.length > 0 ||
-      !villages.length > 0
-    ) {
-      setMessageError("Semua kolom harus diisi");
-      setMessageSuccess(null);
-      toView("top");
-      return;
-    }
-    const dataRegency =
-      selectedRegency["name"] +
-      "," +
-      selectedRegency["id"] +
-      "," +
-      selectedRegency["province_id"];
+  const handleCreateValley = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    const dataDistricts =
-      selectedDistrict["name"] +
-      "," +
-      selectedDistrict["id"] +
-      "," +
-      selectedDistrict["regency_id"];
-    // console.log({ dataRegency });
-    // console.log({ dataDistricts });
-    // return;
-
-    const formData = new FormData();
-    formData.append("lembah", lembah);
-    formData.append("provinsi", province);
-    formData.append("kabupaten_kota", dataRegency);
-    formData.append("kecamatan", dataDistricts);
-
-    try {
-      setIsLoading(true);
-      const res = await createValley(formData);
-      console.log(res);
-
-      if (res.error) {
-        setMessageError(res.message);
+      if (
+        !lembah ||
+        !province ||
+        !regencies.length > 0 ||
+        !districts.length > 0 ||
+        !villages.length > 0
+      ) {
+        setMessageError("Semua kolom harus diisi");
         setMessageSuccess(null);
         toView("top");
-      } else {
-        setMessageError(null);
-        setMessageSuccess(res.message);
-        onSuccess();
-        handleReset();
+        return;
       }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
+      const dataRegency =
+        selectedRegency["name"] +
+        "," +
+        selectedRegency["id"] +
+        "," +
+        selectedRegency["province_id"];
 
-    console.log({ selectedDistrict, selectedRegency });
-  };
+      const dataDistricts =
+        selectedDistrict["name"] +
+        "," +
+        selectedDistrict["id"] +
+        "," +
+        selectedDistrict["regency_id"];
+      // console.log({ dataRegency });
+      // console.log({ dataDistricts });
+      // return;
+
+      const formData = new FormData();
+      formData.append("lembah", lembah);
+      formData.append("provinsi", province);
+      formData.append("kabupaten_kota", dataRegency);
+      formData.append("kecamatan", dataDistricts);
+
+      try {
+        setIsLoading(true);
+        const res = await updateValley(id, formData);
+        console.log(res);
+
+        if (res.error) {
+          setMessageError(res.message);
+          setMessageSuccess(null);
+          toView("top");
+        } else {
+          setMessageError(null);
+          setMessageSuccess(res.message);
+
+          if (onSuccess) {
+            onSuccess();
+            toView("top");
+            setTimeout(() => {
+              onClose();
+              setMessageSuccess(null);
+            }, 2000);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+
+      // console.log({ selectedDistrict, selectedRegency });
+    },
+    [
+      lembah,
+      province,
+      selectedDistrict,
+      selectedRegency,
+      onSuccess,
+      id,
+      handleReset,
+    ],
+  );
+
+  const fetchOneValley = useCallback(
+    async (id) => {
+      // handleReset();
+      setIsLoading(true);
+      try {
+        const res = await getOneValley(id);
+        const data = res?.data;
+        setDataUpdate(data);
+        setLembah(data?.lembah);
+        setProvince(data?.provinsi);
+
+        const dataRegencies = await getKabupaten(
+          getDataByIndex(data?.kabupaten_kota, 2),
+        );
+
+        const regency = dataRegencies.find(
+          (r) => r.name === getDataByIndex(data?.kabupaten_kota, 0),
+        );
+        console.log(dataRegencies);
+        console.log(regency);
+        setRegencies(regency);
+        // setRegencies(data?.kabupaten_kota);
+        // setDistricts(data?.kecamatan);
+        setRegencies(
+          Array.isArray(data?.kabupaten_kota) ? data.kabupaten_kota : [],
+        );
+        // setDistricts(data?.kecamatan);
+        setDistricts(Array.isArray(data?.kecamatan) ? data?.kecamatan : []);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [id],
+  );
 
   useEffect(() => {
     if (province) {
@@ -100,7 +178,6 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
           province === "Sulawesi Tengah"
             ? await getSulawesiTengah()
             : await getSulawesiBarat();
-        console.log({ dataProvince });
         setRegencies(dataProvince);
         setDistricts([]);
         setVillages([]);
@@ -139,12 +216,11 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     }
   };
 
-  const handleReset = () => {
-    setLembah("");
-    setProvince("");
-    setRegencies([]);
-    setDistricts([]);
-  };
+  useEffect(() => {
+    if (id) {
+      fetchOneValley(id);
+    }
+  }, [id]);
 
   // console.log({ province });
   // console.log({ regencies });
@@ -153,7 +229,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
 
   return (
     <>
-      <div className={isOpenCreate ? "block" : "hidden"}>
+      <div className={isOpenUpdate ? "block" : "hidden"}>
         <div className="flex justify-between">
           <TitleSection className="underline">Tambah Lembah</TitleSection>
           <hr className="my-5" />
@@ -258,18 +334,17 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               ))}
             </select>
           </CountenerInput>
-        </form>
 
-        <ButtonFunc
-          className={`m-3 bg-primary text-white`}
-          disabled={isLoading}
-          onClick={handleCreateValley}
-        >
-          Simpan
-        </ButtonFunc>
-        <ButtonFunc className={`bg-tan`} onClick={handleReset}>
-          Reset
-        </ButtonFunc>
+          <ButtonFunc
+            className={`m-3 bg-primary text-white`}
+            disabled={isLoading}
+          >
+            Simpan
+          </ButtonFunc>
+          <ButtonFunc className={`m-3 bg-tan`} onClick={handleReset}>
+            Reset
+          </ButtonFunc>
+        </form>
       </div>
     </>
   );

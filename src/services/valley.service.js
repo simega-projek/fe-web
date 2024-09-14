@@ -1,8 +1,8 @@
 import { fetchDataApi } from "./service";
 
-export const getAllValley = async () => {
+export const getAllValley = async (content) => {
   try {
-    return await fetchDataApi("GET", "lembah");
+    return await fetchDataApi("GET", `lembah?content=${content}`);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
     throw err;
@@ -27,7 +27,7 @@ export const createValley = async (formData) => {
 
 export const updateValley = async (id, formData) => {
   try {
-    return await fetchDataApi("POST", `lembah/${id}`, formData);
+    return await fetchDataApi("PUT", `lembah/${id}`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }
