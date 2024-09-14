@@ -27,6 +27,7 @@ import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import UpdateArticle from "./UpdateArticle";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import Loading from "../../../components/Elements/Loading/Loading";
+import { toView } from "../../../utils/toView";
 
 export default function ArticleAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -44,7 +45,7 @@ export default function ArticleAdmin() {
     setisOpenUpdate(false);
     setMessageError(null);
     setMessageSuccess(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    toView("top");
   };
 
   const handleOpenUpdate = (id) => {
@@ -53,7 +54,7 @@ export default function ArticleAdmin() {
     setIsOpenCreate(false);
     setMessageError(null);
     setMessageSuccess(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    toView("top");
   };
 
   const handleOpenDeleteModal = (id) => {
@@ -64,7 +65,7 @@ export default function ArticleAdmin() {
   const fetchArticle = async () => {
     try {
       setFetchLoading(true);
-      const article = await getAllArticles();
+      const article = await getAllArticles(50);
       setArticleData(article.data);
     } catch (err) {
       console.log(err);

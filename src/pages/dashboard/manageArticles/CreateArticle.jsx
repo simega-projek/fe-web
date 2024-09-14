@@ -7,6 +7,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { createArticle } from "../../../services/article.service";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { toView } from "../../../utils/toView";
 
 export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const editorInput = useRef(null);
@@ -22,8 +23,8 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleReset = (e) => {
-    e.preventDefault();
+  const handleReset = () => {
+    // e.preventDefault();
     setTitle("");
     setDescription("");
     setImage(null);
@@ -54,9 +55,15 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
     console.log(title);
     if (title.trim() === "" || !title) {
       setMessageError("Judul artikel diisi");
+      toView("top");
       return;
     } else if (description.trim() === "" || !description) {
       setMessageError("Deskripsi artikel diisi");
+      toView("top");
+      return;
+    } else if (!image && !file) {
+      setMessageError("Gambar atau PDF artikel diisi");
+      toView("top");
       return;
     }
     const formData = new FormData();
@@ -71,25 +78,15 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);
+        toView("top");
       } else {
         setMessageError(null);
         setMessageSuccess(res.message);
+        toView("top");
 
         if (onSuccess) {
           onSuccess();
-          setTitle("");
-          setDescription("");
-          setImage(null);
-          setFile(null);
-          if (editorInput.current) {
-            editorInput.current.value = null;
-          }
-          if (imageInput.current) {
-            imageInput.current.value = null;
-          }
-          if (pdfInput.current) {
-            pdfInput.current.value = null;
-          }
+          handleReset();
         }
       }
     } catch (err) {

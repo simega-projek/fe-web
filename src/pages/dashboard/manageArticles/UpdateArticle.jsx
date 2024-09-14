@@ -33,8 +33,7 @@ export default function UpdateArticle({
   const [originalImage, setOriginalImage] = useState(null);
   const [originalFile, setOriginalFile] = useState(null);
 
-  const handleReset = useCallback((e) => {
-    e.preventDefault();
+  const handleReset = () => {
     setTitle("");
     setDescription("");
     setImage(null);
@@ -42,7 +41,7 @@ export default function UpdateArticle({
     if (editorInput.current) editorInput.current.value = null;
     if (imageInput.current) imageInput.current.value = null;
     if (pdfInput.current) pdfInput.current.value = null;
-  }, []);
+  };
 
   const handleChangeFile = (e) => {
     const selectFile = e.target.files[0];
@@ -111,6 +110,7 @@ export default function UpdateArticle({
 
   const fetchOneArticle = useCallback(
     async (id) => {
+      handleReset();
       setLoading(true);
       try {
         const res = await getOneArticle(id);
@@ -184,7 +184,7 @@ export default function UpdateArticle({
               accept="image/*"
               onChange={handleChangeImage}
               ref={imageInput}
-              helperText={`File asli: ${originalImage}`}
+              // helperText={`File asli: ${originalImage}`}
             />
           </div>
 
