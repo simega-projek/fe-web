@@ -1,8 +1,8 @@
 import { fetchDataApi } from "./service";
 
-export const getAllSite = async () => {
+export const getAllSite = async (content) => {
   try {
-    return await fetchDataApi("GET", "site");
+    return await fetchDataApi("GET", `site?content=${content}`);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
     throw err;
@@ -27,7 +27,7 @@ export const createSite = async (formData) => {
 
 export const updateSite = async (id, formData) => {
   try {
-    return await fetchDataApi("POST", `site/${id}`, formData);
+    return await fetchDataApi("PUT", `site/${id}`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }

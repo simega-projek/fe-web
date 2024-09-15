@@ -102,7 +102,7 @@ export default function LembahAdmin() {
     <>
       <CreateObjek
         isOpenCreate={isOpenCreateForm}
-        onSuccess={fetchValley}
+        onSuccess={handleSuccess}
         onClose={handleOpenCreateForm}
       />
 
