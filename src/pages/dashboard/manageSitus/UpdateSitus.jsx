@@ -30,7 +30,13 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dataUpdate, setDataUpdate] = useState({});
+  useEffect(() => {
+    fetchValley();
+  }, []);
 
+  useEffect(() => {
+    fetchOneSite(id);
+  }, [id, fetchOneSite]);
   const handleReset = () => {
     setSiteName("");
     setSelectedValley(null);
@@ -226,14 +232,6 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     const village = villageData.find((v) => v.name === selectedVillageName);
     setSelectedVillage(village);
   };
-
-  useEffect(() => {
-    fetchValley();
-  }, []);
-
-  useEffect(() => {
-    fetchOneSite(id);
-  }, [id, fetchOneSite]);
 
   // console.log(siteName);
 
