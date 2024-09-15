@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Dropdown, Label, TextInput } from "flowbite-react";
 
@@ -6,11 +6,20 @@ import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
 import { getSulawesiTengah } from "../../../services/wilIndonesia.service";
-import { createCategory } from "../../../services/category.service";
+import {
+  createCategory,
+  getOneCategory,
+  updateCategory,
+} from "../../../services/category.service";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
-export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
+export default function UpdateCategories({
+  isOpenUpdate,
+  onClose,
+  onSuccess,
+  id,
+}) {
   const [category, setCategory] = useState("");
 
   const [messageError, setMessageError] = useState(null);
@@ -21,19 +30,21 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
     setCategory("");
   };
 
-  const handleCreateCategory = async () => {
+  const handleUpdateCategory = async (e) => {
+    e.preventDefault();
+
     if (category.trim() === "" || !category) {
       setMessageError("Kategori harus diisi");
       setMessageSuccess(null);
       return;
     }
-    const data = {
-      category,
-    };
+
+    const formData = new FormData();
+    formData.append("category", category);
 
     try {
       setIsLoading(true);
-      const res = await createCategory(data);
+      const res = await updateCategory(id, formData);
 
       if (res.error) {
         setMessageError(res.message);
@@ -41,8 +52,14 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
       } else {
         setMessageError(null);
         setMessageSuccess(res.message);
-        onSuccess();
-        handleReset();
+        if (onSuccess) {
+          onSuccess();
+          handleReset();
+          setTimeout(() => {
+            onClose();
+            setMessageSuccess(null);
+          }, 2000);
+        }
       }
     } catch (err) {
       console.log(err);
@@ -51,10 +68,28 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
     }
   };
 
+  const fetchOneCategory = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const res = await getOneCategory(id);
+      setCategory(res?.data?.category);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchOneCategory();
+    }
+  }, [id]);
+
   return (
-    <div className={isOpenCreate ? "block" : "hidden"}>
+    <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
-        <TitleSection className="underline">Tambah Kategori</TitleSection>
+        <TitleSection className="underline">Edit Data Kategori</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
           X
@@ -62,6 +97,7 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
       </div>
 
       {/* alert */}
+
       {(messageError && (
         <FailAllert setMessageError={setMessageError}>
           {messageError}
@@ -74,7 +110,7 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
         ))}
 
       {/* create form */}
-      <div className="flex flex-wrap">
+      <form onSubmit={handleUpdateCategory} className="flex flex-wrap">
         <CountenerInput>
           <Label
             htmlFor="category"
@@ -93,30 +129,17 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
             disabled={isLoading}
           />
         </CountenerInput>
-      </div>
-
+      </form>
       <ButtonFunc
         className="m-3 bg-primary text-white"
-        onClick={handleCreateCategory}
+        disabled={isLoading}
+        onClick={handleUpdateCategory}
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc className="bg-tan" type="reset" onClick={handleReset}>
-        Reset
+      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
+        Batal
       </ButtonFunc>
     </div>
   );
 }
-
-const categoryObject = [
-  "Apple",
-  "Banana",
-  "Cherry",
-  "Date",
-  "Grape",
-  "Mango",
-  "Orange",
-  "Pineapple",
-  "Strawberry",
-  "Watermelon",
-];

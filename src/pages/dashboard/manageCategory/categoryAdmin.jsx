@@ -17,38 +17,109 @@ import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
-import { getAllCategory } from "../../../services/category.service";
-import CreateObjek from "./CreateCategory";
+import { useDebounce } from "use-debounce";
+import Loading from "../../../components/Elements/Loading/Loading";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import {
+  deleteCategory,
+  getAllCategory,
+} from "../../../services/category.service";
+import { toView } from "../../../utils/toView";
+import CreateCategory from "./CreateCategory";
+import UpdateCategories from "./UpdateCategory";
 
 export default function CategoryAdmin() {
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const handleOpenCreateForm = () => {
-    setIsOpenCreate(!isOpenCreate);
-  };
+  const [selectedId, setSelectedId] = useState(null);
+
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
+  const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
+
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+  const [fetchLoading, setFetchLoading] = useState(false);
 
   const [categoryData, setCategoryData] = useState([]);
+  const [searchData, setSearchData] = useState("");
+  const [searchDebounce] = useDebounce(searchData, 1000);
+
+  const handleOpenCreateForm = () => {
+    setIsOpenCreateForm(!isOpenCreateForm);
+    setIsOpenUpdateForm(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
+  };
+
+  const handleOpenUpdateForm = (id) => {
+    setSelectedId(id);
+    setIsOpenUpdateForm(true);
+    setIsOpenCreateForm(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
+  };
+
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
+  };
 
   const fetchCategory = async () => {
+    setFetchLoading(true);
     try {
-      const category = await getAllCategory();
+      const category = await getAllCategory(100, searchDebounce);
       setCategoryData(category.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setFetchLoading(false);
     }
+  };
+
+  const handleDeleteCategory = async () => {
+    const res = await deleteCategory(selectedId);
+
+    if (res.err) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      setIsOpenModalDelete(false);
+    } else {
+      setMessageError(null);
+      setMessageSuccess(res.message);
+    }
+    setIsOpenModalDelete(false);
+    handleSuccess();
+  };
+
+  const handleSuccess = () => {
+    fetchCategory();
   };
 
   useEffect(() => {
     fetchCategory();
-  }, []);
+  }, [searchDebounce]);
 
-  console.log(categoryData);
+  // console.log(categoryData);
 
   return (
-    <>
-      <CreateObjek isOpenCreate={isOpenCreate} />
+    <div>
+      <CreateCategory
+        isOpenCreate={isOpenCreateForm}
+        onClose={handleOpenCreateForm}
+        onSuccess={handleSuccess}
+      />
+      <UpdateCategories
+        isOpenUpdate={isOpenUpdateForm}
+        onClose={() => setIsOpenUpdateForm(false)}
+        onSuccess={handleSuccess}
+        id={selectedId}
+      />
 
       {/* table data */}
-      <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
+      <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
         <BiLibrary /> Data Kategori
       </TitleSection>
@@ -58,7 +129,12 @@ export default function CategoryAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Kategori..." />
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Kategori..."
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+            />
           </div>
           <div className="ml-2">
             <Button
@@ -68,6 +144,20 @@ export default function CategoryAdmin() {
               +
             </Button>
           </div>
+        </div>
+
+        {/* alert */}
+        <div className="mt-5">
+          {(messageError && (
+            <FailAllert setMessageError={setMessageError}>
+              {messageError}
+            </FailAllert>
+          )) ||
+            (messageSuccess && (
+              <SuccessAlert setMessageSuccess={setMessageSuccess}>
+                {messageSuccess}
+              </SuccessAlert>
+            ))}
         </div>
 
         {/* table */}
@@ -96,8 +186,14 @@ export default function CategoryAdmin() {
                     </TableCell>
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls icon={FaEdit} />
-                      <ButtonControls icon={MdDeleteForever} />
+                      <ButtonControls
+                        icon={FaEdit}
+                        onClick={() => handleOpenUpdateForm(category.ID)}
+                      />
+                      <ButtonControls
+                        icon={MdDeleteForever}
+                        onClick={() => handleOpenDeleteModal(category.ID)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -105,6 +201,21 @@ export default function CategoryAdmin() {
           </Table>
         </div>
       </div>
-    </>
+
+      {fetchLoading ? (
+        <div className="mt-10">
+          <Loading />
+        </div>
+      ) : null}
+
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus data kategori"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDeleteCategory}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
+    </div>
   );
 }

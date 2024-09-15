@@ -219,7 +219,7 @@ export default function ArticleAdmin() {
 
       {isOpenModalDelete && (
         <PopupConfirm
-          title={"menghapus akun admin"}
+          title={"menghapus data artikel"}
           isOpen={isOpenModalDelete}
           onClick={handleDeleteArticle}
           onClose={() => setIsOpenModalDelete(false)}

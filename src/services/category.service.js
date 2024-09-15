@@ -1,8 +1,11 @@
 import { fetchDataApi } from "./service";
 
-export const getAllCategory = async () => {
+export const getAllCategory = async (content, search) => {
   try {
-    return await fetchDataApi("GET", "category");
+    return await fetchDataApi(
+      "GET",
+      `category?content=${content}&search=${search}`,
+    );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
     throw err;
@@ -27,7 +30,7 @@ export const createCategory = async (formData) => {
 
 export const updateCategory = async (id, formData) => {
   try {
-    return await fetchDataApi("POST", `category/${id}`, formData);
+    return await fetchDataApi("PUT", `category/${id}`, formData);
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
   }
