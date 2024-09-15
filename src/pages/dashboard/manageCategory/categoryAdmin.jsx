@@ -44,13 +44,7 @@ export default function CategoryAdmin() {
   const [categoryData, setCategoryData] = useState([]);
   const [searchData, setSearchData] = useState("");
   const [searchDebounce] = useDebounce(searchData, 1000);
-  const handleSuccess = () => {
-    fetchCategory();
-  };
 
-  useEffect(() => {
-    fetchCategory();
-  }, [searchDebounce]);
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
     setIsOpenUpdateForm(false);
@@ -101,6 +95,13 @@ export default function CategoryAdmin() {
   };
 
   // console.log(categoryData);
+  const handleSuccess = () => {
+    fetchCategory();
+  };
+
+  useEffect(() => {
+    fetchCategory();
+  }, [searchDebounce]);
 
   return (
     <div>

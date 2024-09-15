@@ -30,13 +30,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [dataUpdate, setDataUpdate] = useState({});
-  useEffect(() => {
-    fetchValley();
-  }, []);
 
-  useEffect(() => {
-    fetchOneSite(id);
-  }, [id, fetchOneSite]);
   const handleReset = () => {
     setSiteName("");
     setSelectedValley(null);
@@ -238,6 +232,14 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ villageData });
   // console.log({ selectedValley });
   // console.log({ selectedVillage });
+
+  useEffect(() => {
+    fetchValley();
+  }, []);
+
+  useEffect(() => {
+    fetchOneSite(id);
+  }, [id, fetchOneSite]);
 
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
