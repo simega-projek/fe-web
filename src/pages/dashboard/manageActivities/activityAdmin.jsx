@@ -45,7 +45,6 @@ export default function ActivityAdmin() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [eventData, setEventData] = useState([]);
-  const [searchParams] = useSearchParams();
   // const querySearch = searchParams.get("search")
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,7 +99,7 @@ export default function ActivityAdmin() {
   const fetchEvent = async () => {
     setFetchLoading(true);
     try {
-      const events = await getAllEvent(50);
+      const events = await getAllEvent(100, debouncedSearch);
       setEventData(events.data);
     } catch (err) {
       console.log(err);
@@ -115,7 +114,7 @@ export default function ActivityAdmin() {
 
   useEffect(() => {
     fetchEvent();
-  }, []);
+  }, [debouncedSearch]);
 
   // console.log(eventData);
 
