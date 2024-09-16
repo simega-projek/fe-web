@@ -72,7 +72,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     try {
       setIsLoading(true);
       const res = await createValley(formData);
-      console.log(res);
+      // console.log(res);
 
       if (res.error) {
         setMessageError(res.message);
@@ -90,24 +90,8 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
       setIsLoading(false);
     }
 
-    console.log({ selectedDistrict, selectedRegency });
+    // console.log({ selectedDistrict, selectedRegency });
   };
-
-  useEffect(() => {
-    if (province) {
-      const fetchRegencies = async () => {
-        const dataProvince =
-          province === "Sulawesi Tengah"
-            ? await getSulawesiTengah()
-            : await getSulawesiBarat();
-        console.log({ dataProvince });
-        setRegencies(dataProvince);
-        setDistricts([]);
-        setVillages([]);
-      };
-      fetchRegencies();
-    }
-  }, [province]);
 
   const handleProvinceChange = (e) => {
     setProvince(e.target.value);
@@ -115,13 +99,13 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
 
   const handleRegencySelect = async (e) => {
     const selectRegency = e.target.value;
-    console.log(selectRegency);
+    // console.log(selectRegency);
     const regency = regencies.find((r) => r.name === selectRegency);
 
     setSelectedRegency(regency);
     if (regency) {
       const dataRegencies = await getKecamatan(regency.id);
-      console.log({ dataRegencies });
+      // console.log({ dataRegencies });
 
       setDistricts(dataRegencies);
       setVillages([]);
@@ -145,6 +129,28 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     setRegencies([]);
     setDistricts([]);
   };
+
+  useEffect(() => {
+    if (province) {
+      const fetchRegencies = async () => {
+        const dataProvince =
+          province === "Sulawesi Tengah"
+            ? await getSulawesiTengah()
+            : await getSulawesiBarat();
+        // console.log({ dataProvince });
+        setRegencies(dataProvince);
+        setDistricts([]);
+        setVillages([]);
+      };
+      fetchRegencies();
+    }
+  }, [province]);
+
+  useEffect(() => {
+    if (isOpenCreate === false) {
+      handleReset();
+    }
+  }, []);
 
   // console.log({ province });
   // console.log({ regencies });

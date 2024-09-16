@@ -28,6 +28,7 @@ import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
 import UpdateLembah from "./UpdateLembah";
+import { useDebounce } from "use-debounce";
 
 export default function LembahAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -40,6 +41,9 @@ export default function LembahAdmin() {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -65,8 +69,8 @@ export default function LembahAdmin() {
 
   const fetchValley = async () => {
     try {
-      const res = await getAllValley(50);
-      console.log(res);
+      const res = await getAllValley(200, debouncedSearch);
+      // console.log(res);
       setValleyData(res.data);
     } catch (err) {
     } finally {
@@ -96,7 +100,7 @@ export default function LembahAdmin() {
 
   useEffect(() => {
     fetchValley();
-  }, []);
+  }, [debouncedSearch]);
 
   return (
     <>
@@ -110,7 +114,7 @@ export default function LembahAdmin() {
         isOpenUpdate={isOpenUpdateForm}
         onSuccess={handleSuccess}
         id={selectedId}
-        onClose={handleOpenUpdateForm}
+        onClose={() => setIsOpenUpdateForm(false)}
       />
 
       <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
@@ -121,7 +125,12 @@ export default function LembahAdmin() {
       <div className="mt-5 w-full px-3">
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Lembah..." />
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Lembah..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <div className="ml-2">
             <Button

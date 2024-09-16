@@ -54,38 +54,20 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     setSelectedDistrict("");
   };
 
-  const handleCreateValley = useCallback(
+  const handleUpdateValley = useCallback(
     async (e) => {
       e.preventDefault();
 
-      if (
-        !lembah ||
-        !province ||
-        !regencies.length > 0 ||
-        !districts.length > 0 ||
-        !villages.length > 0
-      ) {
+      // Cek apakah semua field sudah diisi
+      if (!lembah || !province || !selectedRegency || !selectedDistrict) {
         setMessageError("Semua kolom harus diisi");
         setMessageSuccess(null);
         toView("top");
         return;
       }
-      const dataRegency =
-        selectedRegency["name"] +
-        "," +
-        selectedRegency["id"] +
-        "," +
-        selectedRegency["province_id"];
 
-      const dataDistricts =
-        selectedDistrict["name"] +
-        "," +
-        selectedDistrict["id"] +
-        "," +
-        selectedDistrict["regency_id"];
-      // console.log({ dataRegency });
-      // console.log({ dataDistricts });
-      // return;
+      const dataRegency = `${selectedRegency.name},${selectedRegency.id},${selectedRegency.province_id}`;
+      const dataDistricts = `${selectedDistrict.name},${selectedDistrict.id},${selectedDistrict.regency_id}`;
 
       const formData = new FormData();
       formData.append("lembah", lembah);
@@ -96,7 +78,6 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
       try {
         setIsLoading(true);
         const res = await updateValley(id, formData);
-        console.log(res);
 
         if (res.error) {
           setMessageError(res.message);
@@ -120,23 +101,12 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
       } finally {
         setIsLoading(false);
       }
-
-      // console.log({ selectedDistrict, selectedRegency });
     },
-    [
-      lembah,
-      province,
-      selectedDistrict,
-      selectedRegency,
-      onSuccess,
-      id,
-      handleReset,
-    ],
+    [lembah, province, selectedDistrict, selectedRegency, onSuccess, id],
   );
 
   const fetchOneValley = useCallback(
     async (id) => {
-      // handleReset();
       setIsLoading(true);
       try {
         const res = await getOneValley(id);
@@ -145,23 +115,33 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
         setLembah(data?.lembah);
         setProvince(data?.provinsi);
 
-        const dataRegencies = await getKabupaten(
-          getDataByIndex(data?.kabupaten_kota, 2),
-        );
+        // Split kabupaten_kota and kecamatan to extract name and id
+        const kabupatenData = data?.kabupaten_kota.split(",");
+        const kecamatanData = data?.kecamatan.split(",");
 
-        const regency = dataRegencies.find(
-          (r) => r.name === getDataByIndex(data?.kabupaten_kota, 0),
-        );
-        console.log(dataRegencies);
-        console.log(regency);
-        setRegencies(regency);
-        // setRegencies(data?.kabupaten_kota);
-        // setDistricts(data?.kecamatan);
-        setRegencies(
-          Array.isArray(data?.kabupaten_kota) ? data.kabupaten_kota : [],
-        );
-        // setDistricts(data?.kecamatan);
-        setDistricts(Array.isArray(data?.kecamatan) ? data?.kecamatan : []);
+        if (data?.provinsi === "Sulawesi Tengah") {
+          const dataRegencies = await getSulawesiTengah();
+          const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+          setRegencies(dataRegencies);
+          setSelectedRegency(regency); // Automatically select the regency
+          const districts = await getKecamatan(regency.id);
+          setDistricts(districts);
+          const selectedDistrict = districts.find(
+            (d) => d.id === kecamatanData[1],
+          );
+          setSelectedDistrict(selectedDistrict); // Automatically select the district
+        } else if (data?.provinsi === "Sulawesi Barat") {
+          const dataRegencies = await getSulawesiBarat();
+          const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+          setRegencies(dataRegencies);
+          setSelectedRegency(regency); // Automatically select the regency
+          const districts = await getKecamatan(regency.id);
+          setDistricts(districts);
+          const selectedDistrict = districts.find(
+            (d) => d.id === kecamatanData[1],
+          );
+          setSelectedDistrict(selectedDistrict); // Automatically select the district
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -171,34 +151,19 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     [id],
   );
 
-  useEffect(() => {
-    if (province) {
-      const fetchRegencies = async () => {
-        const dataProvince =
-          province === "Sulawesi Tengah"
-            ? await getSulawesiTengah()
-            : await getSulawesiBarat();
-        setRegencies(dataProvince);
-        setDistricts([]);
-        setVillages([]);
-      };
-      fetchRegencies();
-    }
-  }, [province]);
-
   const handleProvinceChange = (e) => {
     setProvince(e.target.value);
   };
 
   const handleRegencySelect = async (e) => {
     const selectRegency = e.target.value;
-    console.log(selectRegency);
+    // console.log(selectRegency);
     const regency = regencies.find((r) => r.name === selectRegency);
 
     setSelectedRegency(regency);
     if (regency) {
       const dataRegencies = await getKecamatan(regency.id);
-      console.log({ dataRegencies });
+      // console.log({ dataRegencies });
 
       setDistricts(dataRegencies);
       setVillages([]);
@@ -217,6 +182,21 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   };
 
   useEffect(() => {
+    if (province) {
+      const fetchRegencies = async () => {
+        const dataProvince =
+          province === "Sulawesi Tengah"
+            ? await getSulawesiTengah()
+            : await getSulawesiBarat();
+        setRegencies(dataProvince);
+        setDistricts([]);
+        setVillages([]);
+      };
+      fetchRegencies();
+    }
+  }, [province]);
+
+  useEffect(() => {
     if (id) {
       fetchOneValley(id);
     }
@@ -231,7 +211,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     <>
       <div className={isOpenUpdate ? "block" : "hidden"}>
         <div className="flex justify-between">
-          <TitleSection className="underline">Tambah Lembah</TitleSection>
+          <TitleSection className="underline">Ubah Data Lembah</TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
             X
@@ -250,7 +230,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
             </SuccessAlert>
           ))}
 
-        <form onSubmit={handleCreateValley} className="flex flex-wrap">
+        <form onSubmit={handleUpdateValley} className="flex flex-wrap">
           <CountenerInput>
             <Label
               htmlFor="lembah"
@@ -295,13 +275,12 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
               className="mb-2 block text-base"
             />
             <select
-              // ref={regencyRef}
               id="kabkota"
               placeholder="Pilih Kabupaten/Kota"
               onChange={handleRegencySelect}
               className="w-full rounded-md"
               disabled={isLoading}
-              value={regencies?.length > 0 ? regencies.name : ""}
+              value={selectedRegency?.name || ""}
             >
               <option>Pilih Kabupaten/Kota</option>
               {regencies?.map((regency) => (
@@ -324,7 +303,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
               onChange={handleDistrictSelect}
               className="w-full rounded-md"
               disabled={isLoading}
-              value={districts?.length > 0 ? districts.name : ""}
+              value={selectedDistrict?.name || ""}
             >
               <option>Pilih Kecamatan</option>
               {districts?.map((district) => (
@@ -337,12 +316,13 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
 
           <ButtonFunc
             className={`m-3 bg-primary text-white`}
+            onClick={handleUpdateValley}
             disabled={isLoading}
           >
-            Simpan
+            {isLoading ? "Loading..." : "Simpan"}
           </ButtonFunc>
-          <ButtonFunc className={`m-3 bg-tan`} onClick={handleReset}>
-            Reset
+          <ButtonFunc className={`m-3 bg-tan`} onClick={onClose} type="button">
+            Batal
           </ButtonFunc>
         </form>
       </div>
