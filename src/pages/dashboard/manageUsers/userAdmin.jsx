@@ -27,6 +27,7 @@ import CreateAdmin from "./CreateAdmin";
 import { toView } from "../../../utils/toView";
 import { setIsLoading } from "../../../redux/slices/authSlice";
 import Loading from "../../../components/Elements/Loading/Loading";
+import { useDebounce } from "use-debounce";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -38,6 +39,9 @@ export default function UserAdmin() {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -55,7 +59,7 @@ export default function UserAdmin() {
   const fetchAdmin = async () => {
     setFetchLoading(true);
     try {
-      const res = await getAllAdmin(50);
+      const res = await getAllAdmin(50, debouncedSearch);
       setAdminData(res?.data);
     } catch (err) {
       console.log(err);
@@ -110,7 +114,7 @@ export default function UserAdmin() {
   };
   useEffect(() => {
     fetchAdmin();
-  }, []);
+  }, [debouncedSearch]);
 
   // console.log({ isOpenModalDelete });
   // console.log(adminData);
@@ -134,7 +138,12 @@ export default function UserAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Akun Admin..." />
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Akun Admin..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <div className="ml-2">
             <Button
