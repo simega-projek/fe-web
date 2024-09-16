@@ -25,6 +25,7 @@ import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
 import CreateSitus from "./CreateSitus";
 import UpdateSitus from "./UpdateSitus";
+import { useDebounce } from "use-debounce";
 
 export default function SitusAdmin() {
   const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
@@ -35,8 +36,11 @@ export default function SitusAdmin() {
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
 
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState(0);
   const [siteData, setSiteData] = useState("");
+
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -77,7 +81,7 @@ export default function SitusAdmin() {
   const fetchSite = async () => {
     setFetchLoading(true);
     try {
-      const site = await getAllSite(200);
+      const site = await getAllSite(200, debouncedSearch);
       setSiteData(site.data);
     } catch (err) {
       console.log(err);
@@ -92,9 +96,9 @@ export default function SitusAdmin() {
 
   useEffect(() => {
     fetchSite();
-  }, []);
+  }, [debouncedSearch]);
 
-  // console.log(siteData);
+  // console.log(selectedId);
   return (
     <>
       <CreateSitus
@@ -120,7 +124,12 @@ export default function SitusAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Situs..." />
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Situs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
           <div className="ml-2">
             <Button

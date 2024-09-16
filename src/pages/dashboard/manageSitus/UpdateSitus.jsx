@@ -17,15 +17,15 @@ import {
 
 export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [siteName, setSiteName] = useState("");
-  const [villageData, setVillageData] = useState([]);
-  const [valleyData, setValleyData] = useState([]);
+  const [villages, setVillages] = useState([]);
+  const [valleys, setValleys] = useState([]);
 
-  const [selectedValley, setSelectedValley] = useState(null);
-  const [selectedVillage, setSelectedVillage] = useState(null);
+  const [selectedValley, setSelectedValley] = useState("");
+  const [selectedVillage, setSelectedVillage] = useState("");
+
   const [originalValley, setOriginalValley] = useState(null);
   const [originalVillage, setoriginalVillage] = useState(null);
 
-  const [fetchLoading, setFetchLoading] = useState(false);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,28 +41,30 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     async (e) => {
       e.preventDefault();
 
-      if (
-        siteName.trim() === "" ||
-        selectedValley === null ||
-        selectedVillage === null
-      ) {
+      if (siteName.trim() === "" || !selectedValley || !selectedVillage) {
         setMessageError("Semua kolom harus diisi");
         setMessageSuccess(null);
         toView("top");
         return;
       }
 
+      const dataVillage = `${selectedVillage.name},${selectedVillage.id},${selectedVillage.district_id}`;
+      // console.log({ selectedValley.id });
+      // console.log(selectedValley.ID);
+      // return;
+
       const formData = new FormData();
       formData.append("nama_situs", siteName);
-      formData.append("desa_kelurahan", selectedVillage || originalVillage);
-      formData.append("lembah_id", selectedValley["ID"] || originalValley);
+      formData.append("desa_kelurahan", dataVillage);
+      formData.append("lembah_id", selectedValley?.ID);
 
       try {
         setIsLoading(true);
         const res = await updateSite(id, formData);
-        // console.log("hasil create: " + res);
+        // console.log(res);
+        // return;
         if (res.error) {
-          setMessageError(res.messageError);
+          setMessageError(res.message);
           setMessageSuccess(null);
           toView("top");
         } else {
@@ -73,7 +75,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             toView("top");
             handleReset();
             setTimeout(() => {
-              onclose;
+              onClose();
               setMessageSuccess(null);
             }, 2000);
           }
@@ -87,42 +89,29 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     [siteName, selectedValley, selectedVillage, onSuccess, handleReset],
   );
 
-  // const fetchVillages = async (valley) => {
-  //   if (!valley) return;
-  //   setFetchLoading(true);
-  //   try {
-  //     let kecamatanId = getDataByIndex(valley.kecamatan, 1); // Ambil ID kecamatan dari lembah
-  //     const res = await getKelurahan(kecamatanId); // Fetch data desa berdasarkan kecamatan ID
-  //     setVillageData(res);
-
-  //     // Update selected village based on the original data
-  //     const villageName = getDataByIndex(originalVillage, 0);
-  //     const village = res.find((v) => v.name === villageName);
-  //     setSelectedVillage(village);
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     setFetchLoading(false);
-  //   }
-  // };
-
   const fetchOneSite = useCallback(
     async (id) => {
       setIsLoading(true);
       try {
         const res = await getOneSite(id);
         const data = res?.data;
-        console.log(res.data);
 
-        // original data
-        setOriginalValley(data?.lembah_id);
-        setoriginalVillage(data?.desa_kelurahan);
-
-        setDataUpdate(data?.data);
+        setDataUpdate(data);
         setSiteName(data?.nama_situs);
+        // setSelectedValley(data?.lembah_id);
 
-        setSelectedValley(data?.lembah.lembah);
-        setSelectedVillage(getDataByIndex(data?.desa_kelurahan, 0));
+        // valleys
+        const valley = valleys.find((v) => v.ID === data?.lembah_id);
+        setSelectedValley(valley);
+
+        // villages
+        const kelurahan = data?.desa_kelurahan.split(",");
+        const idKelurahan = kelurahan[2];
+        const dataVillages = await getKelurahan(idKelurahan);
+        const village = dataVillages.find((v) => v.id === kelurahan[1]);
+
+        setVillages(dataVillages);
+        setSelectedVillage(village);
       } catch (err) {
         console.log(err);
       } finally {
@@ -132,106 +121,54 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     [id],
   );
 
-  // Fetch semua data lembah
-
-  // const fetchOneSite = useCallback(
-  //   async (id) => {
-  //     setIsLoading(true);
-  //     try {
-  //       const res = await getOneSite(id);
-  //       const data = res?.data;
-  //       console.log(res.data);
-
-  //       // original data
-  //       setOriginalValley(data?.lembah_id);
-  //       setoriginalVillage(data?.desa_kelurahan);
-
-  //       setDataUpdate(data?.data);
-  //       setSiteName(data?.nama_situs);
-
-  //       // Find and set the selected valley
-  //       const valley = valleyData.find((v) => v.ID === data?.lembah_id);
-  //       setSelectedValley(valley);
-
-  //       // Fetch villages based on the selected valley
-  //       if (valley) {
-  //         await fetchVillages(valley);
-  //       }
-
-  //       // Set selected village based on desa_kelurahan
-  //       const villageName = getDataByIndex(data?.desa_kelurahan, 0);
-  //       const village = villageData.find((v) => v.name === villageName);
-  //       setSelectedVillage(village);
-  //     } catch (err) {
-  //       console.log(err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   },
-  //   [id],
-  // );
-
   const fetchValley = useCallback(async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       const res = await getAllValley();
       // console.log(res);
-      setValleyData(res.data);
+      setValleys(res.data);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
-  }, [id, valleyData]);
+  }, [id, valleys]);
 
   const fetchVillages = async (valley) => {
     if (!valley) return;
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       let kecamatanId = getDataByIndex(valley.kecamatan, 1);
 
       const res = await getKelurahan(kecamatanId);
-      setVillageData(res);
-      // console.log(res);
+
+      setVillages(res); // Make sure the response is correct and an array
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // const handleValleyChange = (e) => {
-  //   const selectedValleyName = e.target.value;
-  //   const valley = valleyData.find((v) => v.lembah === selectedValleyName);
-  //   setSelectedValley(valley);
-  //   fetchVillages(valley);
-  // };
-
-  // const handleVillageChange = (e) => {
-  //   const selectedVillageName = e.target.value;
-  //   const village = villageData.find((v) => v.name === selectedVillageName);
-  //   // console.log(village);
-  //   setSelectedVillage(village);
-  // };
-
   const handleValleyChange = (e) => {
     const selectedValleyName = e.target.value;
-    const valley = valleyData.find((v) => v.lembah === selectedValleyName);
+    const valley = valleys.find((v) => v.lembah === selectedValleyName);
     setSelectedValley(valley);
     fetchVillages(valley); // Fetch desa setelah lembah dipilih
   };
 
   const handleVillageChange = (e) => {
     const selectedVillageName = e.target.value;
-    const village = villageData.find((v) => v.name === selectedVillageName);
+    const village = villages.find((v) => v.name === selectedVillageName);
     setSelectedVillage(village);
   };
 
   // console.log(siteName);
 
-  // console.log({ villageData });
+  // console.log({ villages });
   // console.log({ selectedValley });
   // console.log({ selectedVillage });
+  // console.log(dataUpdate);
 
   useEffect(() => {
     fetchValley();
@@ -292,10 +229,10 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             placeholder="Pilih Lembah"
             className="w-full rounded-md"
             onChange={handleValleyChange}
-            value={selectedValley?.lembah ?? selectedValley ?? "-"}
+            value={selectedValley?.lembah ?? selectedValley ?? ""}
           >
             <option>Pilih Lembah</option>
-            {valleyData?.map((valley) => (
+            {valleys?.map((valley) => (
               <option key={valley.ID} value={valley.lembah}>
                 {valley.lembah}
               </option>
@@ -309,20 +246,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             value="Nama Kelurahan"
             className="mb-2 block text-base"
           />
-          {/* <select
-            id="kelurahan"
-            placeholder="Pilih Kelurahan"
-            className="w-full rounded-md"
-            value={selectedVillage ?? selectedVillage?.name ?? "-"}
-            onChange={handleVillageChange}
-          >
-            <option>Pilih Kelurahan</option>
-            {villageData?.map((village) => (
-              <option key={village.id} value={village.name}>
-                {village.name}
-              </option>
-            ))}
-          </select> */}
+
           <select
             id="kelurahan"
             placeholder="Pilih Kelurahan"
@@ -331,7 +255,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             onChange={handleVillageChange}
           >
             <option value="">Pilih Kelurahan</option>
-            {villageData.map((village) => (
+            {villages?.map((village) => (
               <option key={village.id} value={village.name}>
                 {village.name}
               </option>
@@ -346,7 +270,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onclose}>
+      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
         Batal
       </ButtonFunc>
     </div>

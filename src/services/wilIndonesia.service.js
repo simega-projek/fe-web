@@ -79,15 +79,3 @@ export const getKelurahan = async (id) => {
     return null;
   }
 };
-
-// export const getKelurahan = async (id) => {
-//   try {
-//     const response = await fetch(
-//       `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`,
-//     );
-//     const data = await response.json();
-//     return data;
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };

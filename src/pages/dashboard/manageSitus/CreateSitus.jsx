@@ -19,7 +19,6 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   const [selectedValley, setSelectedValley] = useState(null);
   const [selectedVillage, setSelectedVillage] = useState(null);
 
-  const [fetchLoading, setFetchLoading] = useState(false);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +60,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     try {
       setIsLoading(true);
       const res = await createSite(formData);
-      console.log("hasil create: " + res);
+      // console.log("hasil create: " + res);
       if (res.error) {
         setMessageError(res.messageError);
         setMessageSuccess(null);
@@ -83,33 +82,33 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
 
   // Fetch semua data lembah
   const fetchValley = async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       const res = await getAllValley();
-      console.log(res);
+      // console.log(res);
       setValleyData(res.data);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
   // Fetch data desa berdasarkan kecamatan ID dari lembah terpilih
   const fetchVillages = async (valley) => {
     if (!valley) return;
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       let kecamatanId = getDataByIndex(valley.kecamatan, 1); //
       // console.log("Kecamatan ID: ", Number(kecamatanId));
 
       const res = await getKelurahan(kecamatanId);
       setVillageData(res);
-      console.log(res);
+      // console.log(res);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -127,7 +126,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   const handleVillageChange = (e) => {
     const selectedVillageName = e.target.value;
     const village = villageData.find((v) => v.name === selectedVillageName);
-    console.log(village);
+    // console.log(village);
     setSelectedVillage(village);
   };
 
@@ -173,7 +172,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             sizing="md"
             value={situsName}
             onChange={(e) => setSitusName(e.target.value)}
-            isLoading={isLoading}
+            disabled={isLoading}
           />
         </CountenerInput>
 
@@ -188,8 +187,8 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             placeholder="Pilih Lembah"
             className="w-full rounded-md"
             onChange={handleValleyChange} //
-            value={selectedValley?.lembah ?? "-"}
-            isLoading={isLoading}
+            value={selectedValley?.lembah ?? ""}
+            disabled={isLoading}
           >
             <option>Pilih Lembah</option>
             {valleyData?.map((valley) => (
@@ -210,9 +209,9 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             id="kelurahan"
             placeholder="Pilih Kelurahan"
             className="w-full rounded-md"
-            value={selectedVillage?.name ?? "-"}
+            value={selectedVillage?.name ?? ""}
             onChange={handleVillageChange} //
-            isLoading={isLoading}
+            disabled={isLoading}
           >
             <option>Pilih Kelurahan</option>
             {villageData?.map((village) => (
