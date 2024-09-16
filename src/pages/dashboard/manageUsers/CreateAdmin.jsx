@@ -1,4 +1,4 @@
-import { Label, TextInput } from "flowbite-react";
+import { Button, Label, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
@@ -8,7 +8,7 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createAdmin } from "../../../services/superAdmin.service";
 import { toView } from "../../../utils/toView";
 
-export default function CreateAdmin({ isOpenCreate, onSuccess }) {
+export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
   const [fullname, setFullname] = useState("");
   const [nik, setNik] = useState("");
   const [username, setUsername] = useState("");
@@ -98,8 +98,13 @@ export default function CreateAdmin({ isOpenCreate, onSuccess }) {
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <TitleSection className="underline">Tambah Akun Admin</TitleSection>
-      <hr className="my-5" />
+      <div className="flex justify-between">
+        <TitleSection className="underline">Tambah Akun Admin</TitleSection>
+        <hr className="my-5" />
+        <Button color="red" onClick={onClose}>
+          X
+        </Button>
+      </div>
 
       {/* alert */}
       {messageError && (

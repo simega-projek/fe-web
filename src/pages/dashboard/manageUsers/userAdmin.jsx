@@ -78,7 +78,6 @@ export default function UserAdmin() {
     }
     setIsOpenModalDelete(false);
     handleSuccess();
-    toView("top");
   };
 
   const handleResetPassword = async () => {
@@ -118,7 +117,11 @@ export default function UserAdmin() {
   // console.log({ selectedId });
   return (
     <>
-      <CreateAdmin isOpenCreate={isOpenCreate} onSuccess={handleSuccess} />
+      <CreateAdmin
+        isOpenCreate={isOpenCreate}
+        onSuccess={handleSuccess}
+        onClose={handleOpenCreateForm}
+      />
 
       {/* table data */}
       <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
