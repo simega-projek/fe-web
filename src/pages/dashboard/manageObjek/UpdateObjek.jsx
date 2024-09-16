@@ -1,18 +1,24 @@
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
-import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { InputMany } from "../../../components/Elements/Inputs/InputMany";
+import { getAllSite } from "../../../services/site.service";
+import { getAllCategory } from "../../../services/category.service";
+import {
+  createObject,
+  getOneObject,
+  updateObject,
+} from "../../../services/object.service"; // API untuk create object
+import ManyInputImage from "../../../components/Elements/Inputs/ManyInputImage";
 import ManyInputText from "../../../components/Elements/Inputs/ManyInputText";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { getAllCategory } from "../../../services/category.service";
-import { createObject } from "../../../services/object.service"; // API untuk create object
-import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
 
-export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
+export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
   const imageRef = useRef(null);
 
@@ -25,7 +31,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [description, setDescription] = useState("");
 
-  const [video, setVideo] = useState("");
+  const [originalImage, setOriginalImage] = useState(null);
 
   const [images, setImages] = useState([]);
   const [image, setImage] = useState(null);
@@ -105,11 +111,11 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     setImages(selectFile);
   };
 
-  const handleVideosChange = (values) => {
-    setVideos(values);
-  };
+  const handleInputJodit = useCallback((newDescription) => {
+    setDescription(newDescription);
+  }, []);
 
-  const handleCreateObject = async (e) => {
+  const handleUpdateObject = async (e) => {
     e.preventDefault();
 
     if (
@@ -138,11 +144,11 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     formData.append("site_id", selectedSite);
     formData.append("category_id", selectedCategory);
     formData.append("video", videos);
-    formData.append("gambar", images);
+    formData.append("gambar", images ? images : originalImage);
 
     setIsLoading(true);
     try {
-      const res = await createObject(formData);
+      const res = await updateObject(id, formData);
 
       if (res.error) {
         setMessageError(res.message);
@@ -150,8 +156,13 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
       } else {
         setMessageSuccess(res.message);
         setMessageError(null);
-        onSuccess();
-        handleReset();
+        if (onSuccess) {
+          onSuccess();
+          setTimeout(() => {
+            onClose();
+            setMessageSuccess(null);
+          }, 2000);
+        }
       }
       toView("top");
     } catch (error) {
@@ -162,11 +173,30 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     }
   };
 
-  useEffect(() => {
-    if (isOpenCreate === false) {
-      handleReset();
+  const fetchOneObject = async () => {
+    setIsLoading(true);
+    try {
+      const object = await getOneObject(id);
+
+      setNameObject(object?.data?.nama_objek);
+      setLintang(object?.data?.lintang);
+      setBujur(object?.data?.bujur);
+      setDescription(object?.data?.deskripsi);
+      console.log({ description });
+      setSelectedSite(object?.data?.site_id);
+      setSelectedCategory(object?.data?.category_id);
+      setVideos(object?.data?.video.split(","));
+      setOriginalImage(object?.data?.gambar);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
     }
-  }, [isOpenCreate]);
+  };
+
+  useEffect(() => {
+    fetchOneObject();
+  }, [id]);
 
   useEffect(() => {
     fetchSite();
@@ -176,9 +206,9 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   // console.log(image);
   // console.log(images);
   return (
-    <div className={isOpenCreate ? "block" : "hidden"}>
+    <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
-        <TitleSection className="underline">Tambah Objek</TitleSection>
+        <TitleSection className="underline">Ubah Data Objek</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
           X
@@ -198,7 +228,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
         ))}
 
       {/* Form */}
-      <form onSubmit={handleCreateObject} className="flex flex-wrap">
+      <form onSubmit={handleUpdateObject} className="flex flex-wrap">
         <CountenerInput>
           <Label
             htmlFor="objek"
@@ -228,6 +258,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             className="w-full rounded-md"
             onChange={handleCategoryChange}
             disabled={isLoading}
+            value={selectedCategory}
           >
             <option>Pilih Kategori</option>
             {categoryData?.map((cat) => (
@@ -296,6 +327,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             className="w-full rounded-md"
             onChange={handleSiteChange}
             disabled={isLoading}
+            value={selectedSite}
           >
             <option>Pilih Situs</option>
             {siteData?.map((site) => (
@@ -319,9 +351,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             disabled={isLoading}
             ref={imageRef}
           />
-          <small className="text-light">
-            File harus berformat .jpg, .jpeg, .png
-          </small>
+          <small className="w-1/2 text-wrap text-light">{originalImage}</small>
         </CountenerInput>
 
         <CountenerInput>
@@ -334,6 +364,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             onTextsChange={setVideos}
             disabled={isLoading}
             onReset={resetManyInput}
+            initialTexts={videos}
           />
         </CountenerInput>
 
@@ -344,20 +375,20 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
           <JoditEditor
             ref={editorInput}
             value={description}
-            onChange={(newContent) => setDescription(newContent)}
+            onChange={handleInputJodit}
             disabled={isLoading}
           />
         </div>
 
         <ButtonFunc
           className="m-3 bg-primary text-white"
-          onClick={handleCreateObject}
+          onClick={handleUpdateObject}
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset} type="reset">
-          Reset
+        <ButtonFunc className="m-3 bg-tan" onClick={onClose} type="button">
+          Batal
         </ButtonFunc>
       </form>
     </div>

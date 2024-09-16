@@ -46,7 +46,7 @@ export default function ManyInputImage({ onImagesChange }) {
   return (
     <div>
       {images.map((_, index) => (
-        <div key={index} style={{ marginBottom: "10px" }}>
+        <div key={index} className="mb-10">
           <input
             className="w-10/12"
             type="file"

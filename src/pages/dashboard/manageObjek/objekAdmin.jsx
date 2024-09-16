@@ -26,11 +26,12 @@ import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { toView } from "../../../utils/toView";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import UpdateActivity from "../manageActivities/UpdateActivity";
+import UpdateObjek from "./UpdateObjek";
 
 export default function ObjekAdmin() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
-  const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
   const [objectData, setObjectData] = useState([]);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [messageError, setMessageError] = useState(null);
@@ -38,8 +39,23 @@ export default function ObjekAdmin() {
   const [selectedId, setSelectedId] = useState(null);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
 
+  const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
+  const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
+    setIsOpenUpdateForm(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
+  };
+
+  const handleOpenUpdateForm = (id) => {
+    setSelectedId(id);
+    setIsOpenUpdateForm(true);
+    setIsOpenCreateForm(false);
+    setMessageError(null);
+    setMessageSuccess(null);
+    toView("top");
   };
 
   const fetchObject = async () => {
@@ -74,11 +90,22 @@ export default function ObjekAdmin() {
     fetchObject();
   }, [debouncedSearch]);
 
-  console.log(objectData);
+  console.log({ selectedId });
 
   return (
     <>
-      <CreateObjek isOpenCreate={isOpenCreateForm} onSuccess={fetchObject} />
+      <CreateObjek
+        isOpenCreate={isOpenCreateForm}
+        onSuccess={fetchObject}
+        onClose={handleOpenCreateForm}
+      />
+
+      <UpdateObjek
+        isOpenUpdate={isOpenUpdateForm}
+        id={selectedId}
+        onSuccess={fetchObject}
+        onClose={() => setIsOpenUpdateForm(false)}
+      />
 
       {/* table data */}
       <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
@@ -157,9 +184,11 @@ export default function ObjekAdmin() {
                       <ButtonControls
                         icon={FaFileInvoice}
                         to={`/objek/${objects.ID}/${objects.nama_objek}`}
-                        className={"hover:"}
                       />
-                      <ButtonControls icon={FaEdit} />
+                      <ButtonControls
+                        icon={FaEdit}
+                        onClick={() => handleOpenUpdateForm(objects.ID)}
+                      />
                       <ButtonControls
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(objects.ID)}
