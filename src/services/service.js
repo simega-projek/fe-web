@@ -5,15 +5,30 @@ const baseUrl = `http://34.101.227.131:8000/`;
 export const fetchDataApi = async (method, url, data = null, params = null) => {
   const token = localStorage.getItem("token");
 
+  // const config = {
+  //   method,
+  //   url: `${baseUrl}${url}`,
+  //   headers:
+  //     method !== "GET"
+  //       ? {
+  //           Authorization: `Bearer ${token}`,
+  //         }
+  //       : undefined,
+  //   params,
+  //   data,
+  // };
+
   const config = {
     method,
     url: `${baseUrl}${url}`,
-    headers:
-      method !== "GET"
-        ? {
-            Authorization: `Bearer ${token}`,
-          }
-        : undefined,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // Hanya tambahkan `Content-Type` jika bukan GET dan datanya bukan formData
+      ...(method !== "GET" &&
+        !(data instanceof FormData) && {
+          "Content-Type": "application/json",
+        }),
+    },
     params,
     data,
   };

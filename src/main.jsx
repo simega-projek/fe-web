@@ -59,11 +59,11 @@ const route = createBrowserRouter([
         element: <PersebaranPage />,
       },
       {
-        path: "/situs",
+        path: "/objek",
         element: <SitusPage />,
       },
       {
-        path: "/situs/:id",
+        path: "/objek/:id/:slug",
         element: <SitusDetail />,
       },
       {

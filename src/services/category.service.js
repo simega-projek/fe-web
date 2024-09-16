@@ -1,6 +1,6 @@
 import { fetchDataApi } from "./service";
 
-export const getAllCategory = async (content, search) => {
+export const getAllCategory = async (content = 200, search = "") => {
   try {
     return await fetchDataApi(
       "GET",

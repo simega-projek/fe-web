@@ -77,7 +77,7 @@ export default function HomePage() {
                 <CardSitusHome
                   key={situs._id}
                   title={situs.title}
-                  to={`/situs/${situs._id}`}
+                  to={`/objek/${situs._id}`}
                 >
                   {situs.content}
                 </CardSitusHome>

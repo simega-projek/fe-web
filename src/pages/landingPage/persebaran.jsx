@@ -144,7 +144,7 @@ export default function PersebaranPage() {
               key={m?.id}
               title={m?.sekolah}
               desc={m?.propinsi}
-              to={`/situs/${m?.id}`}
+              to={`/objek/${m?.id}/${m?.sekolah}`}
             />
           ))}
         </div>

@@ -1,7 +1,13 @@
 import { Button } from "flowbite-react";
 import React, { useState } from "react";
 
-export const InputMany = ({ typeInput: TypeInput, type = "text", id }) => {
+export const InputMany = ({
+  typeInput: TypeInput,
+  type = "text",
+  id,
+  value,
+  onChange,
+}) => {
   const [inputs, setInputs] = useState([{ id: 1, value: "" }]);
 
   const handleIncrementInput = () => {

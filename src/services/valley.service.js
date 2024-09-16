@@ -1,8 +1,11 @@
 import { fetchDataApi } from "./service";
 
-export const getAllValley = async (content) => {
+export const getAllValley = async (content = 100, search = "") => {
   try {
-    return await fetchDataApi("GET", `lembah?content=${content}`);
+    return await fetchDataApi(
+      "GET",
+      `lembah?content=${content}&search=${search}`,
+    );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
     throw err;

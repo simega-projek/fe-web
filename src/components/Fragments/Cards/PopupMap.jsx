@@ -27,7 +27,10 @@ export const PopupMap = (props) => {
           </p>
         </div>
 
-        <ButtonLink to={`/situs/${id}`} className="bg-tan text-white">
+        <ButtonLink
+          to={`/objek/${id}/${titleObject}`}
+          className="bg-tan text-white"
+        >
           Lihat{" "}
         </ButtonLink>
       </div>

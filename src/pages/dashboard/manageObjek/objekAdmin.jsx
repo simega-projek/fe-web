@@ -18,38 +18,70 @@ import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
-import { getAllObject } from "../../../services/object.service";
+import { deleteObject, getAllObject } from "../../../services/object.service";
 import CreateObjek from "./CreateObjek";
+import { useDebounce } from "use-debounce";
+import Loading from "../../../components/Elements/Loading/Loading";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { toView } from "../../../utils/toView";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
 export default function ObjekAdmin() {
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
-  const handleOpenCreateForm = () => {
-    setIsOpenCreate(!isOpenCreate);
-  };
-
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
   const [objectData, setObjectData] = useState([]);
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+
+  const handleOpenCreateForm = () => {
+    setIsOpenCreateForm(!isOpenCreateForm);
+  };
 
   const fetchObject = async () => {
     try {
-      const objects = await getAllObject();
+      const objects = await getAllObject(200, debouncedSearch);
       setObjectData(objects.data);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
+  };
+
+  const handleDeleteObject = async () => {
+    const res = await deleteObject(selectedId);
+    if (res.error) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      toView("top");
+    } else {
+      setMessageSuccess(res.message);
+      setMessageError(null);
+    }
+    setIsOpenModalDelete(false);
+    fetchObject();
+  };
+
   useEffect(() => {
     fetchObject();
-  }, []);
+  }, [debouncedSearch]);
 
   console.log(objectData);
 
   return (
     <>
-      <CreateObjek isOpenCreate={isOpenCreate} />
+      <CreateObjek isOpenCreate={isOpenCreateForm} onSuccess={fetchObject} />
 
       {/* table data */}
-      <hr className={`${isOpenCreate ? "mt-10" : "mt-0"}`} />
+      <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
         <GiStoneBust /> Data Objek Megalit
       </TitleSection>
@@ -60,8 +92,10 @@ export default function ObjekAdmin() {
         <div className="flex justify-between">
           <div className="w-full lg:w-1/3">
             <TextInput
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               icon={FaSearch}
-              placeholder="Cari Objek, Situs, Lembah..."
+              placeholder="Cari berdasarkan Objek dan kategori..."
             />
           </div>
           <div className="ml-2">
@@ -72,6 +106,20 @@ export default function ObjekAdmin() {
               +
             </Button>
           </div>
+        </div>
+
+        {/* alert */}
+        <div className="mt-5">
+          {(messageError && (
+            <FailAllert setMessageError={setMessageError}>
+              {messageError}
+            </FailAllert>
+          )) ||
+            (messageSuccess && (
+              <SuccessAlert setMessageSuccess={setMessageSuccess}>
+                {messageSuccess}
+              </SuccessAlert>
+            ))}
         </div>
 
         {/* table */}
@@ -108,11 +156,14 @@ export default function ObjekAdmin() {
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${objects.id}`}
+                        to={`/objek/${objects.ID}/${objects.nama_objek}`}
                         className={"hover:"}
                       />
                       <ButtonControls icon={FaEdit} />
-                      <ButtonControls icon={MdDeleteForever} />
+                      <ButtonControls
+                        icon={MdDeleteForever}
+                        onClick={() => handleOpenDeleteModal(objects.ID)}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -120,6 +171,23 @@ export default function ObjekAdmin() {
           </Table>
         </div>
       </div>
+
+      {/* loading fetching */}
+      {fetchLoading ? (
+        <div className="mt-10">
+          <Loading />
+        </div>
+      ) : null}
+
+      {/* delete modal */}
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus kegiatan"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDeleteObject}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
     </>
   );
 }
