@@ -1,6 +1,6 @@
 import { Button, FileInput, Label, Select, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
@@ -38,14 +38,6 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   }, []);
 
   const handleResetForm = () => {
-    // if (btnCancel.current.value === "Batal") {
-    //   if (controllerApi) {
-    //     controllerApi.abort();
-    //     setMessageError("Simpan kegiatan dibatalkan");
-    //     setMessageSuccess(null);
-    //     return;
-    //   }
-    // } else {
     setTitle("");
     setDescription("");
     setRegisLink("");
@@ -80,12 +72,6 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     }
 
     const currentDate = new Date().toISOString();
-    // const formattedStartDate = startDate
-    //   ? new Date(startDate).toISOString()
-    //   : currentDate;
-    // const formattedEndDate = endDate
-    //   ? new Date(endDate).toISOString()
-    //   : currentDate;
 
     const formattedStartDate = startDate
       ? new Date(startDate).toISOString()
@@ -127,6 +113,12 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     }
   };
 
+  useEffect(() => {
+    if (isOpenCreate === false) {
+      handleResetForm();
+    }
+  });
+
   // console.log("start date state: ", startDate.target.defaultValue);
   // console.log(
   //   "start date state: ",
@@ -136,15 +128,15 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   // console.log("start date ref: ", startDateRef.current);
   // console.log("end date ref: ", endDateRef.current);
 
-  console.log("input", {
-    title,
-    description,
-    image,
-    regisLink,
-    status,
-    startDate,
-    endDate,
-  });
+  // console.log("input", {
+  //   title,
+  //   description,
+  //   image,
+  //   regisLink,
+  //   status,
+  //   startDate,
+  //   endDate,
+  // });
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
@@ -216,6 +208,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           />
 
           <input
+            className="w-full rounded-md"
             type="date"
             id="startDate"
             name="start_date"
@@ -234,6 +227,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
 
           <input
             type="date"
+            className="w-full rounded-md"
             min={startDate}
             id="endDate"
             name="end_date"

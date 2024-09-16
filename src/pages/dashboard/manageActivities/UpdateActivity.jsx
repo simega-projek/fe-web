@@ -267,6 +267,7 @@ export default function UpdateActivity({
 
           <input
             type="date"
+            className="w-full rounded-md"
             id="startDate"
             name="start_date"
             required
@@ -284,6 +285,7 @@ export default function UpdateActivity({
 
           <input
             type="date"
+            className="w-full rounded-md"
             min={startDate}
             id="endDate"
             name="end_date"
