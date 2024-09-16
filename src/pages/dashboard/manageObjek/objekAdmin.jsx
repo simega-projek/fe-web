@@ -90,7 +90,7 @@ export default function ObjekAdmin() {
     fetchObject();
   }, [debouncedSearch]);
 
-  console.log({ selectedId });
+  // console.log({ selectedId });
 
   return (
     <>

@@ -36,7 +36,7 @@ export default function SitusAdmin() {
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [fetchLoading, setFetchLoading] = useState(false);
 
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId, setSelectedId] = useState(null);
   const [siteData, setSiteData] = useState("");
 
   const [search, setSearch] = useState("");

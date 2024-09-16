@@ -99,12 +99,12 @@ export default function UpdateActivity({
       formData.append("end_date", formattedEndDate);
       formData.append("status", status);
 
-      console.log("data update: ", formData);
+      // console.log("data update: ", formData);
 
       try {
         setIsLoading(true);
         const res = await updateEvent(id, formData);
-        console.log("response update event: ", res);
+        // console.log("response update event: ", res);
         if (res.error) {
           setMessageError(res.message);
           setMessageSuccess(null);
@@ -153,7 +153,7 @@ export default function UpdateActivity({
         const res = await getOneEvent(id);
         const data = res.data;
         setDataUpdate(data);
-        console.log("res fecth one event :", res);
+        // console.log("res fecth one event :", res);
 
         setTitle(data?.title);
         setDescription(data?.description);
@@ -186,15 +186,15 @@ export default function UpdateActivity({
     }
   }, [id, fetchOneEvent]);
 
-  console.log("input", {
-    title,
-    description,
-    image,
-    regisLink,
-    status,
-    startDate,
-    endDate,
-  });
+  // console.log("input", {
+  //   title,
+  //   description,
+  //   image,
+  //   regisLink,
+  //   status,
+  //   startDate,
+  //   endDate,
+  // });
 
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
