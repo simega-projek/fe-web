@@ -6,21 +6,23 @@ import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
 import videosData from "../../data/videos.json";
 import TitleSection from "../../components/Elements/TitleSection";
+import { getOneObject } from "../../services/object.service";
+import { toView } from "../../utils/toView";
 
 export default function SitusDetail() {
   const { id } = useParams();
-  const [situs, setSitus] = useState({});
+  const [situs, setSitus] = useState(null);
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
   const [indexImage, setIndexImage] = useState(0);
 
-  const fetchData = async () => {
+  const fetchObject = async () => {
     setLoading(true);
     try {
-      const situsData = await getOneArticle(1);
-      setSitus(situsData);
+      const objects = await getOneObject(id);
+      setSitus(objects.data);
       const imageData = await getTechCrunch();
       setImages(imageData);
 
@@ -33,27 +35,28 @@ export default function SitusDetail() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchObject();
+    toView("top");
+  }, [id]);
 
-  const handleOpenImage = (index) => {
-    setIndexImage(index);
-    setOpenImage(true);
-  };
+  // const handleOpenImage = (index) => {
+  //   setIndexImage(index);
+  //   setOpenImage(true);
+  // };
 
-  const handleCloseImage = () => {
-    setOpenImage(false);
-  };
+  // const handleCloseImage = () => {
+  //   setOpenImage(false);
+  // };
 
-  const handleNextImage = () => {
-    setIndexImage((prevIndex) => (prevIndex + 1) % images.length);
-  };
+  // const handleNextImage = () => {
+  //   setIndexImage((prevIndex) => (prevIndex + 1) % images.length);
+  // };
 
-  const handlePrevImage = () => {
-    setIndexImage(
-      (prevIndex) => (prevIndex - 1 + images.length) % images.length,
-    );
-  };
+  // const handlePrevImage = () => {
+  //   setIndexImage(
+  //     (prevIndex) => (prevIndex - 1 + images.length) % images.length,
+  //   );
+  // };
 
   return (
     <>
@@ -63,16 +66,16 @@ export default function SitusDetail() {
             <Loading />
           ) : (
             <Detail
-              date="20,0202"
-              title={situs.title}
-              img={situs.image}
-              desc={situs.description}
+              date={situs?.CreatedAt}
+              title={situs.nama_objek}
+              img={situs.gambar}
+              desc={situs.deskripsi}
             />
           )}
         </div>
       </div>
 
-      <TitleSection className="p-5">Gambar</TitleSection>
+      {/* <TitleSection className="p-5">Gambar</TitleSection>
       <div className="scrollbar overflow-x-scroll">
         <div className="flex gap-5">
           {images.map((i, index) => (
@@ -127,7 +130,7 @@ export default function SitusDetail() {
         {videos.length === 0 && (
           <div className="w-full text-center text-red-500">Tidak Ada video</div>
         )}
-      </div>
+      </div> */}
     </>
   );
 }

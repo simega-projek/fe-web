@@ -4,10 +4,12 @@ import TitleSection from "../../components/Elements/TitleSection";
 import { useEffect, useState } from "react";
 import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
-import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
-import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
+
 import { getAllEvent, getOneEvent } from "../../services/event.service";
 import { formatDate } from "../../utils/formatDate";
+import { CardKegiatanHome } from "../../components/Fragments/Cards/HomeCardKegiatan";
+import { CardArtikelHome } from "../../components/Fragments/Cards/HomeCardArtikel";
+import { toView } from "../../utils/toView";
 
 export default function KegiatanDetail() {
   const { id } = useParams();
@@ -37,6 +39,7 @@ export default function KegiatanDetail() {
 
   useEffect(() => {
     fetchData();
+    toView("top");
   }, [id]);
 
   return (
@@ -49,7 +52,7 @@ export default function KegiatanDetail() {
             Object.keys(kegiatan).length > 0 && (
               <>
                 <Detail
-                  date={formatDate(kegiatan?.CreatedAt)}
+                  date={formatDate(kegiatan?.start_date)}
                   title={kegiatan?.title}
                   img={kegiatan?.image}
                   desc={kegiatan?.description}
@@ -59,7 +62,7 @@ export default function KegiatanDetail() {
           )}
         </div>
 
-        <div className="my-20 flex flex-col lg:my-0 lg:w-4/12">
+        {/* <div className="my-20 flex flex-col lg:my-0 lg:w-1/2">
           <h3 className="mx-auto my-5 text-xl font-bold lg:mx-0">
             Kegiatan lainnya
           </h3>
@@ -70,28 +73,28 @@ export default function KegiatanDetail() {
                 .slice(0, 3)
                 .map((item) => (
                   <>
-                    <CardKegiatan
+                    <CardKegiatanHome
                       to={`/kegiatan/${item?.ID}/${item?.title}`}
                       key={item?.ID}
                       title={item?.title}
                       className="lg:hidden"
-                    >
-                      {item?.description}
-                    </CardKegiatan>
+                      date={item?.start_date}
+                      img={item?.image}
+                    />
 
                     <div className="hidden lg:block">
-                      <CardArtikel
+                      <CardArtikelHome
                         to={`/kegiatan/${item?.ID}/${item?.title}`}
                         key={item?.ID}
                         title={item?.title}
                       >
                         {item?.description}
-                      </CardArtikel>
+                      </CardArtikelHome>
                     </div>
                   </>
                 ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

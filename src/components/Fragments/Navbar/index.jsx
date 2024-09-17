@@ -16,8 +16,8 @@ export function NavbarDashboard() {
           <div className="px-4">
             <Link to={"/"}>
               <img
-                src="/icons/logo-hitam.svg"
-                width={"80%"}
+                src="/icons/bakultur.png"
+                width={"40"}
                 className="lg:3/4"
                 alt=""
               />

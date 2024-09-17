@@ -4,27 +4,29 @@ import { getOneArticle } from "../../services/article.service";
 import { useParams } from "react-router-dom";
 import Loading from "../../components/Elements/Loading/Loading";
 import { formatDate } from "../../utils/formatDate";
+import { toView } from "../../utils/toView";
 export default function ArtikelDetail() {
   const { id } = useParams();
   const [article, setArticle] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchArticles = async () => {
     setLoading(true);
-    const fecthData = async () => {
-      try {
-        const articleDetail = await getOneArticle(id);
-        setArticle(articleDetail.data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fecthData();
+    try {
+      const articleDetail = await getOneArticle(id);
+      setArticle(articleDetail.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchArticles();
+    toView("top");
   }, [id]);
 
-  console.log({ article });
+  // console.log({ article });
 
   // if (loading) return (<Loading />);
   return (

@@ -26,6 +26,7 @@ import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
+import PersebaranPage2 from "./pages/landingPage/persebaran2.jsx";
 
 const route = createBrowserRouter([
   {
@@ -42,7 +43,7 @@ const route = createBrowserRouter([
         element: <ArtikelPage />,
       },
       {
-        path: "/artikel/:id",
+        path: "/artikel/:id/:slug",
         element: <ArtikelDetail />,
       },
 
