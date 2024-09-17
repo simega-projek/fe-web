@@ -14,14 +14,18 @@ export const PopupMap = (props) => {
     <>
       <div className="w-full">
         <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-          {titleObject} Patung palindo
+          {titleObject}
         </h3>
         <h3 className="text-xs font-semibold text-gray-900 dark:text-white">
-          {titleSitus} situs behoa
+          {titleSitus}
         </h3>
 
         <div className="pt-2">
-          <img src={img} alt={titleObject} className="max-h-40 rounded-md" />
+          <img
+            src={img}
+            alt={titleObject}
+            className="mx-auto max-h-40 rounded-md"
+          />
           <p className="px-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
             {maxWord(desc, 20)}
           </p>

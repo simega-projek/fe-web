@@ -116,23 +116,6 @@ export default function ActivityAdmin() {
     fetchEvent();
   }, [debouncedSearch]);
 
-  // console.log(eventData);
-
-  // useEffect(() => {
-  //   if (debouncedSearch) {
-  //     const result = eventData.filter(
-  //       (act) =>
-  //         act.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-  //         act.category
-  //           .toLowerCase()
-  //           .includes(debouncedSearch.toLocaleLowerCase()),
-  //     );
-  //     setResultActivity(result);
-  //   } else {
-  //     setResultActivity(eventData);
-  //   }
-  // }, [debouncedSearch, eventData]);
-
   return (
     <>
       <CreateActivity

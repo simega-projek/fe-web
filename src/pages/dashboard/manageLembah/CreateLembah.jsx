@@ -188,6 +188,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               className="mb-2 block text-base"
             />
             <TextInput
+              placeholder="Behoa"
               autoFocus
               id="lembah"
               type="text"

@@ -4,16 +4,16 @@ import maxWord from "../../../utils/maxWord";
 
 export default function CardSitus(props) {
   const { to, img = "/images/hero-img.png", title, desc } = props;
-  //   const limitWord = maxWord(desc, 10);
+
   return (
     <Link
       to={to}
       className={`flex w-full flex-wrap transition-all duration-300 hover:shadow-lg md:w-1/3 lg:w-1/4 lg:items-center`}
     >
-      <div className="group relative mx-auto max-h-52 overflow-hidden rounded-lg shadow-2xl md:max-h-72 lg:max-h-80">
+      <div className="group relative mx-auto h-64 overflow-hidden rounded-lg shadow-2xl md:h-72 lg:h-80">
         <img
           src={img}
-          className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
+          className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"
           alt=""
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent to-primary"></div>

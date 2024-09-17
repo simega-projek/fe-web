@@ -95,6 +95,7 @@ export default function PersebaranPage() {
                         id={o?.ID}
                         titleObject={o?.nama_objek}
                         titleSitus={o?.site?.nama_situs}
+                        img={o?.gambar}
                         desc=""
                       />
                     </Popup>
@@ -129,6 +130,7 @@ export default function PersebaranPage() {
                 title={o?.nama_objek}
                 desc={o?.propinsi}
                 to={`/objek/${o?.ID}/${o?.nama_objek}`}
+                img={o?.gambar}
               />
             ))}
         </div>
