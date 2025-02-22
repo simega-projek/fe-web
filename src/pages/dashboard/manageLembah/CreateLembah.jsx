@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { TextInput, Label, Button } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import {
   getKabupaten,
   getKecamatan,
@@ -181,7 +181,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
           ))}
 
         <form onSubmit={handleCreateValley} className="flex flex-wrap">
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="lembah"
               value="Nama Lembah"
@@ -197,9 +197,9 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               sizing="md"
               disabled={isLoading}
             />
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="provinsi"
               value="Nama Provinsi"
@@ -217,9 +217,9 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               <option value="Sulawesi Tengah">Sulawesi Tengah</option>
               <option value="Sulawesi Barat">Sulawesi Barat</option>
             </select>
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="kabupaten/kota"
               value="Nama Kabupaten/Kota"
@@ -241,9 +241,9 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
                 </option>
               ))}
             </select>
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="kecamatan"
               value="Nama Kecamatan"
@@ -264,7 +264,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
                 </option>
               ))}
             </select>
-          </CountenerInput>
+          </ContainerInput>
         </form>
 
         <ButtonFunc

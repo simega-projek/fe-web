@@ -11,8 +11,8 @@ export const Detail = (props) => {
   return (
     <div className="flex flex-col">
       <TitleSection>{title}</TitleSection>
-      <span className="mb-2 mt-5">{dateFormatted} </span>
-      <div className="max-w-2xl md:max-w-md">
+      {/* <span className="mb-2 mt-5">{dateFormatted} </span> */}
+      <div className="mt-5 max-w-2xl md:max-w-md">
         <img
           src={img}
           alt={title}

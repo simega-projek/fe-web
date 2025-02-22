@@ -193,7 +193,7 @@ export default function ArticleAdmin() {
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         icon={FaFileInvoice}
-                        to={`/artikel/${article.ID}`}
+                        to={`/artikel/${article?.ID}/${article?.title}`}
                       />
                       <ButtonControls
                         icon={FaEdit}

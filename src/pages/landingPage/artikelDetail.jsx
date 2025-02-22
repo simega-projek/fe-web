@@ -31,7 +31,7 @@ export default function ArtikelDetail() {
   // if (loading) return (<Loading />);
   return (
     <>
-      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-start">
+      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:w-10/12 lg:items-start lg:justify-start lg:justify-center">
         {Object.keys(article).length > 0 && (
           <Detail
             date={formatDate(article?.CreatedAt)}

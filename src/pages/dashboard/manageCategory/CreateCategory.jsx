@@ -4,7 +4,7 @@ import { Button, Dropdown, Label, TextInput } from "flowbite-react";
 
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { getSulawesiTengah } from "../../../services/wilIndonesia.service";
 import { createCategory } from "../../../services/category.service";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
@@ -75,7 +75,7 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
 
       {/* create form */}
       <div className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="category"
             value="Nama Kategori"
@@ -92,7 +92,7 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
             sizing="md"
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
       </div>
 
       <ButtonFunc

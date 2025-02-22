@@ -8,6 +8,8 @@ import { createArticle } from "../../../services/article.service";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { set } from "date-fns";
 
 export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const editorInput = useRef(null);
@@ -17,6 +19,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [file, setFile] = useState(null);
   const [debounceDescription] = useDebounce(description, 1000);
   const [messageError, setMessageError] = useState(null);
@@ -33,6 +36,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
       editorInput.current.value = null;
     }
     if (imageInput.current) {
+      setImagePreview(null);
       imageInput.current.value = null;
     }
     if (pdfInput.current) {
@@ -46,6 +50,13 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
+  };
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    if (imageInput.current) {
+      imageInput.current.value = null;
+    }
   };
   // console.log("editor: ", editor.current);
   // console.log("desc: ", debounceDescription);
@@ -61,8 +72,8 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
       setMessageError("Deskripsi artikel diisi");
       toView("top");
       return;
-    } else if (!image && !file) {
-      setMessageError("Gambar atau PDF artikel diisi");
+    } else if (!image) {
+      setMessageError("Gambar artikel diisi");
       toView("top");
       return;
     }
@@ -138,23 +149,6 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
           <div className="w-full px-3 lg:w-1/2">
             <div className="mb-2">
               <div className="mb-2 block">
-                <Label htmlFor="image" value="Gambar" className="text-base" />
-              </div>
-              <FileInput
-                id="image"
-                name="image"
-                helperText="File harus .jpg .jpeg .png"
-                onChange={handleChangeImage}
-                accept="image/*"
-                ref={imageInput}
-                disabled={loading}
-              />
-            </div>
-          </div>
-
-          <div className="w-full px-3 lg:w-1/2">
-            <div className="mb-2">
-              <div className="mb-2 block">
                 <Label htmlFor="file" value="File" className="text-base" />
               </div>
               <FileInput
@@ -168,6 +162,26 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
               />
             </div>
           </div>
+
+          <div className="w-full px-3 lg:w-1/2">
+            <div className="mb-2">
+              <div className="mb-2 block">
+                <Label htmlFor="image" value="Gambar" className="text-base" />
+              </div>
+              <FileInput
+                id="image"
+                name="image"
+                helperText="File harus .jpg .jpeg .png"
+                onChange={handleChangeImage}
+                accept="image/*"
+                ref={imageInput}
+                disabled={loading}
+              />
+            </div>
+            {imagePreview && (
+              <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+            )}
+          </div>
         </div>
 
         <div className="w-full px-3">
@@ -176,27 +190,11 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
           </Label>
           <JoditEditor
             ref={editorInput}
-            value={debounceDescription}
+            value={description}
             onChange={(newDescription) => setDescription(newDescription)}
             disabled={loading}
           />
         </div>
-
-        {/* <div className="w-full px-3">
-          <Label htmlFor="deskripsi" className="text-base">
-            Deskripsi
-          </Label>
-          <Textarea
-            name="description"
-            autoFocus
-            id="description"
-            type="text"
-            sizing="md"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={5}
-          />
-        </div> */}
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={loading}>
           Simpan

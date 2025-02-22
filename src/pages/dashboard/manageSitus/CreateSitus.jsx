@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { getAllValley } from "../../../services/valley.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { getKelurahan } from "../../../services/wilIndonesia.service";
@@ -158,7 +158,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
 
       {/* form pembuatan situs */}
       <form onSubmit={handleCreateSite} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="situs"
             value="Nama Situs"
@@ -174,9 +174,9 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             onChange={(e) => setSitusName(e.target.value)}
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="lembah"
             value="Nama Lembah"
@@ -197,9 +197,9 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="kelurahan"
             value="Nama Kelurahan"
@@ -220,7 +220,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
 
         <ButtonFunc
           className="m-3 bg-primary text-white"

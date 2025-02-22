@@ -18,15 +18,14 @@ import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
-import { deleteObject, getAllObject } from "../../../services/object.service";
-import CreateObjek from "./CreateObjek";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
-import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
-import { toView } from "../../../utils/toView";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import UpdateActivity from "../manageActivities/UpdateActivity";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { deleteObject, getAllObject } from "../../../services/object.service";
+import { toView } from "../../../utils/toView";
+import CreateObjek from "./CreateObjek";
 import UpdateObjek from "./UpdateObjek";
 
 export default function ObjekAdmin() {

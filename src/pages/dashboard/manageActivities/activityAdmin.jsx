@@ -33,6 +33,7 @@ import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
 import UpdateActivity from "./UpdateActivity";
+import UpdateActivity2 from "./UpdateActivity2";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -124,7 +125,7 @@ export default function ActivityAdmin() {
         onSuccess={handleSuccess}
       />
 
-      <UpdateActivity
+      <UpdateActivity2
         isOpenUpdate={isOpenUpdate}
         onSuccess={handleSuccess}
         id={selectedId}

@@ -86,58 +86,65 @@ export default function KegiatanPage() {
       </div>
 
       <div className="flex flex-col">
-        {loading ? (
-          <div className="mx-auto">
+        {loading && (
+          <div className="mx-auto mt-5">
             <Loading />
           </div>
-        ) : (
-          <>
-            <div
-              className="flex flex-wrap justify-center gap-5 p-12"
-              data-aos="fade-up"
-            >
-              {dataEvents.length > 0 &&
-                dataEvents.map((item) => (
-                  <CardArtikel
-                    to={`/kegiatan/${item.ID}/${item.title}`}
-                    key={item?.ID}
-                    title={item?.title}
-                    date={item?.start_date}
-                    img={item?.image}
-                    source={item?.users?.fullname}
-                  ></CardArtikel>
-                ))}
-            </div>
-          </>
         )}
-      </div>
 
-      <div className="flex flex-col">
-        <div className="container">
-          <TitleSection className="ps-10 pt-5">
-            Kegiatan akan datang
-          </TitleSection>
-        </div>
-        <div className="scrollbar flex gap-5 overflow-x-auto p-12">
-          {loading ? (
-            <div className="mx-auto">
-              <Loading />
-            </div>
-          ) : (
-            dataEventsCS?.length > 0 &&
-            dataEventsCS
-              ?.slice(0, 6)
-              .map((item) => (
-                <CardKegiatanHome
+        <div
+          className="flex flex-wrap justify-center gap-5 p-12"
+          data-aos="fade-up"
+        >
+          {Array.isArray(dataEvents) && dataEvents?.length > 0
+            ? dataEvents.map((item) => (
+                <CardArtikel
                   to={`/kegiatan/${item.ID}/${item.title}`}
                   key={item?.ID}
                   title={item?.title}
-                  className="flex-shrink-0 md:touch-pan-x"
                   date={item?.start_date}
                   img={item?.image}
-                />
+                  source={item?.users?.fullname}
+                ></CardArtikel>
               ))
+            : !loading && (
+                <p className="my-5 text-center text-red-500">
+                  data {search} tidak ditemukan
+                </p>
+              )}
+        </div>
+      </div>
+
+      <div className="flex flex-col px-12">
+        <div className="container">
+          <TitleSection className="ps-5 pt-5">
+            Kegiatan akan datang
+          </TitleSection>
+        </div>
+        <div className="scrollbar flex gap-5 overflow-x-auto p-5">
+          {loading && (
+            <div className="mx-auto">
+              <Loading />
+            </div>
           )}
+          {dataEventsCS?.length > 0
+            ? dataEventsCS
+                ?.slice(0, 6)
+                .map((item) => (
+                  <CardKegiatanHome
+                    to={`/kegiatan/${item.ID}/${item.title}`}
+                    key={item?.ID}
+                    title={item?.title}
+                    className="flex-shrink-0 md:touch-pan-x"
+                    date={item?.start_date}
+                    img={item?.image}
+                  />
+                ))
+            : !loading && (
+                <p className="mx-auto my-5 text-center text-red-500">
+                  data {search} tidak ditemukan
+                </p>
+              )}
         </div>
       </div>
     </>

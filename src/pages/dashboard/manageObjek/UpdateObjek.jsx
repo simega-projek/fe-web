@@ -3,7 +3,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { InputMany } from "../../../components/Elements/Inputs/InputMany";
 import { getAllSite } from "../../../services/site.service";
 import { getAllCategory } from "../../../services/category.service";
@@ -229,7 +229,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
 
       {/* Form */}
       <form onSubmit={handleUpdateObject} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="objek"
             value="Nama Objek"
@@ -245,9 +245,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             required
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="category"
             value="Kategory"
@@ -267,9 +267,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="garisLintang"
             value="Garis Lintang"
@@ -283,9 +283,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             onChange={(e) => setLintang(e.target.value)}
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="garisBujur"
             value="Garis Bujur"
@@ -299,9 +299,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             onChange={(e) => setBujur(e.target.value)}
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="lembah"
             value="Lembah"
@@ -314,9 +314,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             value={valley}
             disabled
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="situs"
             value="Situs"
@@ -336,9 +336,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="picture"
             value="Gambar"
@@ -352,9 +352,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             ref={imageRef}
           />
           <small className="w-1/2 text-wrap text-light">{originalImage}</small>
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="video"
             value="Link Video"
@@ -366,7 +366,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             onReset={resetManyInput}
             initialTexts={videos}
           />
-        </CountenerInput>
+        </ContainerInput>
 
         <div className="w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
