@@ -1,7 +1,7 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
@@ -123,7 +123,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
         {/* create form */}
         <div className="flex flex-wrap">
           {/* fullname */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label htmlFor="name" value="Nama" className="text-base" />
             </div>
@@ -137,10 +137,10 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               onChange={(e) => setFullname(e.target.value)}
               name="fullname"
             />
-          </CountenerInput>
+          </ContainerInput>
 
           {/* nik */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label htmlFor="nip" value="NIK/NIP" className="text-base" />
             </div>
@@ -154,10 +154,10 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={nik}
               onChange={(e) => setNik(e.target.value)}
             />
-          </CountenerInput>
+          </ContainerInput>
 
           {/* username */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label
                 htmlFor="username"
@@ -175,10 +175,10 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-          </CountenerInput>
+          </ContainerInput>
 
           {/* email */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label htmlFor="email" value="Email" className="text-base" />
             </div>
@@ -192,10 +192,10 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-          </CountenerInput>
+          </ContainerInput>
 
           {/* password */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label
                 htmlFor="password"
@@ -213,10 +213,10 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </CountenerInput>
+          </ContainerInput>
 
           {/* confirm password */}
-          <CountenerInput>
+          <ContainerInput>
             <div className="mb-2 block">
               <Label
                 htmlFor="confirmPassword"
@@ -234,7 +234,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-          </CountenerInput>
+          </ContainerInput>
         </div>
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>

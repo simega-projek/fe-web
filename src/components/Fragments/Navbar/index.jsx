@@ -1,14 +1,31 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 export function NavbarDashboard() {
   const [isHamburgerActive, setIsHamburgerActive] = useState(false);
   const [isDropdownMenu, setIsDropdownMenu] = useState(false);
+  const dropdownRef = useRef(null);
   const handleHamburgerClick = () => {
     setIsHamburgerActive(!isHamburgerActive);
   };
   const handleDropdownClick = () => {
     setIsDropdownMenu(!isDropdownMenu);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownMenu(false);
+      }
+    };
+
+    // Add event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <header className="text-poppins fixed left-0 top-0 z-[999] flex w-full items-center justify-center bg-white/70 backdrop-blur-sm">
       <div className="container mx-auto">
@@ -16,8 +33,8 @@ export function NavbarDashboard() {
           <div className="px-4">
             <Link to={"/"}>
               <img
-                src="/icons/logo-hitam.svg"
-                width={"80%"}
+                src="/icons/bakultur.png"
+                width={"40"}
                 className="lg:3/4"
                 alt=""
               />
@@ -62,12 +79,13 @@ export function NavbarDashboard() {
                     onClick={handleDropdownClick}
                   >
                     Informasi
-                    <span className="ml-3 inline-block h-3 w-3 rotate-45 border-b-2 border-r-2 border-dark"></span>
+                    <span className="ml-3 inline-block h-2 w-2 rotate-45 border-b-2 border-r-2 border-dark"></span>
                   </button>
                 </li>
 
                 <div
                   className={`relative ${isDropdownMenu ? "block" : "hidden"}`}
+                  ref={dropdownRef}
                 >
                   <ul className="right-full lg:absolute lg:top-full lg:mr-8 lg:flex lg:flex-col lg:rounded-lg lg:bg-white lg:shadow-lg lg:backdrop-blur-lg">
                     <li className={`group my-2 text-start`}>
@@ -78,6 +96,11 @@ export function NavbarDashboard() {
                     <li className={`group my-2`}>
                       <Link to="/kegiatan" className={`menu-list`}>
                         Kegiatan
+                      </Link>
+                    </li>
+                    <li className={`group my-2`}>
+                      <Link to="/feedback" className={`menu-list`}>
+                        Umpan Balik
                       </Link>
                     </li>
                   </ul>

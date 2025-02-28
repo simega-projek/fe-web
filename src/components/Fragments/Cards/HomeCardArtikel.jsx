@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 // import { formatDate } from "../../../utils/formatDate";
-
-export default function CardArtikelHome(props) {
+import parse from "html-react-parser";
+import formattedDate from "../../../utils/formattedDate";
+import maxWord from "../../../utils/maxWord";
+export const CardArtikelHome = (props) => {
   const {
     to,
     img = "/images/hero-img.png",
     title,
-    children,
+    desc,
     date,
     className,
   } = props;
+
+  // const limitWord = maxWord(desc, 30);
+  const formatedDate = formattedDate(date);
   return (
     // <div className="w-full lg:w-5/12 shadow-xl border-[2px] border-white">
     //     <Link to={to}>
@@ -47,17 +52,17 @@ export default function CardArtikelHome(props) {
           <h3 className="text-lg font-bold text-gray-800 dark:text-white">
             {title}
           </h3>
-          <p className="mt-1 text-gray-500 dark:text-neutral-400">
-            {children.substring(0, 110)}...
-          </p>
+          {/* <div dangerouslySetInnerHTML={{ __html: desc }} className="mt-1 text-gray-500 dark:text-neutral-400">
+            {parse(desc)}...
+          </div> */}
 
           <div className="mt-5 sm:mt-auto">
             <p className="text-xs text-gray-500 dark:text-neutral-500">
-              {/* {formatDate(date)} */} {date}
+              {/* {formatDate(date)} {date} */} {formatedDate}
             </p>
           </div>
         </div>
       </div>
     </Link>
   );
-}
+};

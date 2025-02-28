@@ -4,7 +4,7 @@ import { Button, Dropdown, Label, TextInput } from "flowbite-react";
 
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { getSulawesiTengah } from "../../../services/wilIndonesia.service";
 import {
   createCategory,
@@ -86,6 +86,13 @@ export default function UpdateCategories({
     }
   }, [id]);
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -111,7 +118,7 @@ export default function UpdateCategories({
 
       {/* create form */}
       <form onSubmit={handleUpdateCategory} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="category"
             value="Nama Kategori"
@@ -127,8 +134,9 @@ export default function UpdateCategories({
             type="text"
             sizing="md"
             disabled={isLoading}
+            ref={activeRef}
           />
-        </CountenerInput>
+        </ContainerInput>
       </form>
       <ButtonFunc
         className="m-3 bg-primary text-white"

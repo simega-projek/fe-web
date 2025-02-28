@@ -1,16 +1,82 @@
 import ButtonLink from "../../components/Elements/Buttons/ButtonLink";
 import TitleSection from "../../components/Elements/TitleSection";
-import CardKegiatan from "../../components/Fragments/Cards/HomeCardKegiatan";
-import CardSitusHome from "../../components/Fragments/Cards/HomeCardSitus";
-import CardArtikel from "../../components/Fragments/Cards/HomeCardArtikel";
-import Footer from "../../components/Fragments/Footer/Footer";
 
-import artikelData from "../../data/artikel.json";
-import situsData from "../../data/situs.json";
-import kegiatanData from "../../data/kegiatan.json";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import { useEffect, useState } from "react";
+import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
+import { CardKegiatanHome } from "../../components/Fragments/Cards/HomeCardKegiatan";
+import { CardSitusHome } from "../../components/Fragments/Cards/HomeCardSitus";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
+import { getAllArticles } from "../../services/article.service";
+import { getAllEvent } from "../../services/event.service";
+import { getAllObject } from "../../services/object.service";
+import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
+import TextBlink from "../../components/Elements/TextBlink/TextBlink";
+import { HiOutlineGlobe } from "react-icons/hi";
 
 export default function HomePage() {
+  const [dataObjects, setDataObjects] = useState([]);
+  const [dataEvents, setDataEvents] = useState([]);
+  const [dataArticles, setDataArticles] = useState([]);
+
+  const [fetchLoading, setFetchLoading] = useState(false);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 700,
+      once: false,
+    });
+  }, []);
+  const fetchObjects = async () => {
+    setFetchLoading(true);
+    try {
+      const objects = await getAllObject(3);
+      setDataObjects(objects.data);
+      // console.log(objects.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setFetchLoading(false);
+    }
+  };
+
+  const fetchEvents = async () => {
+    setFetchLoading(true);
+    try {
+      const events = await getAllEvent(3);
+      setDataEvents(events.data);
+      // console.log(events.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setFetchLoading(false);
+    }
+  };
+  const fetchArticles = async () => {
+    setFetchLoading(true);
+    try {
+      const articles = await getAllArticles(3);
+      setDataArticles(articles.data);
+      // console.log(articles.data);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setFetchLoading(false);
+    }
+  };
+
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
+
+  useEffect(() => {
+    fetchObjects();
+    fetchArticles();
+    fetchEvents();
+  }, []);
+
   return (
     <>
       <HeroSection>
@@ -53,13 +119,14 @@ export default function HomePage() {
               </h2>
 
               <p className="mt-4 text-justify text-lg font-medium md:text-xl">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Delectus sed inventore quae unde, aspernatur accusantium iure
-                temporibus veniam. Magnam, culpa? Cum exercitationem in nisi
-                soluta sequi debitis natus mollitia qui? Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Adipisci voluptas eveniet
-                consequatur laudantium delectus voluptatibus veritatis corporis,
-                cum et? Tempore!
+                Sulawesi Tengah dikenal sebagai "Negeri Seribu Megalit", karena
+                merupakan rumah bagi ribuan peninggalan batu besar dari
+                peradaban megalitik kuno. Situs-situs ini, yang tersebar di
+                seluruh wilayah, menyimpan jejak sejarah dan budaya masyarakat
+                purba yang hidup ribuan tahun lalu. Melalui upaya pelestarian
+                dan pemanfaatan teknologi digital, kita dapat lebih memahami
+                makna dari artefak-artefak bersejarah ini serta menjaga warisan
+                budaya yang tak ternilai bagi generasi mendatang.
               </p>
             </div>
           </div>
@@ -72,16 +139,27 @@ export default function HomePage() {
             <div className="w-full text-center md:mb-5">
               <TitleSection>Situs</TitleSection>
             </div>
-            <div className="mx-auto flex w-10/12 flex-wrap justify-center gap-3 md:gap-5 lg:w-full lg:gap-0">
-              {situsData.slice(0, 3).map((situs) => (
+            <div
+              data-aos="fade-up"
+              className="mx-auto flex w-10/12 flex-wrap justify-center gap-3 md:gap-5 lg:w-full lg:gap-10 lg:p-10"
+            >
+              {dataObjects?.map((obj) => (
                 <CardSitusHome
-                  key={situs._id}
-                  title={situs.title}
-                  to={`/objek/${situs._id}`}
-                >
-                  {situs.content}
-                </CardSitusHome>
+                  key={obj?.ID}
+                  title={obj?.nama_objek}
+                  to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
+                  desc={obj?.deskripsi}
+                  img={obj?.gambar}
+                ></CardSitusHome>
               ))}
+            </div>
+            <div className="mx-auto mt-8 w-10/12 lg:w-8/12">
+              <ButtonLink
+                to={`/persebaran`}
+                className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white lg:w-6/12`}
+              >
+                Persebaran Megalitikum
+              </ButtonLink>
             </div>
           </div>
         </div>
@@ -96,10 +174,21 @@ export default function HomePage() {
             <div className="mb-10 w-full text-center">
               <TitleSection>Kegiatan</TitleSection>
             </div>
-            <div className="mx-auto flex w-8/12 flex-wrap gap-10 md:w-full md:justify-center lg:w-full">
-              {kegiatanData.slice(0, 3).map((keg) => (
-                <CardKegiatan key={keg._id} date={keg.date} title={keg.title} />
-              ))}
+            <div
+              className="mx-auto flex w-8/12 flex-wrap gap-10 md:w-full md:justify-center lg:w-full"
+              data-aos="fade-down"
+            >
+              {Array.isArray(dataEvents) &&
+                dataEvents
+                  .slice(0, 3)
+                  .map((keg) => (
+                    <CardKegiatanHome
+                      to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                      key={keg?.ID}
+                      date={keg?.start_date}
+                      title={keg?.title}
+                    />
+                  ))}
             </div>
             <div className="mt-8 w-8/12">
               <ButtonLink
@@ -123,17 +212,19 @@ export default function HomePage() {
               <TitleSection>Artikel & Berita</TitleSection>
             </div>
 
-            <div className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full">
-              {artikelData.slice(0, 4).map((artikel) => (
+            <div
+              className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
+              data-aos="zoom-in"
+            >
+              {dataArticles?.slice(0, 4).map((artikel) => (
                 <CardArtikel
-                  to={`/artikel`}
-                  image={artikel.image}
-                  key={artikel._id}
-                  title={artikel.title}
-                  date={artikel.date}
-                >
-                  {artikel.content}
-                </CardArtikel>
+                  to={`/artikel/${artikel?.ID}/${artikel?.title}`}
+                  image={artikel?.image}
+                  key={artikel?.ID}
+                  title={artikel?.title}
+                  date={artikel?.CreatedAt}
+                  source={artikel?.users?.fullname}
+                />
               ))}
             </div>
             <div className="mx-auto mt-8 w-10/12 lg:w-8/12">
@@ -141,7 +232,7 @@ export default function HomePage() {
                 to={`/artikel`}
                 className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white lg:w-6/12`}
               >
-                Lihat Semua Kegiatan
+                Lihat Artikel & Berita Lainnya
               </ButtonLink>
             </div>
           </div>

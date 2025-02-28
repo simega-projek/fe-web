@@ -6,10 +6,10 @@
 @tailwind utilities;
 
 .scrollbar::-webkit-scrollbar {
-  @apply h-2 bg-tan pt-2;
+  @apply h-2 w-2 rounded bg-tan;
 }
 .scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-white;
+  @apply rounded bg-white;
 }
 .leaflet-container {
   width: 100%;
@@ -43,5 +43,5 @@
 }
 
 .menu-list {
-  @apply mx-8 text-lg font-semibold text-dark transition-all ease-linear group-hover:border-b-4 group-hover:border-b-primary group-hover:text-primary;
+  @apply mx-8 whitespace-nowrap text-lg font-semibold text-dark transition-all ease-linear group-hover:border-b-4 group-hover:border-b-primary group-hover:text-primary;
 }

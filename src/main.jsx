@@ -26,12 +26,13 @@ import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
+import FeedbackPage from "./pages/landingPage/feedback.jsx";
 
 const route = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -42,7 +43,7 @@ const route = createBrowserRouter([
         element: <ArtikelPage />,
       },
       {
-        path: "/artikel/:id",
+        path: "/artikel/:id/:slug",
         element: <ArtikelDetail />,
       },
 
@@ -73,6 +74,14 @@ const route = createBrowserRouter([
       {
         path: "/media",
         element: <Media />,
+      },
+      {
+        path: "/feedback",
+        element: <FeedbackPage />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
       },
     ],
   },
@@ -126,6 +135,6 @@ const route = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <RouterProvider router={route} />,
+    <RouterProvider router={route} />
   </Provider>,
 );

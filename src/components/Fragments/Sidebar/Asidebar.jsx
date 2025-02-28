@@ -27,7 +27,7 @@ export const Asidebars = () => {
   };
   return (
     <aside
-      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} fixed z-50 flex h-screen w-64 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
+      className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} fixed z-30 flex h-screen w-64 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
     >
       {/* <!-- open sidebar button --> */}
       <div
