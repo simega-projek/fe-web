@@ -93,8 +93,8 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     setDescription(newDescription);
   }, []);
 
-  const handleUpdateObject = async (e) => {
-    e.preventDefault();
+  const handleUpdateObject = async () => {
+    // e.preventDefault();
 
     if (
       nameObject.trim() === "" ||
@@ -156,6 +156,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     try {
       const object = await getOneObject(id);
 
+
       setNameObject(object?.data.nama_objek);
       setLintang(object?.data.lintang);
       setBujur(object?.data.bujur);
@@ -166,6 +167,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
       setSelectedCategory(object?.data.category_id);
       setVideos(object?.data.video.split(","));
       setOriginalImage(object?.data.gambar);
+
     } catch (err) {
       console.log(err);
     } finally {
