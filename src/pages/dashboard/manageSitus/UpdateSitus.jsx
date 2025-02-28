@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
@@ -170,6 +170,13 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ selectedVillage });
   // console.log(dataUpdate);
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   useEffect(() => {
     fetchValley();
   }, []);
@@ -178,9 +185,14 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     fetchOneSite(id);
   }, [id, fetchOneSite]);
 
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Ubah Data Situs</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -215,6 +227,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             sizing="md"
             value={siteName}
             onChange={(e) => setSiteName(e.target.value)}
+            ref={activeRef}
           />
         </ContainerInput>
 

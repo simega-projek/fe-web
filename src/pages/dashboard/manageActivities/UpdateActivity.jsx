@@ -213,6 +213,13 @@ export default function UpdateActivity({
   //   endDate,
   // });
 
+  // const activeRef = useRef(false);
+
+  // useEffect(() => {
+  //   activeRef.current.focus();
+  // }),
+  //   [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -245,7 +252,7 @@ export default function UpdateActivity({
           />
 
           <TextInput
-            autoFocus
+            // autoFocus
             required
             id="title"
             type="text"
@@ -253,6 +260,7 @@ export default function UpdateActivity({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
+            // ref={activeRef}
           />
         </ContainerInput>
 

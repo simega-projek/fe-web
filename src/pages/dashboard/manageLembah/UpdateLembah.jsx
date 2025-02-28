@@ -207,10 +207,17 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   // console.log({ districts });
   // console.log({ villages });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <>
       <div className={isOpenUpdate ? "block" : "hidden"}>
-        <div className="flex justify-between">
+        <div className="mb-2 flex justify-between">
           <TitleSection className="underline">Ubah Data Lembah</TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
@@ -245,6 +252,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
               onChange={(e) => setLembah(e.target.value)}
               sizing="md"
               disabled={isLoading}
+              ref={activeRef}
             />
           </ContainerInput>
 

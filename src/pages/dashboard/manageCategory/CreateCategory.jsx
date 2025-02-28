@@ -51,6 +51,13 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
     }
   };
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -91,6 +98,8 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
             type="text"
             sizing="md"
             disabled={isLoading}
+            placeholder="Nisan"
+            ref={activeRef}
           />
         </ContainerInput>
       </div>

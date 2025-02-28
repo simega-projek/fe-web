@@ -157,10 +157,17 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
   // console.log({ districts });
   // console.log({ villages });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <>
       <div className={isOpenCreate ? "block" : "hidden"}>
-        <div className="flex justify-between">
+        <div className="mb-2 flex justify-between">
           <TitleSection className="underline">Tambah Lembah</TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
@@ -196,6 +203,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               onChange={(e) => setLembah(e.target.value)}
               sizing="md"
               disabled={isLoading}
+              ref={activeRef}
             />
           </ContainerInput>
 

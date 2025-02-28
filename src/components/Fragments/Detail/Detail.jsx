@@ -1,3 +1,4 @@
+import HTMLReactParser from "html-react-parser/lib/index";
 import { formatDate } from "../../../utils/formatDate";
 import formattedDate from "../../../utils/formattedDate";
 import TitleSection from "../../Elements/TitleSection";
@@ -20,9 +21,12 @@ export const Detail = (props) => {
         />
       </div>
       <div
-        className="mt-5 text-lg md:text-xl"
-        dangerouslySetInnerHTML={{ __html: desc }}
-      ></div>
+        className="mt-5 break-words text-lg md:text-xl"
+        // dangerouslySetInnerHTML={{ __html: desc }}
+      >
+        {/* {HTMLReactParser(desc)} */}
+        {parse(desc)}
+      </div>
     </div>
   );
 };

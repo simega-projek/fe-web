@@ -103,7 +103,11 @@ export default function ArticleAdmin() {
 
   return (
     <>
-      <CreateArticle isOpenCreate={isOpenCreate} onSuccess={handleSuccess} />
+      <CreateArticle
+        isOpenCreate={isOpenCreate}
+        onSuccess={handleSuccess}
+        onClose={handleOpenCreateForm}
+      />
 
       <UpdateArticle
         isOpenUpdate={isOpenUpdate}

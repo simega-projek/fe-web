@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
@@ -134,9 +134,16 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   // console.log({ selectedValley });
   // console.log({ selectedVillage });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Tambah Situs</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -173,6 +180,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             value={situsName}
             onChange={(e) => setSitusName(e.target.value)}
             disabled={isLoading}
+            ref={activeRef}
           />
         </ContainerInput>
 

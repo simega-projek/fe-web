@@ -1,6 +1,6 @@
-import { FileInput, Label, TextInput } from "flowbite-react";
+import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import TitleSection from "../../../components/Elements/TitleSection";
@@ -10,8 +10,9 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { set } from "date-fns";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 
-export default function CreateArticle({ isOpenCreate, onSuccess }) {
+export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef(null);
   const imageInput = useRef(null);
   const pdfInput = useRef(null);
@@ -21,7 +22,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [file, setFile] = useState(null);
-  const [debounceDescription] = useDebounce(description, 1000);
+  const [debounceDescription] = useDebounce(description, 800);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -63,7 +64,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
 
   const handleCreateArticle = async (e) => {
     e.preventDefault();
-    console.log(title);
+    // console.log(title);
     if (title.trim() === "" || !title) {
       setMessageError("Judul artikel diisi");
       toView("top");
@@ -94,11 +95,8 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
         setMessageError(null);
         setMessageSuccess(res.message);
         toView("top");
-
-        if (onSuccess) {
-          onSuccess();
-          handleReset();
-        }
+        onSuccess();
+        handleReset();
       }
     } catch (err) {
       console.log(err);
@@ -107,10 +105,21 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
     }
   };
 
+  useEffect(() => {
+    if (isOpenCreate === false) {
+      handleReset();
+    }
+  }, [isOpenCreate]);
+
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <TitleSection className="underline">Tambah Berita & Artikel</TitleSection>
-      <hr className="my-5" />
+      <div className="mb-2 flex justify-between">
+        <TitleSection className="underline">Tambah Objek</TitleSection>
+        <hr className="my-5" />
+        <Button color="red" onClick={onClose}>
+          X
+        </Button>
+      </div>
 
       {/* alert */}
       {(messageError && (
@@ -125,72 +134,72 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
         ))}
 
       {/* create form */}
-      <form onSubmit={handleCreateArticle}>
-        <div className="flex flex-wrap">
-          <div className="w-full px-3 lg:w-1/2">
-            <div className="mb-2">
-              <div className="mb-2 block">
-                <Label htmlFor="title" value="Title" className="text-base" />
-              </div>
-              <TextInput
-                required
-                name="title"
-                autoFocus
-                id="title"
-                type="text"
-                sizing="md"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-          </div>
+      <form onSubmit={handleCreateArticle} className="flex flex-wrap">
+        <ContainerInput>
+          <Label
+            htmlFor="title"
+            value="Title"
+            className="mb-2 block text-base"
+          />
+          <TextInput
+            required
+            name="title"
+            autoFocus
+            id="title"
+            type="text"
+            sizing="md"
+            placeholder="Artikel terkini hari ini"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            disabled={loading}
+          />
+        </ContainerInput>
 
-          <div className="w-full px-3 lg:w-1/2">
-            <div className="mb-2">
-              <div className="mb-2 block">
-                <Label htmlFor="file" value="File" className="text-base" />
-              </div>
-              <FileInput
-                id="file"
-                name="file"
-                helperText="File harus .pdf"
-                onChange={handleChangeFile}
-                accept="application/pdf"
-                ref={pdfInput}
-                disabled={loading}
-              />
-            </div>
-          </div>
+        <ContainerInput>
+          <Label htmlFor="file" value="File" className="mb-2 block text-base" />
+          <FileInput
+            id="file"
+            name="file"
+            helperText="File harus .pdf"
+            onChange={handleChangeFile}
+            accept="application/pdf"
+            ref={pdfInput}
+            disabled={loading}
+          />
+        </ContainerInput>
 
-          <div className="w-full px-3 lg:w-1/2">
-            <div className="mb-2">
-              <div className="mb-2 block">
-                <Label htmlFor="image" value="Gambar" className="text-base" />
-              </div>
-              <FileInput
-                id="image"
-                name="image"
-                helperText="File harus .jpg .jpeg .png"
-                onChange={handleChangeImage}
-                accept="image/*"
-                ref={imageInput}
-                disabled={loading}
-              />
-            </div>
-            {imagePreview && (
-              <ImagePreview src={imagePreview} onClose={handleClosePreview} />
-            )}
-          </div>
-        </div>
+        <ContainerInput>
+          <Label
+            htmlFor="image"
+            value="Gambar"
+            className="mb-2 block text-base"
+          />
+
+          <FileInput
+            id="image"
+            name="image"
+            helperText="File harus .jpg .jpeg .png"
+            onChange={handleChangeImage}
+            accept="image/*"
+            multiple
+            ref={imageInput}
+            disabled={loading}
+          />
+        </ContainerInput>
+
+        <ContainerInput>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
+        </ContainerInput>
 
         <div className="w-full px-3">
-          <Label htmlFor="deskripsi" className="text-base">
+          <Label htmlFor="deskripsi" className="mb-2 block text-base">
             Deskripsi
           </Label>
           <JoditEditor
             ref={editorInput}
-            value={description}
+            value={debounceDescription}
             onChange={(newDescription) => setDescription(newDescription)}
             disabled={loading}
           />
@@ -200,7 +209,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess }) {
           Simpan
         </ButtonFunc>
 
-        <ButtonFunc className="bg-tan" onClick={handleReset}>
+        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
           Reset
         </ButtonFunc>
       </form>

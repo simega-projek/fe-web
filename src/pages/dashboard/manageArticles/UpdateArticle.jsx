@@ -58,7 +58,8 @@ export default function UpdateArticle({
 
   const handleClosePreview = () => {
     setImagePreview(null);
-    if (imageInput.current) imageInput.current.value = null;
+    setImage(null);
+    if (!imageInput.current) imageInput.current.value = null;
   };
 
   const handleUpdateArticle = useCallback(
@@ -98,6 +99,7 @@ export default function UpdateArticle({
           }
         }
         toView("top");
+        window.location.reload();
       } catch (err) {
         console.log(err);
       } finally {
@@ -147,6 +149,12 @@ export default function UpdateArticle({
 
   // console.log({ dataUpdate });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -182,6 +190,7 @@ export default function UpdateArticle({
               onChange={(e) => setTitle(e.target.value)}
               required
               disabled={loading}
+              ref={activeRef}
             />
           </div>
 

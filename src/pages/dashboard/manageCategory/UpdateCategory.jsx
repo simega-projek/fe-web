@@ -86,6 +86,13 @@ export default function UpdateCategories({
     }
   }, [id]);
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -127,6 +134,7 @@ export default function UpdateCategories({
             type="text"
             sizing="md"
             disabled={isLoading}
+            ref={activeRef}
           />
         </ContainerInput>
       </form>

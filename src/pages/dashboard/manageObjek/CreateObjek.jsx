@@ -11,9 +11,11 @@ import { getAllCategory } from "../../../services/category.service";
 import { createObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { useDebounce } from "use-debounce";
 
 export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
-  const editorInput = useRef(null);
+  const editorInput = useRef("");
   const imageRef = useRef(null);
 
   const [nameObject, setNameObject] = useState("");
@@ -21,14 +23,11 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const [bujur, setBujur] = useState("");
   const [valley, setValley] = useState("");
   const [videos, setVideos] = useState([]); //multiple video
+  const [image, setImage] = useState(null);
   const [selectedSite, setSelectedSite] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [description, setDescription] = useState("");
-
-  const [video, setVideo] = useState("");
-
-  const [images, setImages] = useState([]);
-  const [image, setImage] = useState(null);
+  const [debounceDescription] = useDebounce(description, 800);
 
   const [siteData, setSiteData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -36,8 +35,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [resetManyInput, setResetManyInput] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleReset = () => {
     setNameObject("");
@@ -48,15 +46,8 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     setSelectedSite(0);
     setSelectedCategory(0);
     setDescription("");
-    setImages([]);
-
-    setResetManyInput((prev) => !prev); // Toggle state untuk reset ManyInputText
-    if (editorInput.current) {
-      editorInput.current.value = null;
-    }
-    if (editorInput.current) {
-      editorInput.current.value = null;
-    }
+    setImage(null);
+    setImagePreview(null);
     if (imageRef.current) {
       imageRef.current.value = null;
     }
@@ -64,23 +55,28 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     toView("top");
   };
 
-  const fetchSite = async () => {
-    setIsLoading(true);
-    try {
-      const sites = await getAllSite();
-      setSiteData(sites?.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
+  const handleImageChange = (e) => {
+    const selectFile = e.target.files[0];
+    setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
+  };
+
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    setImage(null);
+    if (imageRef.current) {
+      imageRef.current.value = null;
     }
   };
 
-  const fetchCategory = async () => {
+  const fetchData = async () => {
     setIsLoading(true);
     try {
       const categories = await getAllCategory();
       setCategoryData(categories?.data);
+
+      const sites = await getAllSite();
+      setSiteData(sites?.data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -100,10 +96,6 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     const site = siteData.find((s) => s.ID === +selectedSite);
     setValley(site?.lembah?.lembah);
   };
-  const handleImagesChange = (e) => {
-    const selectFile = e.target.files[0];
-    setImages(selectFile);
-  };
 
   const handleVideosChange = (values) => {
     setVideos(values);
@@ -120,6 +112,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
       bujur.trim() === "" ||
       !bujur ||
       description.trim() === "" ||
+      !image ||
       !description ||
       !selectedSite ||
       !selectedCategory
@@ -138,7 +131,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     formData.append("site_id", selectedSite);
     formData.append("category_id", selectedCategory);
     formData.append("video", videos);
-    formData.append("gambar", images);
+    formData.append("gambar", image);
 
     setIsLoading(true);
     try {
@@ -169,15 +162,14 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   }, [isOpenCreate]);
 
   useEffect(() => {
-    fetchSite();
-    fetchCategory();
+    fetchData();
   }, []);
 
   // console.log(image);
-  // console.log(images);
+  // console.log(image);
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Tambah Objek</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -210,7 +202,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             type="text"
             sizing="md"
             value={nameObject}
-            placeholder="name objek"
+            placeholder="Patung Palindo"
             onChange={(e) => setNameObject(e.target.value)}
             required
             disabled={isLoading}
@@ -228,6 +220,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             className="w-full rounded-md"
             onChange={handleCategoryChange}
             disabled={isLoading}
+            value={selectedCategory}
           >
             <option>Pilih Kategori</option>
             {categoryData?.map((cat) => (
@@ -248,6 +241,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             id="garisLintang"
             type="text"
             sizing="md"
+            placeholder="-0.9052080924767166"
             value={lintang}
             onChange={(e) => setLintang(e.target.value)}
             disabled={isLoading}
@@ -264,6 +258,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             id="garisBujur"
             type="text"
             sizing="md"
+            placeholder="119.85368178963921"
             value={bujur}
             onChange={(e) => setBujur(e.target.value)}
             disabled={isLoading}
@@ -296,6 +291,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             className="w-full rounded-md"
             onChange={handleSiteChange}
             disabled={isLoading}
+            value={selectedSite}
           >
             <option>Pilih Situs</option>
             {siteData?.map((site) => (
@@ -309,12 +305,11 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
         <ContainerInput>
           <Label
             htmlFor="picture"
-            value="Gambar"
+            value="Gambar Thumbnail"
             className="mb-2 block text-base"
           />
-          {/* <ManyInputImage onImagesChange={setImages} /> */}
           <FileInput
-            onChange={handleImagesChange}
+            onChange={handleImageChange}
             accept="image/*"
             disabled={isLoading}
             ref={imageRef}
@@ -325,6 +320,12 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
         </ContainerInput>
 
         <ContainerInput>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
+        </ContainerInput>
+
+        {/* <ContainerInput>
           <Label
             htmlFor="video"
             value="Link Video"
@@ -335,7 +336,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             disabled={isLoading}
             onReset={resetManyInput}
           />
-        </ContainerInput>
+        </ContainerInput> */}
 
         <div className="w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
@@ -343,7 +344,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
           </Label>
           <JoditEditor
             ref={editorInput}
-            value={description}
+            value={debounceDescription}
             onChange={(newContent) => setDescription(newContent)}
             disabled={isLoading}
           />

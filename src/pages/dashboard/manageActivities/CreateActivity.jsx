@@ -36,9 +36,13 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
   };
 
-  const handleInputJodit = useCallback((newDescription) => {
-    setDescription(newDescription);
-  }, []);
+  // const handleInputJodit = useCallback((newDescription) => {
+  //   setDescription(newDescription);
+  // }, []);
+
+  const handleInputJodit = (desc) => {
+    setDescription(desc);
+  };
 
   const handleClosePreview = () => {
     setImagePreview(null);
@@ -149,16 +153,16 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   //   endDate,
   // });
 
-  const activeRef = useRef(false);
+  // const activeRef = useRef(false);
 
-  useEffect(() => {
-    activeRef.current.focus();
-  }),
-    [];
+  // useEffect(() => {
+  //   activeRef.current.focus();
+  // }),
+  //   [];
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Tambah Kegiatan</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -197,7 +201,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
             placeholder="Kegiatan Hari ini"
-            ref={activeRef}
+            // ref={activeRef}
           />
         </ContainerInput>
 
@@ -211,6 +215,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           <TextInput
             id="regisLink"
             name="registration_link"
+            placeholder="https://forms.gle/MUKWvwvoyz6oaLEC8"
             required
             type="text"
             sizing="md"
@@ -303,11 +308,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
             Deskripsi
           </Label>
-          <JoditEditor
-            ref={editorInput}
-            value={description}
-            onChange={handleInputJodit}
-          />
+          <JoditEditor onChange={handleInputJodit} ref={editorInput} />
         </div>
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>

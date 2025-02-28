@@ -17,6 +17,8 @@ import ManyInputText from "../../../components/Elements/Inputs/ManyInputText";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
+import { useDebounce } from "use-debounce";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 
 export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
@@ -30,11 +32,12 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const [selectedSite, setSelectedSite] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [description, setDescription] = useState("");
+  const [debounceDescription] = useDebounce(description, 800);
 
   const [originalImage, setOriginalImage] = useState(null);
 
-  const [images, setImages] = useState([]);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const [siteData, setSiteData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -45,48 +48,14 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
 
   const [resetManyInput, setResetManyInput] = useState(false);
 
-  const handleReset = () => {
-    setNameObject("");
-    setLintang("");
-    setBujur("");
-    setValley("");
-    setVideos([]);
-    setSelectedSite(0);
-    setSelectedCategory(0);
-    setDescription("");
-    setImages([]);
-
-    setResetManyInput((prev) => !prev); // Toggle state untuk reset ManyInputText
-    if (editorInput.current) {
-      editorInput.current.value = null;
-    }
-    if (editorInput.current) {
-      editorInput.current.value = null;
-    }
-    if (imageRef.current) {
-      imageRef.current.value = null;
-    }
-
-    toView("top");
-  };
-
-  const fetchSite = async () => {
-    setIsLoading(true);
-    try {
-      const sites = await getAllSite();
-      setSiteData(sites?.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchCategory = async () => {
+  const fetchData = async () => {
     setIsLoading(true);
     try {
       const categories = await getAllCategory();
       setCategoryData(categories?.data);
+
+      const sites = await getAllSite();
+      setSiteData(sites?.data);
     } catch (err) {
       console.log(err);
     } finally {
@@ -106,9 +75,18 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     const site = siteData.find((s) => s.ID === +selectedSite);
     setValley(site?.lembah?.lembah);
   };
-  const handleImagesChange = (e) => {
+  const handleImageChange = (e) => {
     const selectFile = e.target.files[0];
-    setImages(selectFile);
+    setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
+  };
+
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    setImage(null);
+    if (imageRef.current) {
+      imageRef.current.value = null;
+    }
   };
 
   const handleInputJodit = useCallback((newDescription) => {
@@ -144,7 +122,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     formData.append("site_id", selectedSite);
     formData.append("category_id", selectedCategory);
     formData.append("video", videos);
-    formData.append("gambar", images ? images : originalImage);
+    formData.append("gambar", image ? image : originalImage);
 
     setIsLoading(true);
     try {
@@ -178,15 +156,16 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     try {
       const object = await getOneObject(id);
 
-      setNameObject(object?.data?.nama_objek);
-      setLintang(object?.data?.lintang);
-      setBujur(object?.data?.bujur);
-      setDescription(object?.data?.deskripsi);
-      // console.log({ description });
-      setSelectedSite(object?.data?.site_id);
-      setSelectedCategory(object?.data?.category_id);
-      setVideos(object?.data?.video.split(","));
-      setOriginalImage(object?.data?.gambar);
+      setNameObject(object?.data.nama_objek);
+      setLintang(object?.data.lintang);
+      setBujur(object?.data.bujur);
+      setDescription(object?.data.deskripsi);
+      setImage(object?.data.gambar);
+      setImagePreview(object?.data.gambar);
+      setSelectedSite(object?.data.site_id);
+      setSelectedCategory(object?.data.category_id);
+      setVideos(object?.data.video.split(","));
+      setOriginalImage(object?.data.gambar);
     } catch (err) {
       console.log(err);
     } finally {
@@ -199,15 +178,14 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   }, [id]);
 
   useEffect(() => {
-    fetchSite();
-    fetchCategory();
+    fetchData();
   }, []);
 
   // console.log(image);
-  // console.log(images);
+  // console.log(image);
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Ubah Data Objek</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -344,17 +322,24 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             value="Gambar"
             className="mb-2 block text-base"
           />
-          {/* <ManyInputImage onImagesChange={setImages} /> */}
+          {/* <ManyInputImage onImageChange={setImage} /> */}
           <FileInput
-            onChange={handleImagesChange}
+            onChange={handleImageChange}
             accept="image/*"
             disabled={isLoading}
             ref={imageRef}
           />
-          <small className="w-1/2 text-wrap text-light">{originalImage}</small>
+          <p className="truncate text-xs text-gray-400">
+            File asli: ${originalImage}
+          </p>
+        </ContainerInput>
+        <ContainerInput>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
         </ContainerInput>
 
-        <ContainerInput>
+        {/* <ContainerInput>
           <Label
             htmlFor="video"
             value="Link Video"
@@ -366,7 +351,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             onReset={resetManyInput}
             initialTexts={videos}
           />
-        </ContainerInput>
+        </ContainerInput> */}
 
         <div className="w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
@@ -374,7 +359,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           </Label>
           <JoditEditor
             ref={editorInput}
-            value={description}
+            value={debounceDescription}
             onChange={handleInputJodit}
             disabled={isLoading}
           />
