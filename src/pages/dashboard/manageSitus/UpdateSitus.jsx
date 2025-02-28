@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { getAllValley } from "../../../services/valley.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { getKelurahan } from "../../../services/wilIndonesia.service";
@@ -170,6 +170,13 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ selectedVillage });
   // console.log(dataUpdate);
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   useEffect(() => {
     fetchValley();
   }, []);
@@ -178,9 +185,14 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     fetchOneSite(id);
   }, [id, fetchOneSite]);
 
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Ubah Data Situs</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -202,7 +214,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
 
       {/* form pembuatan situs */}
       <form onSubmit={handeUpdateSite} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="situs"
             value="Nama Situs"
@@ -215,10 +227,11 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
             sizing="md"
             value={siteName}
             onChange={(e) => setSiteName(e.target.value)}
+            ref={activeRef}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="lembah"
             value="Nama Lembah"
@@ -238,9 +251,9 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="kelurahan"
             value="Nama Kelurahan"
@@ -261,7 +274,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
               </option>
             ))}
           </select>
-        </CountenerInput>
+        </ContainerInput>
       </form>
       <ButtonFunc
         className="m-3 bg-primary text-white"

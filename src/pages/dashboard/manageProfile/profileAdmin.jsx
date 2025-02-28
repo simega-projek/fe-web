@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
 import {
   changePassword,
@@ -177,7 +177,7 @@ export const ProfileAdmin = () => {
         ))}
 
       <form className="flex flex-wrap" onSubmit={handleEditProfile}>
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="fullname"
             value="Nama Lengkap"
@@ -194,9 +194,9 @@ export const ProfileAdmin = () => {
             value={fullname ?? "loading..."}
             onChange={(e) => setFullname(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="username"
             value="Username"
@@ -212,9 +212,9 @@ export const ProfileAdmin = () => {
             name="username"
             onChange={(e) => setUsername(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label htmlFor="nik" value="NIK" className="mb-2 block text-base" />
 
           <TextInput
@@ -226,9 +226,9 @@ export const ProfileAdmin = () => {
             onChange={(e) => setNik(e.target.value)}
             value={nik ?? "loading..."}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="email"
             value="Email"
@@ -244,9 +244,9 @@ export const ProfileAdmin = () => {
             value={email ?? "loading..."}
             onChange={(e) => setEmail(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="phone_number"
             value="No Hp"
@@ -262,9 +262,9 @@ export const ProfileAdmin = () => {
             value={phone_number ?? +"loading..."}
             onChange={(e) => setPhone_number(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label htmlFor="role" value="Role" className="mb-2 block text-base" />
 
           <TextInput
@@ -274,7 +274,7 @@ export const ProfileAdmin = () => {
             sizing="md"
             value={role ?? "loading..."}
           />
-        </CountenerInput>
+        </ContainerInput>
 
         {formEdit && (
           <>
@@ -320,7 +320,7 @@ export const ProfileAdmin = () => {
       {/* change password */}
       {formPassword && (
         <form className="flex flex-wrap" onSubmit={handleEditPassword}>
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="password"
               value="Password Lama"
@@ -335,9 +335,9 @@ export const ProfileAdmin = () => {
               name="old_password"
               autoComplete="off"
             />
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="newPassword"
               value="Password Baru"
@@ -352,9 +352,9 @@ export const ProfileAdmin = () => {
               onChange={(e) => setNewPassword(e.target.value)}
               autoComplete="off"
             />
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="newPasswordConfirm"
               value="Konfirmasi Password Baru"
@@ -368,7 +368,7 @@ export const ProfileAdmin = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               autoComplete="off"
             />
-          </CountenerInput>
+          </ContainerInput>
 
           <ButtonFunc
             className="m-3 bg-primary text-white"

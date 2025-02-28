@@ -60,7 +60,7 @@ export default function SitusDetail() {
 
   return (
     <>
-      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-start">
+      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start">
         <div className="lg:w-10/12">
           {loading ? (
             <Loading />

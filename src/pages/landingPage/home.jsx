@@ -12,6 +12,9 @@ import { HeroSection } from "../../components/Fragments/Sections/Hero";
 import { getAllArticles } from "../../services/article.service";
 import { getAllEvent } from "../../services/event.service";
 import { getAllObject } from "../../services/object.service";
+import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
+import TextBlink from "../../components/Elements/TextBlink/TextBlink";
+import { HiOutlineGlobe } from "react-icons/hi";
 
 export default function HomePage() {
   const [dataObjects, setDataObjects] = useState([]);
@@ -175,14 +178,17 @@ export default function HomePage() {
               className="mx-auto flex w-8/12 flex-wrap gap-10 md:w-full md:justify-center lg:w-full"
               data-aos="fade-down"
             >
-              {dataEvents.slice(0, 3).map((keg) => (
-                <CardKegiatanHome
-                  to={`/kegiatan/${keg?.ID}/${keg?.title}`}
-                  key={keg?.ID}
-                  date={keg?.start_date}
-                  title={keg?.title}
-                />
-              ))}
+              {Array.isArray(dataEvents) &&
+                dataEvents
+                  .slice(0, 3)
+                  .map((keg) => (
+                    <CardKegiatanHome
+                      to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                      key={keg?.ID}
+                      date={keg?.start_date}
+                      title={keg?.title}
+                    />
+                  ))}
             </div>
             <div className="mt-8 w-8/12">
               <ButtonLink
@@ -210,7 +216,7 @@ export default function HomePage() {
               className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
               data-aos="zoom-in"
             >
-              {dataArticles.slice(0, 4).map((artikel) => (
+              {dataArticles?.slice(0, 4).map((artikel) => (
                 <CardArtikel
                   to={`/artikel/${artikel?.ID}/${artikel?.title}`}
                   image={artikel?.image}

@@ -2,12 +2,13 @@ import { Button, FileInput, Label, Select, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 
 export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   let controllerApi;
@@ -19,6 +20,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [regisLink, setRegisLink] = useState("");
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState(null);
@@ -31,11 +33,23 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
   };
 
-  const handleInputJodit = useCallback((newDescription) => {
-    setDescription(newDescription);
-  }, []);
+  // const handleInputJodit = useCallback((newDescription) => {
+  //   setDescription(newDescription);
+  // }, []);
+
+  const handleInputJodit = (desc) => {
+    setDescription(desc);
+  };
+
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    if (imageInput.current) {
+      imageInput.current.value = null;
+    }
+  };
 
   const handleResetForm = () => {
     setTitle("");
@@ -45,6 +59,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     setImage(null);
     setStartDate(null);
     setEndDate(null);
+    setImagePreview(null);
     if (editorInput.current) editorInput.current.value = null;
     if (imageInput.current) imageInput.current.value = null;
   };
@@ -138,9 +153,16 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   //   endDate,
   // });
 
+  // const activeRef = useRef(false);
+
+  // useEffect(() => {
+  //   activeRef.current.focus();
+  // }),
+  //   [];
+
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
-      <div className="flex justify-between">
+      <div className="mb-2 flex justify-between">
         <TitleSection className="underline">Tambah Kegiatan</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
@@ -162,7 +184,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
 
       {/* create form */}
       <form onSubmit={handleCreateActivity} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="title"
             value="Title"
@@ -178,10 +200,12 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
+            placeholder="Kegiatan Hari ini"
+            // ref={activeRef}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="regisLink"
             value="Link Pendaftaran"
@@ -191,6 +215,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           <TextInput
             id="regisLink"
             name="registration_link"
+            placeholder="https://forms.gle/MUKWvwvoyz6oaLEC8"
             required
             type="text"
             sizing="md"
@@ -198,9 +223,9 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             onChange={(e) => setRegisLink(e.target.value)}
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="startDate"
             value="Tanggal Kegiatan"
@@ -216,9 +241,9 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             value={startDate || ""}
             onChange={(e) => setStartDate(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="endDate"
             value="Selesai Kegiatan"
@@ -235,9 +260,9 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             value={endDate || ""}
             onChange={(e) => setEndDate(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="picture"
             value="Gambar"
@@ -252,9 +277,13 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             ref={imageInput}
             disabled={isLoading}
           />
-        </CountenerInput>
 
-        <CountenerInput>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
+        </ContainerInput>
+
+        <ContainerInput>
           <Label
             htmlFor="status"
             value="Status Kegiatan"
@@ -273,17 +302,13 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             <option value={"Proses"}>Proses</option>
             <option value={"Selesai"}>Selesai</option>
           </Select>
-        </CountenerInput>
+        </ContainerInput>
 
         <div className="mt-2 w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
             Deskripsi
           </Label>
-          <JoditEditor
-            ref={editorInput}
-            value={description}
-            onChange={handleInputJodit}
-          />
+          <JoditEditor onChange={handleInputJodit} ref={editorInput} />
         </div>
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>

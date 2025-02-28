@@ -1,18 +1,13 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Button, Modal, TextInput } from "flowbite-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDebounce } from "use-debounce";
-import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import CardSitus from "../../components/Fragments/Cards/CardSitus";
-import { getAllMaps } from "../../services/maps.service";
-import mapsData from "../../data/map.json";
-import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
-import Loading from "../../components/Elements/Loading/Loading";
-import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
-import { getAllObject } from "../../services/object.service";
-import { getAllCategory } from "../../services/category.service";
-import { getAllSite } from "../../services/site.service";
+import { TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useDebounce } from "use-debounce";
+import Loading from "../../components/Elements/Loading/Loading";
+import CardSitus from "../../components/Fragments/Cards/CardSitus";
+import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
+import { getAllObject } from "../../services/object.service";
+import { getAllSite } from "../../services/site.service";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -88,14 +83,14 @@ export default function PersebaranPage() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {dataObejcts.map((o) => (
-                  <Marker position={[o?.lintang, o?.bujur]} key={o?.ID}>
+                {dataObejcts?.map((o) => (
+                  <Marker position={[o.lintang, o.bujur]} key={o.ID}>
                     <Popup>
                       <PopupMap
-                        id={o?.ID}
-                        titleObject={o?.nama_objek}
-                        titleSitus={o?.site?.nama_situs}
-                        img={o?.gambar}
+                        id={o.ID}
+                        titleObject={o.nama_objek}
+                        titleSitus={o.site?.nama_situs}
+                        img={o.gambar}
                         desc=""
                       />
                     </Popup>
@@ -123,23 +118,22 @@ export default function PersebaranPage() {
           </div>
         )}
         <div className="flex size-auto flex-wrap justify-center gap-5 px-5 pb-5">
-          {dataObejcts?.length > 0 &&
-            dataObejcts?.map((o) => (
-              <CardSitus
-                key={o?.ID}
-                title={o?.nama_objek}
-                desc={o?.propinsi}
-                to={`/objek/${o?.ID}/${o?.nama_objek}`}
-                img={o?.gambar}
-              />
-            ))}
+          {dataObejcts?.length > 0
+            ? dataObejcts?.map((o) => (
+                <CardSitus
+                  key={o?.ID}
+                  title={o?.nama_objek}
+                  desc={o?.propinsi}
+                  to={`/objek/${o?.ID}/${o?.nama_objek}`}
+                  img={o?.gambar}
+                />
+              ))
+            : !loading && (
+                <p className="my-5 text-center text-red-500">
+                  data {search} tidak ditemukan
+                </p>
+              )}
         </div>
-
-        {loading && dataObejcts.length === 0 && (
-          <p className="my-5 text-center text-red-500">
-            {search} tidak ditemukan
-          </p>
-        )}
       </div>
     </>
   );

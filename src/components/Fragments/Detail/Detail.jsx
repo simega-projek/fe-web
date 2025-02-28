@@ -1,3 +1,4 @@
+import HTMLReactParser from "html-react-parser/lib/index";
 import { formatDate } from "../../../utils/formatDate";
 import formattedDate from "../../../utils/formattedDate";
 import TitleSection from "../../Elements/TitleSection";
@@ -11,8 +12,8 @@ export const Detail = (props) => {
   return (
     <div className="flex flex-col">
       <TitleSection>{title}</TitleSection>
-      <span className="mb-2 mt-5">{dateFormatted} </span>
-      <div className="max-w-2xl md:max-w-md">
+      {/* <span className="mb-2 mt-5">{dateFormatted} </span> */}
+      <div className="mt-5 max-w-2xl md:max-w-md">
         <img
           src={img}
           alt={title}
@@ -20,9 +21,12 @@ export const Detail = (props) => {
         />
       </div>
       <div
-        className="mt-5 text-lg md:text-xl"
-        dangerouslySetInnerHTML={{ __html: desc }}
-      ></div>
+        className="mt-5 break-words text-lg md:text-xl"
+        // dangerouslySetInnerHTML={{ __html: desc }}
+      >
+        {/* {HTMLReactParser(desc)} */}
+        {parse(desc)}
+      </div>
     </div>
   );
 };

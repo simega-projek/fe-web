@@ -8,6 +8,7 @@ import { getAllValley } from "../../services/valley.service";
 import { getAllObject } from "../../services/object.service";
 import { getAllCategory } from "../../services/category.service";
 import { getAllArticles } from "../../services/article.service";
+import { useSelector } from "react-redux";
 
 export const Dashboard = () => {
   const [admins, setAdmins] = useState(0);
@@ -17,6 +18,10 @@ export const Dashboard = () => {
   const [events, setEvents] = useState(0);
   const [articles, setArticles] = useState(0);
   const [categories, setCategories] = useState(0);
+
+  const role = useSelector((state) => state.auth.userData);
+  let roleAuth = role?.info?.role;
+  let roleProfile = role?.data?.role;
 
   const fetchAdmin = async () => {
     try {
@@ -96,16 +101,50 @@ export const Dashboard = () => {
       <TitleSection>Dashboard</TitleSection>
       <TitleSection>Bakultur - Sistem Informasi Megalit</TitleSection>
       <div className="-mx-2 my-5 flex flex-wrap">
-        <CardDashboard title={"Admin"} lots={admins} icon={FaCity} />
-        <CardDashboard title={"Lembah"} lots={valleys} icon={FaCity} />
-        <CardDashboard title={"Situs"} lots={sites} icon={FaCity} />
-        <CardDashboard title={"Objek"} lots={objects} icon={FaCity} />
-        <CardDashboard title={"Jenis Objek"} lots={categories} icon={FaCity} />
-        <CardDashboard title={"Kegiatan"} lots={events} icon={FaCity} />
+        {roleAuth === roleProfile ||
+          (roleProfile === "super-admin" && (
+            <CardDashboard
+              title={"Admin"}
+              lots={admins}
+              icon={FaCity}
+              to={"/admin/kelola-user"}
+            />
+          ))}
+        <CardDashboard
+          title={"Lembah"}
+          lots={valleys}
+          icon={FaCity}
+          to={`/admin/kelola-lembah`}
+        />
+        <CardDashboard
+          title={"Situs"}
+          lots={sites}
+          icon={FaCity}
+          to={`/admin/kelola-situs`}
+        />
+        <CardDashboard
+          title={"Objek"}
+          lots={objects}
+          icon={FaCity}
+          to={`/admin/kelola-objek`}
+        />
+        <CardDashboard
+          title={"Jenis Objek"}
+          lots={categories}
+          icon={FaCity}
+          to={`/admin/kelola-kategori`}
+        />
+        <CardDashboard
+          title={"Kegiatan"}
+          lots={events}
+          icon={FaCity}
+          to={`/admin/kelola-kegiatan`}
+        />
         <CardDashboard
           title={"Artikel & Berita"}
           lots={articles}
           icon={FaCity}
+          to={`/admin/kelola-artikel`}
         />
       </div>
     </>

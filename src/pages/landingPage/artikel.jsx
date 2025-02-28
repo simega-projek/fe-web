@@ -28,6 +28,7 @@ export default function ArtikelPage() {
     setLoading(true);
     try {
       const articles = await getAllArticles(50, debouncedSearch);
+      console.log(articles);
       setDataArticles(articles.data);
       console.log(articles.data);
     } catch (err) {
@@ -51,7 +52,6 @@ export default function ArtikelPage() {
           </TextBlink>
         </div>
       </HeroSection>
-
       <div className="mx-auto mt-5 w-full px-5 lg:w-1/2">
         <TextInput
           icon={FaSearch}
@@ -61,15 +61,19 @@ export default function ArtikelPage() {
         />
       </div>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <div
-          className="my-12 flex flex-wrap justify-center gap-5 px-10 md:justify-evenly md:px-0 lg:justify-center"
-          data-aos="zoom-in"
-        >
-          {dataArticles?.length > 0 &&
-            dataArticles?.map((article) => (
+      {loading && (
+        <div className="mt-5">
+          {" "}
+          <Loading />
+        </div>
+      )}
+
+      <div
+        className="my-5 flex flex-wrap justify-center gap-5 px-10 md:justify-evenly md:px-0 lg:justify-center"
+        data-aos="zoom-in"
+      >
+        {Array.isArray(dataArticles) && dataArticles?.length > 0
+          ? dataArticles?.map((article) => (
               <>
                 <CardArtikel
                   key={article?.ID}
@@ -77,11 +81,16 @@ export default function ArtikelPage() {
                   to={`/artikel/${article?.ID}/${article?.title}`}
                   date={article?.CreatedAt}
                   source={article?.users?.fullname}
+                  img={article?.image}
                 />
               </>
-            ))}
-        </div>
-      )}
+            ))
+          : !loading && (
+              <p className="my-5 text-center text-red-500">
+                data {search} tidak ditemukan
+              </p>
+            )}
+      </div>
     </>
   );
 }

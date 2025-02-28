@@ -44,15 +44,15 @@ export default function KegiatanDetail() {
 
   return (
     <>
-      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-start">
-        <div className="lg:w-8/12">
+      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-center">
+        <div className="lg:w-10/12">
           {loading ? (
             <Loading />
           ) : (
             Object.keys(kegiatan).length > 0 && (
               <>
                 <Detail
-                  date={formatDate(kegiatan?.start_date)}
+                  // date={formatDate(kegiatan?.start_date)}
                   title={kegiatan?.title}
                   img={kegiatan?.image}
                   desc={kegiatan?.description}
