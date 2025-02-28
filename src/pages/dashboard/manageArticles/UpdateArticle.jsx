@@ -11,6 +11,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { toView } from "../../../utils/toView";
 
 export default function UpdateArticle({
   isOpenUpdate,
@@ -26,24 +27,13 @@ export default function UpdateArticle({
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
-  const [debounceDescription] = useDebounce(description, 3000); // Debounce description
+  const [debounceDescription] = useDebounce(description, 800); // Debounce description
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dataUpdate, setDataUpdate] = useState({});
   const [originalImage, setOriginalImage] = useState(null);
   const [originalFile, setOriginalFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-
-  const handleReset = () => {
-    setTitle("");
-    setDescription("");
-    setImage(null);
-    setFile(null);
-    if (editorInput.current) editorInput.current.value = null;
-    if (imageInput.current) imageInput.current.value = null;
-    if (pdfInput.current) pdfInput.current.value = null;
-  };
 
   const handleChangeFile = (e) => {
     const selectFile = e.target.files[0];
@@ -62,99 +52,77 @@ export default function UpdateArticle({
     if (!imageInput.current) imageInput.current.value = null;
   };
 
-  const handleUpdateArticle = useCallback(
-    async (e) => {
-      e.preventDefault();
-      if (title.trim() === "" || !title) {
-        setMessageError("Judul artikel harus diisi");
-        return;
-      } else if (description.trim() === "" || !description) {
-        setMessageError("Deskripsi artikel harus diisi");
-        return;
-      }
+  const handleUpdateArticle = async (e) => {
+    e.preventDefault();
+    if (title.trim() === "" || !title) {
+      setMessageError("Judul artikel harus diisi");
+      return;
+    } else if (description.trim() === "" || !description) {
+      setMessageError("Deskripsi artikel harus diisi");
+      return;
+    }
 
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("image", image || originalImage);
-      formData.append("file", file || originalFile);
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("image", image || originalImage);
+    formData.append("file", file || originalFile);
 
-      try {
-        setLoading(true);
-        let res = await updateArticle(id, formData);
-        if (res.error) {
-          setMessageError(res.message);
-          setMessageSuccess(null);
-        } else {
-          setMessageError(null);
-          setMessageSuccess(res.message);
-
-          if (onSuccess) {
-            onSuccess();
-
-            setTimeout(() => {
-              onClose();
-              setMessageSuccess(null);
-            }, 2000);
-          }
-        }
-        toView("top");
-        window.location.reload();
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [
-      title,
-      description,
-      image,
-      file,
-      originalImage,
-      originalFile,
-      id,
-      onSuccess,
-      handleReset,
-    ],
-  );
-
-  const fetchOneArticle = useCallback(
-    async (id) => {
-      handleReset();
+    try {
       setLoading(true);
-      try {
-        const res = await getOneArticle(id);
-        const data = res?.data;
-        setDataUpdate(data);
-        setTitle(data?.title);
-        setDescription(data?.description);
-        setOriginalImage(data?.image);
-        setOriginalFile(data?.file);
-        setImagePreview(data?.image);
-      } catch (err) {
-        console.log(err.message);
-      } finally {
-        setLoading(false);
+      let res = await updateArticle(id, formData);
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+
+        if (onSuccess) {
+          onSuccess();
+          setTimeout(() => {
+            onClose();
+            setMessageSuccess(null);
+          }, 2000);
+        }
+
+        toView("top");
       }
-    },
-    [id],
-  );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchOneArticle = async () => {
+    // handleReset();
+    setLoading(true);
+    try {
+      const res = await getOneArticle(id);
+      const data = res?.data;
+      setTitle(data?.title);
+      setDescription(data?.description);
+      setOriginalImage(data?.image);
+      setOriginalFile(data?.file);
+      setImagePreview(data?.image);
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (id) {
-      fetchOneArticle(id);
-    }
-  }, [id, fetchOneArticle]);
+    if (id) fetchOneArticle();
+  }, [id]);
 
   // console.log({ dataUpdate });
+  const handleBtnCancel = () => {
+    onClose();
+    if (loading) window.location.reload();
+  };
 
-  const activeRef = useRef(false);
-
-  useEffect(() => {
-    activeRef.current.focus();
-  }),
-    [];
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -190,7 +158,6 @@ export default function UpdateArticle({
               onChange={(e) => setTitle(e.target.value)}
               required
               disabled={loading}
-              ref={activeRef}
             />
           </div>
 
@@ -244,7 +211,7 @@ export default function UpdateArticle({
         <ButtonFunc className="m-3 bg-primary text-white" disabled={loading}>
           {loading ? "Loading" : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="bg-tan" onClick={onClose}>
+        <ButtonFunc className="bg-tan" onClick={handleBtnCancel}>
           Batal
         </ButtonFunc>
       </form>
