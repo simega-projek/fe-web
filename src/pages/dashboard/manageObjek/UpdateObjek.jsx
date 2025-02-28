@@ -115,8 +115,8 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     setDescription(newDescription);
   }, []);
 
-  const handleUpdateObject = async (e) => {
-    e.preventDefault();
+  const handleUpdateObject = async () => {
+    // e.preventDefault();
 
     if (
       nameObject.trim() === "" ||
@@ -182,7 +182,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
       setLintang(object?.data?.lintang);
       setBujur(object?.data?.bujur);
       setDescription(object?.data?.deskripsi);
-      // console.log({ description });
+      console.log({ description });
       setSelectedSite(object?.data?.site_id);
       setSelectedCategory(object?.data?.category_id);
       setVideos(object?.data?.video.split(","));
