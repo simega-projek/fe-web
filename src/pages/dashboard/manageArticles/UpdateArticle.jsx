@@ -10,6 +10,7 @@ import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 
 export default function UpdateArticle({
   isOpenUpdate,
@@ -32,6 +33,7 @@ export default function UpdateArticle({
   const [dataUpdate, setDataUpdate] = useState({});
   const [originalImage, setOriginalImage] = useState(null);
   const [originalFile, setOriginalFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleReset = () => {
     setTitle("");
@@ -51,6 +53,13 @@ export default function UpdateArticle({
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
+  };
+
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    setImage(null);
+    if (!imageInput.current) imageInput.current.value = null;
   };
 
   const handleUpdateArticle = useCallback(
@@ -82,13 +91,15 @@ export default function UpdateArticle({
 
           if (onSuccess) {
             onSuccess();
-            window.scrollTo({ top: 0, behavior: "smooth" });
+
             setTimeout(() => {
               onClose();
               setMessageSuccess(null);
             }, 2000);
           }
         }
+        toView("top");
+        window.location.reload();
       } catch (err) {
         console.log(err);
       } finally {
@@ -120,6 +131,7 @@ export default function UpdateArticle({
         setDescription(data?.description);
         setOriginalImage(data?.image);
         setOriginalFile(data?.file);
+        setImagePreview(data?.image);
       } catch (err) {
         console.log(err.message);
       } finally {
@@ -137,6 +149,12 @@ export default function UpdateArticle({
 
   // console.log({ dataUpdate });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -172,19 +190,7 @@ export default function UpdateArticle({
               onChange={(e) => setTitle(e.target.value)}
               required
               disabled={loading}
-            />
-          </div>
-
-          {/* Image Input */}
-          <div className="w-full px-3 lg:w-1/2">
-            <Label htmlFor="image" value="Gambar" />
-            <FileInput
-              id="image"
-              name="image"
-              accept="image/*"
-              onChange={handleChangeImage}
-              ref={imageInput}
-              helperText={`File asli: ${originalImage}`}
+              ref={activeRef}
             />
           </div>
 
@@ -197,14 +203,34 @@ export default function UpdateArticle({
               accept="application/pdf"
               onChange={handleChangeFile}
               ref={pdfInput}
-              helperText={`Gambar asli: ${originalFile}`}
               disabled={loading}
             />
+            <p className="truncate text-xs text-gray-400">
+              File asli: ${originalFile}
+            </p>
           </div>
+
+          {/* Image Input */}
+          <div className="w-full px-3 lg:w-1/2">
+            <Label htmlFor="image" value="Gambar" />
+            <FileInput
+              id="image"
+              name="image"
+              accept="image/*"
+              onChange={handleChangeImage}
+              ref={imageInput}
+            />
+            <p className="truncate text-xs text-gray-400">
+              File asli: ${originalImage}
+            </p>
+          </div>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
         </div>
 
         {/* Description Editor */}
-        <div className="w-full px-3">
+        <div className="w-full px-3 pt-5">
           <Label htmlFor="deskripsi" value="Deskripsi" />
           <JoditEditor
             ref={editorInput}

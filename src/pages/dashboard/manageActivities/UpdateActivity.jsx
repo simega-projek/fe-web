@@ -2,12 +2,13 @@ import { Button, FileInput, Label, Select, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { getOneEvent, updateEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 
 export default function UpdateActivity({
   isOpenUpdate,
@@ -38,10 +39,16 @@ export default function UpdateActivity({
   const [originalImage, setOriginalImage] = useState(null);
   const [originalStartDate, setOriginalStartDate] = useState(null);
   const [originalEndDate, setOriginalEndDate] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
+    if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
+  };
+  const handleClosePreview = () => {
+    setImagePreview(null);
+    if (imageInputRef.current) imageInputRef.current.value = null;
   };
 
   const handleInputJodit = useCallback((newDescription) => {
@@ -66,20 +73,21 @@ export default function UpdateActivity({
     async (e) => {
       e.preventDefault();
 
-      controllerApi = new AbortController();
+      // controllerApi = new AbortController();
       if (title.trim() === "" || !title) {
         setMessageError("Judul kegiatan diisi");
-        toView("top");
+
         return;
       } else if (regisLink.trim() === "" || !title) {
         setMessageError("Link pendaftaran diisi");
-        toView("top");
+
         return;
       } else if (description.trim() === "" || !description) {
         setMessageError("Deskripsi kegiatan diisi");
-        toView("top");
+
         return;
       }
+      toView("top");
 
       const currentDate = new Date().toISOString();
 
@@ -93,13 +101,22 @@ export default function UpdateActivity({
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("image", image || originalImage);
+      formData.append("image", image ? image : originalImage);
       formData.append("registration_link", regisLink);
       formData.append("start_date", formattedStartDate);
       formData.append("end_date", formattedEndDate);
       formData.append("status", status);
 
       // console.log("data update: ", formData);
+      console.log("Data yang akan dikirim:", {
+        title,
+        description,
+        image: image ? image.name : originalImage,
+        regisLink,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        status,
+      });
 
       try {
         setIsLoading(true);
@@ -108,11 +125,9 @@ export default function UpdateActivity({
         if (res.error) {
           setMessageError(res.message);
           setMessageSuccess(null);
-          toView("top");
         } else {
           setMessageError(null);
           setMessageSuccess(res.message);
-          toView("top");
 
           if (onSuccess) {
             onSuccess();
@@ -122,6 +137,7 @@ export default function UpdateActivity({
             }, 2000);
           }
         }
+        toView("top");
       } catch (err) {
         console.log(err);
       } finally {
@@ -160,6 +176,7 @@ export default function UpdateActivity({
         setRegisLink(data?.registration_link);
         setStatus(data?.status);
         setOriginalImage(data?.image);
+        setImagePreview(data?.image);
         setStartDate(
           data?.start_date
             ? new Date(data.start_date).toISOString().split("T")[0]
@@ -196,6 +213,13 @@ export default function UpdateActivity({
   //   endDate,
   // });
 
+  // const activeRef = useRef(false);
+
+  // useEffect(() => {
+  //   activeRef.current.focus();
+  // }),
+  //   [];
+
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="flex justify-between">
@@ -220,7 +244,7 @@ export default function UpdateActivity({
 
       {/* create form */}
       <form onSubmit={handleUpdateActivity} className="flex flex-wrap">
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="title"
             value="Title"
@@ -228,7 +252,7 @@ export default function UpdateActivity({
           />
 
           <TextInput
-            autoFocus
+            // autoFocus
             required
             id="title"
             type="text"
@@ -236,10 +260,11 @@ export default function UpdateActivity({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
+            // ref={activeRef}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="regisLink"
             value="Link Pendaftaran"
@@ -256,9 +281,9 @@ export default function UpdateActivity({
             onChange={(e) => setRegisLink(e.target.value)}
             disabled={isLoading}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="startDate"
             value="Tanggal Kegiatan"
@@ -274,9 +299,9 @@ export default function UpdateActivity({
             value={startDate || ""}
             onChange={(e) => setStartDate(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="endDate"
             value="Selesai Kegiatan"
@@ -293,9 +318,9 @@ export default function UpdateActivity({
             value={endDate || ""}
             onChange={(e) => setEndDate(e.target.value)}
           />
-        </CountenerInput>
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="picture"
             value="Gambar"
@@ -304,15 +329,21 @@ export default function UpdateActivity({
 
           <FileInput
             id="picture"
-            helperText={originalImage}
+            // helperText={originalImage}
             onChange={handleChangeImage}
             accept="image/*"
             ref={imageInputRef}
             disabled={isLoading}
           />
-        </CountenerInput>
+          <p className="truncate text-xs text-gray-400">
+            File asli: ${originalImage}
+          </p>
+          {imagePreview && (
+            <ImagePreview src={imagePreview} onClose={handleClosePreview} />
+          )}
+        </ContainerInput>
 
-        <CountenerInput>
+        <ContainerInput>
           <Label
             htmlFor="status"
             value="Status Kegiatan"
@@ -331,7 +362,7 @@ export default function UpdateActivity({
             <option value={"Proses"}>Proses</option>
             <option value={"Selesai"}>Selesai</option>
           </Select>
-        </CountenerInput>
+        </ContainerInput>
 
         <div className="mt-2 w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">

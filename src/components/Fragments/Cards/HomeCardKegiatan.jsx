@@ -1,22 +1,36 @@
 import { Link } from "react-router-dom";
-// import { formatDate } from "../../../utils/formatDate";
+import { formatDate } from "../../../utils/formatDate";
+import formattedDate from "../../../utils/formattedDate";
 
-export default function CardKegiatanHome(props) {
-    const { to = '/', img = "/images/hero-img.png", date, title, className = '' } = props;
+export const CardKegiatanHome = (props) => {
+  const {
+    to = "/",
+    img = "/images/hero-img.png",
+    date,
+    title,
+    className = "",
+  } = props;
 
+  const dateFormatted = formattedDate(date);
 
-    return (
-        <div className={`w-full lg:w-1/4 md:w-5/12 hover:shadow-lg md:flex md:items-center transition-all duration-300 ${className}`}>
-            <Link to={to} >
-                <div className="aspect-[11/12] shadow-2xl rounded-lg overflow-hidden group lg:h-4/6 md:h-4/6 mx-auto relative ">
-                    <img src={img} className="h-full w-full object-cover group-hover:scale-110 transition-all duration-500" alt="" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary z-10"></div>
-                    <div className="absolute bottom-0 left-0 m-4 z-20 text-white pl-2">
-                        <p className="text-lg font-semibold mb-2">{date}</p>
-                        <p className="text-lg ">{title}</p>
-                    </div>
-                </div>
-            </Link>
+  return (
+    <div
+      className={`w-full transition-all duration-300 hover:shadow-lg md:flex md:w-5/12 md:items-center lg:w-1/4 ${className}`}
+    >
+      <Link to={to}>
+        <div className="group relative mx-auto aspect-[11/12] overflow-hidden rounded-lg shadow-2xl md:h-4/6 lg:h-4/6">
+          <img
+            src={img}
+            className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110"
+            alt={title}
+          />
+          <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent to-primary"></div>
+          <div className="absolute bottom-0 left-0 z-20 m-4 pl-2 text-white">
+            <p className="mb-2 text-lg font-semibold">{dateFormatted}</p>
+            <p className="text-lg">{title}</p>
+          </div>
         </div>
-    );
-}
+      </Link>
+    </div>
+  );
+};

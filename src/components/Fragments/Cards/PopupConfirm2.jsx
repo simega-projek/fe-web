@@ -2,7 +2,12 @@ import { Button, Modal } from "flowbite-react";
 
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-export const PopupConfirm = ({ title, isOpen, onClick, onClose }) => {
+export const PopupConfirm = ({
+  title,
+  isOpen,
+  onClick = () => {},
+  onClose,
+}) => {
   return (
     <>
       <Modal show={isOpen} onClose={onClose} popup>

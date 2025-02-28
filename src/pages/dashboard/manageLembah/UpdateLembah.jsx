@@ -8,7 +8,7 @@ import React, {
 import TitleSection from "../../../components/Elements/TitleSection";
 import { TextInput, Label, Button } from "flowbite-react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { CountenerInput } from "../../../components/Elements/Inputs/CountenerInput";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import {
   getKabupaten,
   getKecamatan,
@@ -207,10 +207,17 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   // console.log({ districts });
   // console.log({ villages });
 
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    activeRef.current.focus();
+  }),
+    [];
+
   return (
     <>
       <div className={isOpenUpdate ? "block" : "hidden"}>
-        <div className="flex justify-between">
+        <div className="mb-2 flex justify-between">
           <TitleSection className="underline">Ubah Data Lembah</TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
@@ -231,7 +238,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
           ))}
 
         <form onSubmit={handleUpdateValley} className="flex flex-wrap">
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="lembah"
               value="Nama Lembah"
@@ -245,10 +252,11 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
               onChange={(e) => setLembah(e.target.value)}
               sizing="md"
               disabled={isLoading}
+              ref={activeRef}
             />
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="provinsi"
               value="Nama Provinsi"
@@ -266,9 +274,9 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
               <option value="Sulawesi Tengah">Sulawesi Tengah</option>
               <option value="Sulawesi Barat">Sulawesi Barat</option>
             </select>
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="kabupaten/kota"
               value="Nama Kabupaten/Kota"
@@ -289,9 +297,9 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
                 </option>
               ))}
             </select>
-          </CountenerInput>
+          </ContainerInput>
 
-          <CountenerInput>
+          <ContainerInput>
             <Label
               htmlFor="kecamatan"
               value="Nama Kecamatan"
@@ -312,7 +320,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
                 </option>
               ))}
             </select>
-          </CountenerInput>
+          </ContainerInput>
 
           <ButtonFunc
             className={`m-3 bg-primary text-white`}

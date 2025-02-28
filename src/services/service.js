@@ -1,22 +1,10 @@
 import axios from "axios";
 
-const baseUrl = `http://34.101.227.131:8000/`;
+// const baseUrl = `http://34.101.227.131:8000/`;
+export const baseUrl = `http://88.222.245.248:8000/`;
 
 export const fetchDataApi = async (method, url, data = null, params = null) => {
   const token = localStorage.getItem("token");
-
-  // const config = {
-  //   method,
-  //   url: `${baseUrl}${url}`,
-  //   headers:
-  //     method !== "GET"
-  //       ? {
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       : undefined,
-  //   params,
-  //   data,
-  // };
 
   const config = {
     method,
