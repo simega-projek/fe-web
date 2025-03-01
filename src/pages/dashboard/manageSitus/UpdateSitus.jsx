@@ -37,57 +37,54 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     setSelectedVillage(null);
   };
 
-  const handeUpdateSite = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handeUpdateSite = async (e) => {
+    e.preventDefault();
 
-      if (siteName.trim() === "" || !selectedValley || !selectedVillage) {
-        setMessageError("Semua kolom harus diisi");
+    if (siteName.trim() === "" || !selectedValley || !selectedVillage) {
+      setMessageError("Semua kolom harus diisi");
+      setMessageSuccess(null);
+      toView("top");
+      return;
+    }
+
+    const dataVillage = `${selectedVillage.name},${selectedVillage.id},${selectedVillage.district_id}`;
+    // console.log({ selectedValley.id });
+    // console.log(selectedValley.ID);
+    // return;
+
+    const formData = new FormData();
+    formData.append("nama_situs", siteName);
+    formData.append("desa_kelurahan", dataVillage);
+    formData.append("lembah_id", selectedValley?.ID);
+
+    try {
+      setIsLoading(true);
+      const res = await updateSite(id, formData);
+      // console.log(res);
+      // return;
+      if (res.error) {
+        setMessageError(res.message);
         setMessageSuccess(null);
         toView("top");
-        return;
-      }
-
-      const dataVillage = `${selectedVillage.name},${selectedVillage.id},${selectedVillage.district_id}`;
-      // console.log({ selectedValley.id });
-      // console.log(selectedValley.ID);
-      // return;
-
-      const formData = new FormData();
-      formData.append("nama_situs", siteName);
-      formData.append("desa_kelurahan", dataVillage);
-      formData.append("lembah_id", selectedValley?.ID);
-
-      try {
-        setIsLoading(true);
-        const res = await updateSite(id, formData);
-        // console.log(res);
-        // return;
-        if (res.error) {
-          setMessageError(res.message);
-          setMessageSuccess(null);
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
+        if (onSuccess) {
+          onSuccess();
           toView("top");
-        } else {
-          setMessageError(null);
-          setMessageSuccess(res.message);
-          if (onSuccess) {
-            onSuccess();
-            toView("top");
-            handleReset();
-            setTimeout(() => {
-              onClose();
-              setMessageSuccess(null);
-            }, 2000);
-          }
+          handleReset();
+          setTimeout(() => {
+            onClose();
+            setMessageSuccess(null);
+          }, 2000);
         }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
       }
-    },
-    [siteName, selectedValley, selectedVillage, onSuccess, handleReset],
-  );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchOneSite = useCallback(
     async (id) => {
@@ -121,7 +118,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     [id],
   );
 
-  const fetchValley = useCallback(async () => {
+  const fetchValley = async () => {
     setIsLoading(true);
     try {
       const res = await getAllValley();
@@ -132,7 +129,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     } finally {
       setIsLoading(false);
     }
-  }, [id, valleys]);
+  };
 
   const fetchVillages = async (valley) => {
     if (!valley) return;
@@ -170,10 +167,6 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ selectedVillage });
   // console.log(dataUpdate);
 
-  const handleBtnCancel = () => {
-    onClose();
-    if (isLoading) window.location.reload();
-  };
   const activeRef = useRef(false);
 
   useEffect(() => {
@@ -187,7 +180,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
 
   useEffect(() => {
     fetchOneSite(id);
-  }, [id, fetchOneSite]);
+  }, [id]);
 
   useEffect(() => {
     activeRef.current.focus();
@@ -281,17 +274,13 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
         </ContainerInput>
       </form>
       <ButtonFunc
-        className="m-3 bg-primary text-white disabled:cursor-no-drop"
+        className="m-3 bg-primary text-white"
         onClick={handeUpdateSite}
         disabled={isLoading}
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc
-        className="m-3 bg-tan"
-        type="button"
-        onClick={handleBtnCancel}
-      >
+      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
         Batal
       </ButtonFunc>
     </div>

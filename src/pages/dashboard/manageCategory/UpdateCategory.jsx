@@ -1,18 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { Button, Dropdown, Label, TextInput } from "flowbite-react";
 
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import { getSulawesiTengah } from "../../../services/wilIndonesia.service";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import {
-  createCategory,
   getOneCategory,
   updateCategory,
 } from "../../../services/category.service";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
 export default function UpdateCategories({
   isOpenUpdate,
@@ -69,7 +67,7 @@ export default function UpdateCategories({
     }
   };
 
-  const fetchOneCategory = useCallback(async () => {
+  const fetchOneCategory = async () => {
     try {
       setIsLoading(true);
       const res = await getOneCategory(id);
@@ -79,7 +77,7 @@ export default function UpdateCategories({
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  };
 
   useEffect(() => {
     if (id) {

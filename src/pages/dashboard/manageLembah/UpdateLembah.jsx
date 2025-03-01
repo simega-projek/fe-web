@@ -1,30 +1,18 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useDebugValue,
-} from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
-import { TextInput, Label, Button } from "flowbite-react";
+import { Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { getOneValley, updateValley } from "../../../services/valley.service";
 import {
-  getKabupaten,
   getKecamatan,
   getKelurahan,
   getSulawesiBarat,
   getSulawesiTengah,
 } from "../../../services/wilIndonesia.service";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { toView } from "../../../utils/toView";
-import {
-  createValley,
-  getOneValley,
-  updateValley,
-} from "../../../services/valley.service";
-import { getDataByIndex } from "../../../utils/getDataByIndex";
 
 export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   const regencyRef = useRef(null);
@@ -49,102 +37,96 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     if (isLoading) window.location.reload();
   };
 
-  const handleUpdateValley = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleUpdateValley = async (e) => {
+    e.preventDefault();
 
-      // Cek apakah semua field sudah diisi
-      if (!lembah || !province || !selectedRegency || !selectedDistrict) {
-        setMessageError("Semua kolom harus diisi");
+    // Cek apakah semua field sudah diisi
+    if (!lembah || !province || !selectedRegency || !selectedDistrict) {
+      setMessageError("Semua kolom harus diisi");
+      setMessageSuccess(null);
+      toView("top");
+      return;
+    }
+
+    const dataRegency = `${selectedRegency.name},${selectedRegency.id},${selectedRegency.province_id}`;
+    const dataDistricts = `${selectedDistrict.name},${selectedDistrict.id},${selectedDistrict.regency_id}`;
+
+    const formData = new FormData();
+    formData.append("lembah", lembah);
+    formData.append("provinsi", province);
+    formData.append("kabupaten_kota", dataRegency);
+    formData.append("kecamatan", dataDistricts);
+
+    try {
+      setIsLoading(true);
+      const res = await updateValley(id, formData);
+
+      if (res.error) {
+        setMessageError(res.message);
         setMessageSuccess(null);
         toView("top");
-        return;
-      }
+      } else {
+        setMessageError(null);
+        setMessageSuccess(res.message);
 
-      const dataRegency = `${selectedRegency.name},${selectedRegency.id},${selectedRegency.province_id}`;
-      const dataDistricts = `${selectedDistrict.name},${selectedDistrict.id},${selectedDistrict.regency_id}`;
-
-      const formData = new FormData();
-      formData.append("lembah", lembah);
-      formData.append("provinsi", province);
-      formData.append("kabupaten_kota", dataRegency);
-      formData.append("kecamatan", dataDistricts);
-
-      try {
-        setIsLoading(true);
-        const res = await updateValley(id, formData);
-
-        if (res.error) {
-          setMessageError(res.message);
-          setMessageSuccess(null);
+        if (onSuccess) {
+          onSuccess();
           toView("top");
-        } else {
-          setMessageError(null);
-          setMessageSuccess(res.message);
-
-          if (onSuccess) {
-            onSuccess();
-            toView("top");
-            setTimeout(() => {
-              onClose();
-              setMessageSuccess(null);
-            }, 2000);
-          }
+          setTimeout(() => {
+            onClose();
+            setMessageSuccess(null);
+          }, 2000);
         }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
       }
-    },
-    [lembah, province, selectedDistrict, selectedRegency, onSuccess, id],
-  );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const fetchOneValley = useCallback(
-    async (id) => {
-      setIsLoading(true);
-      try {
-        const res = await getOneValley(id);
-        const data = res?.data;
-        setDataUpdate(data);
-        setLembah(data?.lembah);
-        setProvince(data?.provinsi);
+  const fetchOneValley = async (id) => {
+    setIsLoading(true);
+    try {
+      const res = await getOneValley(id);
+      const data = res?.data;
+      setDataUpdate(data);
+      setLembah(data?.lembah);
+      setProvince(data?.provinsi);
 
-        // Split kabupaten_kota and kecamatan to extract name and id
-        const kabupatenData = data?.kabupaten_kota.split(",");
-        const kecamatanData = data?.kecamatan.split(",");
+      // Split kabupaten_kota and kecamatan to extract name and id
+      const kabupatenData = data?.kabupaten_kota.split(",");
+      const kecamatanData = data?.kecamatan.split(",");
 
-        if (data?.provinsi === "Sulawesi Tengah") {
-          const dataRegencies = await getSulawesiTengah();
-          const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
-          setRegencies(dataRegencies);
-          setSelectedRegency(regency); // Automatically select the regency
-          const districts = await getKecamatan(regency.id);
-          setDistricts(districts);
-          const selectedDistrict = districts.find(
-            (d) => d.id === kecamatanData[1],
-          );
-          setSelectedDistrict(selectedDistrict); // Automatically select the district
-        } else if (data?.provinsi === "Sulawesi Barat") {
-          const dataRegencies = await getSulawesiBarat();
-          const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
-          setRegencies(dataRegencies);
-          setSelectedRegency(regency); // Automatically select the regency
-          const districts = await getKecamatan(regency.id);
-          setDistricts(districts);
-          const selectedDistrict = districts.find(
-            (d) => d.id === kecamatanData[1],
-          );
-          setSelectedDistrict(selectedDistrict); // Automatically select the district
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
+      if (data?.provinsi === "Sulawesi Tengah") {
+        const dataRegencies = await getSulawesiTengah();
+        const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+        setRegencies(dataRegencies);
+        setSelectedRegency(regency); // Automatically select the regency
+        const districts = await getKecamatan(regency.id);
+        setDistricts(districts);
+        const selectedDistrict = districts.find(
+          (d) => d.id === kecamatanData[1],
+        );
+        setSelectedDistrict(selectedDistrict); // Automatically select the district
+      } else if (data?.provinsi === "Sulawesi Barat") {
+        const dataRegencies = await getSulawesiBarat();
+        const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+        setRegencies(dataRegencies);
+        setSelectedRegency(regency); // Automatically select the regency
+        const districts = await getKecamatan(regency.id);
+        setDistricts(districts);
+        const selectedDistrict = districts.find(
+          (d) => d.id === kecamatanData[1],
+        );
+        setSelectedDistrict(selectedDistrict); // Automatically select the district
       }
-    },
-    [id],
-  );
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleProvinceChange = (e) => {
     setProvince(e.target.value);

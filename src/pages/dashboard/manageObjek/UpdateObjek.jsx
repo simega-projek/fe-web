@@ -1,24 +1,17 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import { InputMany } from "../../../components/Elements/Inputs/InputMany";
-import { getAllSite } from "../../../services/site.service";
-import { getAllCategory } from "../../../services/category.service";
-import {
-  createObject,
-  getOneObject,
-  updateObject,
-} from "../../../services/object.service"; // API untuk create object
-import ManyInputImage from "../../../components/Elements/Inputs/ManyInputImage";
-import ManyInputText from "../../../components/Elements/Inputs/ManyInputText";
+import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { toView } from "../../../utils/toView";
-import { useDebounce } from "use-debounce";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { getAllCategory } from "../../../services/category.service";
+import { getOneObject, updateObject } from "../../../services/object.service"; // API untuk create object
+import { getAllSite } from "../../../services/site.service";
+import { toView } from "../../../utils/toView";
 
 export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
@@ -89,9 +82,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     }
   };
 
-  const handleInputJodit = useCallback((newDescription) => {
+  const handleInputJodit = (newDescription) => {
     setDescription(newDescription);
-  }, []);
+  };
 
   const handleUpdateObject = async () => {
     // e.preventDefault();
