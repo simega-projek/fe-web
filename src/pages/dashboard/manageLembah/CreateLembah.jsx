@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
-import { TextInput, Label, Button } from "flowbite-react";
+import { Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
+import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { createValley } from "../../../services/valley.service";
 import {
-  getKabupaten,
   getKecamatan,
   getKelurahan,
   getSulawesiBarat,
   getSulawesiTengah,
 } from "../../../services/wilIndonesia.service";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { toView } from "../../../utils/toView";
-import { createValley } from "../../../services/valley.service";
 
 export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
   const regencyRef = useRef(null);
@@ -276,13 +275,17 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
         </form>
 
         <ButtonFunc
-          className={`m-3 bg-primary text-white`}
+          className={`m-3 bg-primary text-white disabled:cursor-no-drop`}
           disabled={isLoading}
           onClick={handleCreateValley}
         >
           Simpan
         </ButtonFunc>
-        <ButtonFunc className={`bg-tan`} onClick={handleReset}>
+        <ButtonFunc
+          className={`bg-tan disabled:cursor-no-drop`}
+          onClick={handleReset}
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </div>

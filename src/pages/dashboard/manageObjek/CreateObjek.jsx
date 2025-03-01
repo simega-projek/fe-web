@@ -351,13 +351,18 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
         </div>
 
         <ButtonFunc
-          className="m-3 bg-primary text-white"
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
           onClick={handleCreateObject}
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset} type="reset">
+        <ButtonFunc
+          className="m-3 bg-tan disabled:cursor-no-drop"
+          onClick={handleReset}
+          type="reset"
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </form>

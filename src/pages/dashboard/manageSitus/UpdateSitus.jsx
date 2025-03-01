@@ -170,6 +170,10 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ selectedVillage });
   // console.log(dataUpdate);
 
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
+  };
   const activeRef = useRef(false);
 
   useEffect(() => {
@@ -277,13 +281,17 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
         </ContainerInput>
       </form>
       <ButtonFunc
-        className="m-3 bg-primary text-white"
+        className="m-3 bg-primary text-white disabled:cursor-no-drop"
         onClick={handeUpdateSite}
         disabled={isLoading}
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
+      <ButtonFunc
+        className="m-3 bg-tan"
+        type="button"
+        onClick={handleBtnCancel}
+      >
         Batal
       </ButtonFunc>
     </div>

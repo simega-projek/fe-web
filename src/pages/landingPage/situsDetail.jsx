@@ -14,12 +14,12 @@ export default function SitusDetail() {
   const [situs, setSitus] = useState(null);
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [openImage, setOpenImage] = useState(false);
   const [indexImage, setIndexImage] = useState(0);
 
   const fetchObject = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const objects = await getOneObject(id);
       setSitus(objects.data);
@@ -30,7 +30,7 @@ export default function SitusDetail() {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -62,7 +62,7 @@ export default function SitusDetail() {
     <>
       <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start">
         <div className="lg:w-10/12">
-          {loading ? (
+          {isLoading ? (
             <Loading />
           ) : (
             <Detail

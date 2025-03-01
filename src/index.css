@@ -6,10 +6,10 @@
 @tailwind utilities;
 
 .scrollbar::-webkit-scrollbar {
-  @apply h-2 w-2 rounded bg-tan;
+  @apply h-3 w-2 rounded bg-white;
 }
 .scrollbar::-webkit-scrollbar-thumb {
-  @apply rounded bg-white;
+  @apply rounded bg-tan;
 }
 .leaflet-container {
   width: 100%;

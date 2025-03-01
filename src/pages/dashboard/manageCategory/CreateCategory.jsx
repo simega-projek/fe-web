@@ -105,27 +105,19 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
       </div>
 
       <ButtonFunc
-        className="m-3 bg-primary text-white"
+        className="m-3 bg-primary text-white disabled:cursor-no-drop"
         onClick={handleCreateCategory}
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc className="bg-tan" type="reset" onClick={handleReset}>
+      <ButtonFunc
+        className="bg-tan disabled:cursor-no-drop"
+        type="reset"
+        onClick={handleReset}
+        disabled={isLoading}
+      >
         Reset
       </ButtonFunc>
     </div>
   );
 }
-
-const categoryObject = [
-  "Apple",
-  "Banana",
-  "Cherry",
-  "Date",
-  "Grape",
-  "Mango",
-  "Orange",
-  "Pineapple",
-  "Strawberry",
-  "Watermelon",
-];

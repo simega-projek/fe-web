@@ -11,7 +11,7 @@ import { getAllSite } from "../../services/site.service";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [maps, setMaps] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
@@ -26,7 +26,7 @@ export default function PersebaranPage() {
   const [debouncedSearch] = useDebounce(search, 1000);
 
   const fetchObjects = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const objects = await getAllObject(50, debouncedSearch);
       setDataObejcts(objects.data);
@@ -34,7 +34,7 @@ export default function PersebaranPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -112,7 +112,7 @@ export default function PersebaranPage() {
       </div>
 
       <div className="mt-10">
-        {loading && (
+        {isLoading && (
           <div className="mx-auto">
             <Loading />
           </div>
@@ -128,7 +128,7 @@ export default function PersebaranPage() {
                   img={o?.gambar}
                 />
               ))
-            : !loading && (
+            : !isLoading && (
                 <p className="my-5 text-center text-red-500">
                   data {search} tidak ditemukan
                 </p>

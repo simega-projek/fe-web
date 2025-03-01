@@ -15,10 +15,10 @@ export default function KegiatanDetail() {
   const { id } = useParams();
   const [kegiatan, setKegiatan] = useState({});
   const [otherKegiatan, setOtherKegiatan] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const kegiatanData = await getOneEvent(id);
       // console.log(kegiatanData.data);
@@ -29,7 +29,7 @@ export default function KegiatanDetail() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -46,7 +46,7 @@ export default function KegiatanDetail() {
     <>
       <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start lg:justify-center">
         <div className="lg:w-10/12">
-          {loading ? (
+          {isLoading ? (
             <Loading />
           ) : (
             Object.keys(kegiatan).length > 0 && (

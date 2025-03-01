@@ -44,14 +44,9 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   const [messageError, setMessageError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleReset = () => {
-    setLembah("");
-    setProvince("");
-    setRegencies([]);
-    setDistricts([]);
-    setVillages([]);
-    setSelectedRegency("");
-    setSelectedDistrict("");
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
   };
 
   const handleUpdateValley = useCallback(
@@ -323,13 +318,17 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
           </ContainerInput>
 
           <ButtonFunc
-            className={`m-3 bg-primary text-white`}
+            className={`m-3 bg-primary text-white disabled:cursor-no-drop`}
             onClick={handleUpdateValley}
             disabled={isLoading}
           >
             {isLoading ? "Loading..." : "Simpan"}
           </ButtonFunc>
-          <ButtonFunc className={`m-3 bg-tan`} onClick={onClose} type="button">
+          <ButtonFunc
+            className={`m-3 bg-tan`}
+            onClick={handleBtnCancel}
+            type="button"
+          >
             Batal
           </ButtonFunc>
         </form>

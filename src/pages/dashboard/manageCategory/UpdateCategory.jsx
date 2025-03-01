@@ -26,8 +26,9 @@ export default function UpdateCategories({
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleReset = () => {
-    setCategory("");
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
   };
 
   const handleUpdateCategory = async (e) => {
@@ -54,7 +55,7 @@ export default function UpdateCategories({
         setMessageSuccess(res.message);
         if (onSuccess) {
           onSuccess();
-          handleReset();
+
           setTimeout(() => {
             onClose();
             setMessageSuccess(null);
@@ -139,13 +140,17 @@ export default function UpdateCategories({
         </ContainerInput>
       </form>
       <ButtonFunc
-        className="m-3 bg-primary text-white"
+        className="m-3 bg-primary text-white disabled:cursor-no-drop"
         disabled={isLoading}
         onClick={handleUpdateCategory}
       >
         {isLoading ? "Loading..." : "Simpan"}
       </ButtonFunc>
-      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
+      <ButtonFunc
+        className="m-3 bg-tan"
+        type="button"
+        onClick={handleBtnCancel}
+      >
         Batal
       </ButtonFunc>
     </div>

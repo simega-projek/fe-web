@@ -25,7 +25,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   const [debounceDescription] = useDebounce(description, 800);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleReset = () => {
     setTitle("");
@@ -88,7 +88,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
     formData.append("image", image);
     formData.append("file", file);
     try {
-      setLoading(true);
+      setIsLoading(true);
       let res = await createArticle(formData);
       console.log(res);
       if (res.error) {
@@ -105,7 +105,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -155,7 +155,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
             placeholder="Artikel terkini hari ini"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            disabled={loading}
+            disabled={isLoading}
           />
         </ContainerInput>
 
@@ -168,7 +168,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
             onChange={handleChangeFile}
             accept="application/pdf"
             ref={pdfInput}
-            disabled={loading}
+            disabled={isLoading}
           />
         </ContainerInput>
 
@@ -187,7 +187,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
             accept="image/*"
             multiple
             ref={imageInput}
-            disabled={loading}
+            disabled={isLoading}
           />
         </ContainerInput>
 
@@ -205,15 +205,22 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
             ref={editorInput}
             value={debounceDescription}
             onChange={(newDescription) => setDescription(newDescription)}
-            disabled={loading}
+            disabled={isLoading}
           />
         </div>
 
-        <ButtonFunc className="m-3 bg-primary text-white" disabled={loading}>
+        <ButtonFunc
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
+          disabled={isLoading}
+        >
           Simpan
         </ButtonFunc>
 
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
+        <ButtonFunc
+          className="m-3 bg-tan disabled:cursor-no-drop"
+          onClick={handleReset}
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </form>

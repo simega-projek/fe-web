@@ -237,10 +237,17 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
           </ContainerInput>
         </div>
 
-        <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
+        <ButtonFunc
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Register"}
         </ButtonFunc>
-        <ButtonFunc className="bg-tan" onClick={handleReset}>
+        <ButtonFunc
+          className="bg-tan disabled:cursor-no-drop"
+          onClick={handleReset}
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </form>

@@ -231,14 +231,19 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
         </ContainerInput>
 
         <ButtonFunc
-          className="m-3 bg-primary text-white"
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
           // onClick={handleCreateSite}
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
 
-        <ButtonFunc className="m-3 bg-tan" type="reset" onClick={handleReset}>
+        <ButtonFunc
+          className="m-3 bg-tan disabled:cursor-no-drop"
+          type="reset"
+          onClick={handleReset}
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </form>

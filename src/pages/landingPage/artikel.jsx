@@ -12,7 +12,7 @@ import "aos/dist/aos.css";
 
 export default function ArtikelPage() {
   const [dataArticles, setDataArticles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
@@ -25,7 +25,7 @@ export default function ArtikelPage() {
   }, []);
 
   const fetchArticles = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const articles = await getAllArticles(50, debouncedSearch);
       console.log(articles);
@@ -34,7 +34,7 @@ export default function ArtikelPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function ArtikelPage() {
         />
       </div>
 
-      {loading && (
+      {isLoading && (
         <div className="mt-5">
           {" "}
           <Loading />
@@ -85,7 +85,7 @@ export default function ArtikelPage() {
                 />
               </>
             ))
-          : !loading && (
+          : !isLoading && (
               <p className="my-5 text-center text-red-500">
                 data {search} tidak ditemukan
               </p>

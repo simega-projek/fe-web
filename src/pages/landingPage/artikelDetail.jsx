@@ -8,17 +8,17 @@ import { toView } from "../../utils/toView";
 export default function ArtikelDetail() {
   const { id } = useParams();
   const [article, setArticle] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchArticles = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const articleDetail = await getOneArticle(id);
       setArticle(articleDetail.data);
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
   useEffect(() => {

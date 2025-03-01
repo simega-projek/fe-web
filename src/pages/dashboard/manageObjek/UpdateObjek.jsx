@@ -173,6 +173,11 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     }
   };
 
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
+  };
+
   useEffect(() => {
     fetchOneObject();
   }, [id]);
@@ -366,13 +371,17 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
         </div>
 
         <ButtonFunc
-          className="m-3 bg-primary text-white"
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
           onClick={handleUpdateObject}
           disabled={isLoading}
         >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={onClose} type="button">
+        <ButtonFunc
+          className="m-3 bg-tan"
+          onClick={handleBtnCancel}
+          type="button"
+        >
           Batal
         </ButtonFunc>
       </form>

@@ -58,17 +58,9 @@ export default function UpdateActivity({
     setDescription(desc);
   };
 
-  const handleReset = () => {
-    setTitle("");
-    setDescription("");
-    setRegisLink("");
-    setStatus("");
-    setImage(null);
-    setStartDate(null);
-    setEndDate(null);
-    setImagePreview(null);
-    if (editorInput.current) editorInput.current.value = null;
-    if (imageInput.current) imageInput.current.value = null;
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
   };
 
   const validateForm = () => {
@@ -325,11 +317,14 @@ export default function UpdateActivity({
           />
         </div>
 
-        <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
+        <ButtonFunc
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
-          Reset
+        <ButtonFunc className="m-3 bg-tan" onClick={handleBtnCancel}>
+          Batal
         </ButtonFunc>
       </form>
     </div>

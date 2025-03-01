@@ -287,10 +287,17 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           />
         </div>
 
-        <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
+        <ButtonFunc
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
+          disabled={isLoading}
+        >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
+        <ButtonFunc
+          className="m-3 bg-tan disabled:cursor-no-drop"
+          onClick={handleReset}
+          disabled={isLoading}
+        >
           Reset
         </ButtonFunc>
       </form>

@@ -30,7 +30,7 @@ export default function UpdateArticle({
   const [debounceDescription] = useDebounce(description, 800); // Debounce description
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [originalImage, setOriginalImage] = useState(null);
   const [originalFile, setOriginalFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -69,7 +69,7 @@ export default function UpdateArticle({
     formData.append("file", file || originalFile);
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       let res = await updateArticle(id, formData);
       if (res.error) {
         setMessageError(res.message);
@@ -91,13 +91,13 @@ export default function UpdateArticle({
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchOneArticle = async () => {
     // handleReset();
-    setLoading(true);
+    setIsLoading(true);
     try {
       const res = await getOneArticle(id);
       const data = res?.data;
@@ -109,7 +109,7 @@ export default function UpdateArticle({
     } catch (err) {
       console.log(err.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +120,7 @@ export default function UpdateArticle({
   // console.log({ dataUpdate });
   const handleBtnCancel = () => {
     onClose();
-    if (loading) window.location.reload();
+    if (isLoading) window.location.reload();
   };
 
   return (
@@ -157,7 +157,7 @@ export default function UpdateArticle({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              disabled={loading}
+              disabled={isLoading}
             />
           </div>
 
@@ -170,7 +170,7 @@ export default function UpdateArticle({
               accept="application/pdf"
               onChange={handleChangeFile}
               ref={pdfInput}
-              disabled={loading}
+              disabled={isLoading}
             />
             <p className="truncate text-xs text-gray-400">
               File asli: ${originalFile}
@@ -203,13 +203,16 @@ export default function UpdateArticle({
             ref={editorInput}
             value={debounceDescription}
             onChange={(newDescription) => setDescription(newDescription)}
-            disabled={loading}
+            disabled={isLoading}
           />
         </div>
 
         {/* Action Buttons */}
-        <ButtonFunc className="m-3 bg-primary text-white" disabled={loading}>
-          {loading ? "Loading" : "Simpan"}
+        <ButtonFunc
+          className="m-3 bg-primary text-white disabled:cursor-no-drop"
+          disabled={isLoading}
+        >
+          {isLoading ? "isLoading" : "Simpan"}
         </ButtonFunc>
         <ButtonFunc className="bg-tan" onClick={handleBtnCancel}>
           Batal

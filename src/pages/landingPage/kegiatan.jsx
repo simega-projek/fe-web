@@ -2,7 +2,7 @@ import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
-import Loading from "../../components/Elements/Loading/Loading";
+import isLoading from "../../components/Elements/isLoading/isLoading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 import TitleSection from "../../components/Elements/TitleSection";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
@@ -16,7 +16,7 @@ import "aos/dist/aos.css";
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
   const [dataEventsCS, setDataEventsCS] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
@@ -29,7 +29,7 @@ export default function KegiatanPage() {
   }, []);
 
   const fetchEvents = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const events = await getAllEvent(50, debouncedSearch);
       setDataEvents(events.data);
@@ -37,12 +37,12 @@ export default function KegiatanPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const fetchEventsComingSoon = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const events = await getAllEvent(50, "Akan Datang");
       setDataEventsCS(events.data);
@@ -50,7 +50,7 @@ export default function KegiatanPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -86,9 +86,9 @@ export default function KegiatanPage() {
       </div>
 
       <div className="flex flex-col">
-        {loading && (
+        {isLoading && (
           <div className="mx-auto mt-5">
-            <Loading />
+            <isLoading />
           </div>
         )}
 
@@ -107,7 +107,7 @@ export default function KegiatanPage() {
                   source={item?.users?.fullname}
                 ></CardArtikel>
               ))
-            : !loading && (
+            : !isLoading && (
                 <p className="my-5 text-center text-red-500">
                   data {search} tidak ditemukan
                 </p>
@@ -122,9 +122,9 @@ export default function KegiatanPage() {
           </TitleSection>
         </div>
         <div className="scrollbar flex gap-5 overflow-x-auto p-5">
-          {loading && (
+          {isLoading && (
             <div className="mx-auto">
-              <Loading />
+              <isLoading />
             </div>
           )}
           {dataEventsCS?.length > 0
@@ -140,7 +140,7 @@ export default function KegiatanPage() {
                     img={item?.image}
                   />
                 ))
-            : !loading && (
+            : !isLoading && (
                 <p className="mx-auto my-5 text-center text-red-500">
                   data {search} tidak ditemukan
                 </p>
