@@ -6,91 +6,69 @@ import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInp
 import TitleSection from "../../../components/Elements/TitleSection";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import {
-  createEvent,
-  getOneEvent,
-  updateEvent,
-} from "../../../services/event.service";
+import { getOneEvent, updateEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { useDebounce } from "use-debounce";
 
 export default function UpdateActivity({
-  id,
   isOpenUpdate,
   onClose,
+  id,
   onSuccess,
 }) {
-  const editorInput = useRef(null);
-  const imageInput = useRef(null);
+  const editorInputRef = useRef(null);
+  const imageInputRef = useRef(null);
 
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
   const [regisLink, setRegisLink] = useState("");
   const [status, setStatus] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [originalImage, setOriginalImage] = useState(null);
-
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [debounceDescription] = useDebounce(description, 800);
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [originalImage, setOriginalImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleChangeImage = (e) => {
     const selectFile = e.target.files[0];
     setImage(selectFile);
     if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
   };
-
   const handleClosePreview = () => {
     setImagePreview(null);
     setImage(null);
-    if (imageInput.current) {
-      imageInput.current.value = null;
-    }
+    if (!imageInputRef.current) imageInputRef.current.value = null;
   };
 
-  const handleInputJodit = (desc) => {
-    setDescription(desc);
-  };
-
-  const handleReset = () => {
-    setTitle("");
-    setDescription("");
-    setRegisLink("");
-    setStatus("");
-    setImage(null);
-    setStartDate(null);
-    setEndDate(null);
-    setImagePreview(null);
-    if (editorInput.current) editorInput.current.value = null;
-    if (imageInput.current) imageInput.current.value = null;
-  };
+  const handleInputJodit = useCallback((newDescription) => {
+    setDescription(newDescription);
+  }, []);
 
   const validateForm = () => {
     if (title.trim() === "" || !title) {
       setMessageError("Judul kegiatan diisi");
-      toView("top");
-      return false;
+
+      return;
     } else if (regisLink.trim() === "" || !title) {
       setMessageError("Link pendaftaran diisi");
-      toView("top");
-      return false;
+
+      return;
     } else if (description.trim() === "" || !description) {
       setMessageError("Deskripsi kegiatan diisi");
-      toView("top");
-      return false;
+
+      return;
     }
     toView("top");
-    return true;
   };
-
   const handleUpdateActivity = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     const currentDate = new Date().toISOString();
@@ -98,6 +76,7 @@ export default function UpdateActivity({
     const formattedStartDate = startDate
       ? new Date(startDate).toISOString()
       : currentDate;
+
     const formattedEndDate = endDate
       ? new Date(endDate).toISOString()
       : currentDate;
@@ -110,7 +89,18 @@ export default function UpdateActivity({
     formData.append("start_date", formattedStartDate);
     formData.append("end_date", formattedEndDate);
     formData.append("status", status);
-    console.log("form data: ", formData);
+
+    // console.log("data update: ", formData);
+    console.log("Data yang akan dikirim:", {
+      title,
+      description,
+      image: image ? image.name : originalImage,
+      regisLink,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      status,
+    });
+
     try {
       setIsLoading(true);
       const res = await updateEvent(id, formData);
@@ -118,11 +108,10 @@ export default function UpdateActivity({
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);
-        toView("top");
       } else {
         setMessageError(null);
         setMessageSuccess(res.message);
-        toView("top");
+
         if (onSuccess) {
           onSuccess();
           setTimeout(() => {
@@ -131,6 +120,7 @@ export default function UpdateActivity({
           }, 2000);
         }
       }
+      toView("top");
     } catch (err) {
       console.log(err);
     } finally {
@@ -142,39 +132,57 @@ export default function UpdateActivity({
     setIsLoading(true);
     try {
       const res = await getOneEvent(id);
-      const data = res?.data;
-      setTitle(data.title);
-      setRegisLink(data.registration_link);
+      const data = res.data;
+
+      setTitle(data?.title);
+      setDescription(data?.description);
+      setRegisLink(data?.registration_link);
+      setStatus(data?.status);
+      setOriginalImage(data?.image);
+      setImagePreview(data?.image);
       setStartDate(
-        data.start_date
+        data?.start_date
           ? new Date(data.start_date).toISOString().split("T")[0]
           : "",
       );
       setEndDate(
-        data.end_date
+        data?.end_date
           ? new Date(data.end_date).toISOString().split("T")[0]
           : "",
       );
-      setImage(data.image);
-      setImagePreview(data.image);
-      setStatus(data.status);
-      setDescription(data.description);
-
-      console.log(title);
+      // console.log({ startDate, endDate });
     } catch (err) {
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
+  };
+
   useEffect(() => {
-    fetchOneEvent();
+    if (id) {
+      fetchOneEvent();
+    }
   }, [id]);
+
+  console.log("input", {
+    title,
+    description,
+    image,
+    regisLink,
+    status,
+    startDate,
+    endDate,
+  });
 
   return (
     <div className={isOpenUpdate ? "block" : "hidden"}>
       <div className="mb-2 flex justify-between">
-        <TitleSection className="underline">Edit Kegiatan</TitleSection>
+        <TitleSection className="underline">Ubah Data Kegiatan</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
           X
@@ -203,7 +211,7 @@ export default function UpdateActivity({
           />
 
           <TextInput
-            autoFocus
+            // autoFocus
             required
             id="title"
             type="text"
@@ -211,7 +219,7 @@ export default function UpdateActivity({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
-            placeholder="Kegiatan Hari ini"
+            // ref={activeRef}
           />
         </ContainerInput>
 
@@ -225,7 +233,6 @@ export default function UpdateActivity({
           <TextInput
             id="regisLink"
             name="registration_link"
-            placeholder="https://forms.gle/MUKWvwvoyz6oaLEC8"
             required
             type="text"
             sizing="md"
@@ -243,8 +250,8 @@ export default function UpdateActivity({
           />
 
           <input
-            className="w-full rounded-md"
             type="date"
+            className="w-full rounded-md"
             id="startDate"
             name="start_date"
             required
@@ -274,20 +281,22 @@ export default function UpdateActivity({
 
         <ContainerInput>
           <Label
-            htmlFor="picture"
+            htmlFor="image"
             value="Gambar"
             className="mb-2 block text-base"
           />
 
           <FileInput
-            id="picture"
-            helperText="File harus .jpg .jpeg .png"
-            onChange={handleChangeImage}
+            id="image"
+            name="image"
             accept="image/*"
-            ref={imageInput}
+            onChange={handleChangeImage}
+            ref={imageInputRef}
             disabled={isLoading}
           />
-
+          <p className="truncate text-xs text-gray-400">
+            File asli: ${originalImage}
+          </p>
           {imagePreview && (
             <ImagePreview src={imagePreview} onClose={handleClosePreview} />
           )}
@@ -319,17 +328,17 @@ export default function UpdateActivity({
             Deskripsi
           </Label>
           <JoditEditor
-            onChange={handleInputJodit}
-            ref={editorInput}
+            ref={editorInputRef}
             value={debounceDescription}
+            onChange={handleInputJodit}
           />
         </div>
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
-          Reset
+        <ButtonFunc className="m-3 bg-tan" onClick={handleBtnCancel}>
+          Batal
         </ButtonFunc>
       </form>
     </div>

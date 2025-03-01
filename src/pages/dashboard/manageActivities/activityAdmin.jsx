@@ -89,7 +89,7 @@ export default function ActivityAdmin() {
         setMessageError(null);
         setMessageSuccess(res.message);
       }
-      toView("top");
+      // toView("top");
       setIsOpenModalDelete(false);
       handleSuccess();
     } catch (err) {
@@ -174,7 +174,7 @@ export default function ActivityAdmin() {
         </div>
 
         {/* table */}
-        <div className="mt-5 overflow-x-auto">
+        <div className="scrollbar mt-5 overflow-x-auto">
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
@@ -200,7 +200,11 @@ export default function ActivityAdmin() {
                       className="whitespace-normal break-words"
                       style={{ tableLayout: "fixed" }}
                     >
-                      <a href={event?.registration_link} target="_blank">
+                      <a
+                        href={event?.registration_link}
+                        target="_blank"
+                        className=""
+                      >
                         {event?.registration_link ?? "-"}
                       </a>
                     </TableCell>

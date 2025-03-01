@@ -28,7 +28,6 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   const [loading, setLoading] = useState(false);
 
   const handleReset = () => {
-    // e.preventDefault();
     setTitle("");
     setDescription("");
     setImage(null);
@@ -55,6 +54,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   };
   const handleClosePreview = () => {
     setImagePreview(null);
+    setImage(null);
     if (imageInput.current) {
       imageInput.current.value = null;
     }
@@ -69,12 +69,16 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
       setMessageError("Judul artikel diisi");
       toView("top");
       return;
-    } else if (description.trim() === "" || !description) {
-      setMessageError("Deskripsi artikel diisi");
+    } else if (!file) {
+      setMessageError("File artikel diisi");
       toView("top");
       return;
     } else if (!image) {
       setMessageError("Gambar artikel diisi");
+      toView("top");
+      return;
+    } else if (description.trim() === "" || !description) {
+      setMessageError("Deskripsi artikel diisi");
       toView("top");
       return;
     }

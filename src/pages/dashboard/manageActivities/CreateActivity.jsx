@@ -9,13 +9,11 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { useDebounce } from "use-debounce";
 
 export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
-  let controllerApi;
-
   const editorInput = useRef(null);
   const imageInput = useRef(null);
-  const btnCancel = useRef(null);
 
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
@@ -25,6 +23,8 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const [debounceDescription] = useDebounce(description, 800);
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
@@ -36,22 +36,19 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
   };
 
-  // const handleInputJodit = useCallback((newDescription) => {
-  //   setDescription(newDescription);
-  // }, []);
-
   const handleInputJodit = (desc) => {
     setDescription(desc);
   };
 
   const handleClosePreview = () => {
     setImagePreview(null);
+    setImage(null);
     if (imageInput.current) {
       imageInput.current.value = null;
     }
   };
 
-  const handleResetForm = () => {
+  const handleReset = () => {
     setTitle("");
     setDescription("");
     setRegisLink("");
@@ -64,27 +61,31 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     if (imageInput.current) imageInput.current.value = null;
   };
 
-  const handleCreateActivity = async (e) => {
-    e.preventDefault();
-
-    controllerApi = new AbortController();
+  const validateForm = () => {
     if (title.trim() === "" || !title) {
       setMessageError("Judul kegiatan diisi");
       toView("top");
-      return;
+      return false;
     } else if (regisLink.trim() === "" || !title) {
       setMessageError("Link pendaftaran diisi");
       toView("top");
-      return;
+      return false;
     } else if (!image) {
       setMessageError("Gambar kegiatan diisi");
       toView("top");
-      return;
-    } else if (description.trim() === "" || !description) {
+      return false;
+    } else if (description.trim() === " " || !description) {
       setMessageError("Deskripsi kegiatan diisi");
       toView("top");
-      return;
+      return false;
     }
+    toView("top");
+    return true;
+  };
+
+  const handleCreateActivity = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
     const currentDate = new Date().toISOString();
 
@@ -106,7 +107,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
     console.log("form data: ", formData);
     try {
       setIsLoading(true);
-      const res = await createEvent(formData, { signal: controllerApi.signal });
+      const res = await createEvent(formData);
       console.log("response create event: ", res);
       if (res.error) {
         setMessageError(res.message);
@@ -116,9 +117,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
         setMessageError(null);
         setMessageSuccess(res.message);
         toView("top");
-        handleResetForm();
-      }
-      if (onSuccess) {
+        handleReset();
         onSuccess();
       }
     } catch (err) {
@@ -130,35 +129,9 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
 
   useEffect(() => {
     if (isOpenCreate === false) {
-      handleResetForm();
+      handleReset();
     }
-  });
-
-  // console.log("start date state: ", startDate.target.defaultValue);
-  // console.log(
-  //   "start date state: ",
-  //   startDate ? new Date().toISOString() : null,
-  // );
-  // console.log("end date state: ", endDate);
-  // console.log("start date ref: ", startDateRef.current);
-  // console.log("end date ref: ", endDateRef.current);
-
-  // console.log("input", {
-  //   title,
-  //   description,
-  //   image,
-  //   regisLink,
-  //   status,
-  //   startDate,
-  //   endDate,
-  // });
-
-  // const activeRef = useRef(false);
-
-  // useEffect(() => {
-  //   activeRef.current.focus();
-  // }),
-  //   [];
+  }, [isOpenCreate]);
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
@@ -201,7 +174,6 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
             onChange={(e) => setTitle(e.target.value)}
             disabled={isLoading}
             placeholder="Kegiatan Hari ini"
-            // ref={activeRef}
           />
         </ContainerInput>
 
@@ -308,18 +280,18 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
           <Label htmlFor="deskripsi" className="mb-2 block text-base">
             Deskripsi
           </Label>
-          <JoditEditor onChange={handleInputJodit} ref={editorInput} />
+          <JoditEditor
+            onChange={handleInputJodit}
+            ref={editorInput}
+            value={debounceDescription}
+          />
         </div>
 
         <ButtonFunc className="m-3 bg-primary text-white" disabled={isLoading}>
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc
-          className="m-3 bg-tan"
-          useRef={btnCancel}
-          onClick={handleResetForm}
-        >
-          {isLoading ? "Batal" : "Reset"}
+        <ButtonFunc className="m-3 bg-tan" onClick={handleReset}>
+          Reset
         </ButtonFunc>
       </form>
     </div>
