@@ -23,8 +23,8 @@ export const fetchDataApi = async (method, url, data = null, params = null) => {
 
   try {
     const response = await axios(config);
+    // console.log(response.data);
     return response.data;
-    console.log(response.data);
   } catch (error) {
     if (error.response) {
       const errorMessage = error.response.data.message || "An error occurred";

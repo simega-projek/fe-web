@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BiLibrary } from "react-icons/bi";
 import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
+import { GrValidate } from "react-icons/gr";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
@@ -60,7 +61,7 @@ export const Asidebars = () => {
       </div>
       {/* <!-- MAX SIDEBAR--> */}
       <div
-        className={`mt-20 flex ${!isSidebarOpen ? "ml-5 translate-x-40" : ""} h-[calc(100vh)] w-full flex-col space-y-2 text-white`}
+        className={`mt-20 flex ${!isSidebarOpen ? "ml-5 translate-x-40" : "w-full"} h-[calc(100vh)] flex-col space-y-2 text-white`}
       >
         <SidebarItem
           label={"Dashboard"}
@@ -69,12 +70,13 @@ export const Asidebars = () => {
           isOpen={isSidebarOpen}
         />
 
-        <p
+        <Link
           className={`flex ${!isSidebarOpen ? "w-fit" : "w-full"} transform cursor-pointer flex-row items-center space-x-3 rounded-full bg-primary p-2 pl-8 text-white duration-300 ease-in-out hover:ml-4`}
           onClick={toggleOnListMenageObject}
+          to={"persebaran-objek"}
         >
           <GiColombianStatue /> {isSidebarOpen && <span>Kelola Megalit</span>}
-        </p>
+        </Link>
         {onListMenageObject && (
           <>
             <SidebarItem
@@ -106,6 +108,14 @@ export const Asidebars = () => {
               classLabel={"ml-3"}
             />
           </>
+        )}
+        {(roleAuth === "superadmin" || roleProfile === "superadmin") && (
+          <SidebarItem
+            label={"Validasi Publikasi"}
+            to={"validasi-publikasi"}
+            icon={GrValidate}
+            isOpen={isSidebarOpen}
+          />
         )}
         <SidebarItem
           label={"Kelola Artikel"}

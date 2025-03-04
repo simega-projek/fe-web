@@ -2,7 +2,7 @@ import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
-import isLoading from "../../components/Elements/isLoading/isLoading";
+import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 import TitleSection from "../../components/Elements/TitleSection";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
@@ -16,7 +16,7 @@ import "aos/dist/aos.css";
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
   const [dataEventsCS, setDataEventsCS] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
@@ -29,7 +29,7 @@ export default function KegiatanPage() {
   }, []);
 
   const fetchEvents = async () => {
-    setIsLoading(true);
+    setisLoading(true);
     try {
       const events = await getAllEvent(50, debouncedSearch);
       setDataEvents(events.data);
@@ -37,12 +37,12 @@ export default function KegiatanPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setIsLoading(false);
+      setisLoading(false);
     }
   };
 
   const fetchEventsComingSoon = async () => {
-    setIsLoading(true);
+    setisLoading(true);
     try {
       const events = await getAllEvent(50, "Akan Datang");
       setDataEventsCS(events.data);
@@ -50,7 +50,7 @@ export default function KegiatanPage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setIsLoading(false);
+      setisLoading(false);
     }
   };
 
@@ -88,7 +88,7 @@ export default function KegiatanPage() {
       <div className="flex flex-col">
         {isLoading && (
           <div className="mx-auto mt-5">
-            <isLoading />
+            <Loading />
           </div>
         )}
 

@@ -27,6 +27,8 @@ import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
 import FeedbackPage from "./pages/landingPage/feedback.jsx";
+import ObjectPersebaran from "./pages/dashboard/manageObjek/objectPersebaran.jsx";
+import PublicationAdmin from "./pages/dashboard/managePublication/publicationAdmin.jsx";
 
 const route = createBrowserRouter([
   {
@@ -90,7 +92,7 @@ const route = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/admin",
+    path: "/admin/",
     element: <AdminLayout />,
     children: [
       {
@@ -128,6 +130,14 @@ const route = createBrowserRouter([
       {
         path: "profil",
         element: <ProfileAdmin />,
+      },
+      {
+        path: "persebaran-objek",
+        element: <ObjectPersebaran />,
+      },
+      {
+        path: "validasi-publikasi",
+        element: <PublicationAdmin />,
       },
     ],
   },

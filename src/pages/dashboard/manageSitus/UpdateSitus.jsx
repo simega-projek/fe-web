@@ -86,37 +86,34 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     }
   };
 
-  const fetchOneSite = useCallback(
-    async (id) => {
-      setIsLoading(true);
-      try {
-        const res = await getOneSite(id);
-        const data = res?.data;
+  const fetchOneSite = async () => {
+    setIsLoading(true);
+    try {
+      const res = await getOneSite(id);
+      const data = res?.data;
 
-        setDataUpdate(data);
-        setSiteName(data?.nama_situs);
-        // setSelectedValley(data?.lembah_id);
+      setDataUpdate(data);
+      setSiteName(data?.nama_situs);
+      // setSelectedValley(data?.lembah_id);
 
-        // valleys
-        const valley = valleys.find((v) => v.ID === data?.lembah_id);
-        setSelectedValley(valley);
+      // valleys
+      const valley = valleys.find((v) => v.ID === data?.lembah_id);
+      setSelectedValley(valley);
 
-        // villages
-        const kelurahan = data?.desa_kelurahan.split(",");
-        const idKelurahan = kelurahan[2];
-        const dataVillages = await getKelurahan(idKelurahan);
-        const village = dataVillages.find((v) => v.id === kelurahan[1]);
+      // villages
+      const kelurahan = data?.desa_kelurahan.split(",");
+      const idKelurahan = kelurahan[2];
+      const dataVillages = await getKelurahan(idKelurahan);
+      const village = dataVillages.find((v) => v.id === kelurahan[1]);
 
-        setVillages(dataVillages);
-        setSelectedVillage(village);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [id],
-  );
+      setVillages(dataVillages);
+      setSelectedVillage(village);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchValley = async () => {
     setIsLoading(true);
@@ -179,7 +176,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   }, []);
 
   useEffect(() => {
-    fetchOneSite(id);
+    if (id) fetchOneSite(id);
   }, [id]);
 
   useEffect(() => {

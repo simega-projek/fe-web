@@ -147,8 +147,6 @@ export default function UpdateActivity({
       setImagePreview(data.image);
       setStatus(data.status);
       setDescription(data.description);
-
-      console.log(title);
     } catch (err) {
     } finally {
       setIsLoading(false);
@@ -156,7 +154,7 @@ export default function UpdateActivity({
   };
 
   useEffect(() => {
-    fetchOneEvent();
+    if (id) fetchOneEvent();
   }, [id]);
 
   return (
