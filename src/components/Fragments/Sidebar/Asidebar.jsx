@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BiLibrary } from "react-icons/bi";
+import { BiLibrary, BiSolidMessageDetail } from "react-icons/bi";
 import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
 import { GrValidate } from "react-icons/gr";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
@@ -127,6 +127,12 @@ export const Asidebars = () => {
           label={"Kelola Kegiatan"}
           to={"kelola-kegiatan"}
           icon={FaBookmark}
+          isOpen={isSidebarOpen}
+        />
+        <SidebarItem
+          label={"Umpan Balik"}
+          to={"feedback-masyarakat"}
+          icon={BiSolidMessageDetail}
           isOpen={isSidebarOpen}
         />
         {(roleAuth === "superadmin" || roleProfile === "superadmin") && (

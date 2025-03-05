@@ -29,6 +29,7 @@ import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
 import FeedbackPage from "./pages/landingPage/feedback.jsx";
 import ObjectPersebaran from "./pages/dashboard/manageObjek/objectPersebaran.jsx";
 import PublicationAdmin from "./pages/dashboard/managePublication/publicationAdmin.jsx";
+import { FeedbackAdmin } from "./pages/dashboard/manageFeedback/feedbackAdmin.jsx";
 
 const route = createBrowserRouter([
   {
@@ -138,6 +139,10 @@ const route = createBrowserRouter([
       {
         path: "validasi-publikasi/",
         element: <PublicationAdmin />,
+      },
+      {
+        path: "feedback-masyarakat/",
+        element: <FeedbackAdmin />,
       },
     ],
   },
