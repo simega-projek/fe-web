@@ -286,7 +286,7 @@ export const ProfileAdmin = () => {
             </ButtonFunc>
 
             <ButtonFunc
-              className="m-3 bg-primary text-white"
+              className="m-3 bg-tan text-white"
               onClick={closeFormEditProfile}
               type="button"
             >
@@ -296,95 +296,99 @@ export const ProfileAdmin = () => {
         )}
       </form>
 
-      {!formEdit && (
+      {!formEdit && !formPassword && (
         <>
           <ButtonFunc
-            className="m-3 bg-tan text-black"
+            className="m-3 bg-primary text-white"
             onClick={() => setFormEdit(true)}
           >
             Edit Profile
           </ButtonFunc>
 
           {/* change password */}
-          {!formPassword && (
-            <ButtonFunc
-              className="m-3 bg-tan text-white"
-              onClick={openFormChangePassword}
-            >
-              Ganti Password
-            </ButtonFunc>
-          )}
+
+          <ButtonFunc
+            className="m-3 bg-primary text-white"
+            onClick={openFormChangePassword}
+          >
+            Ganti Password
+          </ButtonFunc>
         </>
       )}
 
       {/* change password */}
       {formPassword && (
-        <form className="flex flex-wrap" onSubmit={handleEditPassword}>
-          <ContainerInput>
-            <Label
-              htmlFor="password"
-              value="Password Lama"
-              className="mb-2 block text-base"
-            />
+        <div>
+          <TitleSection className="mb-5 mt-10">Ubah Password</TitleSection>
+          <form className="flex flex-wrap" onSubmit={handleEditPassword}>
+            <ContainerInput>
+              <Label
+                htmlFor="password"
+                value="Password Lama"
+                className="mb-2 block text-base"
+              />
 
-            <TextInput
-              id="password"
-              type="text"
-              sizing="md"
-              onChange={(e) => setPassword(e.target.value)}
-              name="old_password"
-              autoComplete="off"
-            />
-          </ContainerInput>
+              <TextInput
+                id="password"
+                type="text"
+                sizing="md"
+                onChange={(e) => setPassword(e.target.value)}
+                name="old_password"
+                autoComplete="off"
+              />
+            </ContainerInput>
 
-          <ContainerInput>
-            <Label
-              htmlFor="newPassword"
-              value="Password Baru"
-              className="mb-2 block text-base"
-            />
+            <ContainerInput>
+              <Label
+                htmlFor="newPassword"
+                value="Password Baru"
+                className="mb-2 block text-base"
+              />
 
-            <TextInput
-              id="newPassword"
-              type="text"
-              sizing="md"
-              name="new_password"
-              onChange={(e) => setNewPassword(e.target.value)}
-              autoComplete="off"
-            />
-          </ContainerInput>
+              <TextInput
+                id="newPassword"
+                type="text"
+                sizing="md"
+                name="new_password"
+                onChange={(e) => setNewPassword(e.target.value)}
+                autoComplete="off"
+              />
+            </ContainerInput>
 
-          <ContainerInput>
-            <Label
-              htmlFor="newPasswordConfirm"
-              value="Konfirmasi Password Baru"
-              className="mb-2 block text-base"
-            />
+            <ContainerInput>
+              <Label
+                htmlFor="newPasswordConfirm"
+                value="Konfirmasi Password Baru"
+                className="mb-2 block text-base"
+              />
 
-            <TextInput
-              id="newPasswordConfirm"
-              type="text"
-              sizing="md"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              autoComplete="off"
-            />
-          </ContainerInput>
+              <TextInput
+                id="newPasswordConfirm"
+                type="text"
+                sizing="md"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete="off"
+              />
+            </ContainerInput>
 
-          <ButtonFunc
-            className="m-3 bg-primary text-white"
-            disabled={isLoading}
-          >
-            {isLoading ? "loading..." : "Simpan"}
-          </ButtonFunc>
+            <ContainerInput className={"flex items-end"}>
+              <ButtonFunc
+                className="mr-5 bg-primary text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? "loading..." : "Simpan"}
+              </ButtonFunc>
 
-          <ButtonFunc
-            className="m-3 bg-primary text-white"
-            onClick={closeFormChangePassword}
-            type="button"
-          >
-            Batal
-          </ButtonFunc>
-        </form>
+              <ButtonFunc
+                className="bg-tan text-white"
+                onClick={closeFormChangePassword}
+                type="button"
+              >
+                Batal
+              </ButtonFunc>
+            </ContainerInput>
+          </form>
+        </div>
       )}
     </>
   );
