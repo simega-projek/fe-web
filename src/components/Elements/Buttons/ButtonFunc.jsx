@@ -5,10 +5,13 @@ export const ButtonFunc = (props) => {
     children = "button",
     onClick = () => {},
     disabled = false,
+
+    value,
   } = props;
 
   return (
     <button
+      value={value}
       type={type}
       className={`cursor-pointer rounded px-4 py-2 font-bold hover:shadow-lg disabled:bg-light ${className}`}
       onClick={onClick}

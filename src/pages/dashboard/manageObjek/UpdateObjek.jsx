@@ -12,10 +12,15 @@ import { getAllCategory } from "../../../services/category.service";
 import { getOneObject, updateObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
+import { useSelector } from "react-redux";
 
 export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
   const imageRef = useRef(null);
+  const role = useSelector((state) => state.auth.userData);
+  let roleAuth = role?.info?.role;
+  let roleProfile = role?.data?.role;
+  console.log({ roleAuth, roleProfile });
 
   const [nameObject, setNameObject] = useState("");
   const [lintang, setLintang] = useState("");
@@ -170,6 +175,9 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     onClose();
     if (isLoading) window.location.reload();
   };
+
+  if (roleAuth === "superadmin" || roleProfile === "superadmin")
+    console.log(roleAuth, roleProfile, "yes");
 
   useEffect(() => {
     if (id) fetchOneObject();

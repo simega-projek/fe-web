@@ -9,6 +9,7 @@ import { PopupMap } from "../../../components/Fragments/Cards/PopupMap";
 import { getAllObject } from "../../../services/object.service";
 import { getAllSite } from "../../../services/site.service";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
+import { RadioButton } from "../../../components/Elements/RadioButton/RadioButton";
 
 export default function ObjectPersebaran() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -98,50 +99,32 @@ export default function ObjectPersebaran() {
         </div>
         <fieldset className="flex items-center justify-center gap-x-3">
           <div className="flex items-center gap-1">
-            <Radio
-              id="all"
-              name="publish"
+            <RadioButton
               value="all"
-              className="peer hidden"
-              defaultChecked
+              name="publish"
+              defaultChecked={true}
               onChange={(e) => setFilter(e.target.value)}
-            />
-            <Label
-              htmlFor="all"
-              className="cursor-pointer rounded-sm px-3 py-1 duration-300 ease-in-out peer-checked:bg-primary peer-checked:text-white peer-hover:bg-primary peer-hover:text-white md:text-lg"
             >
               Semua
-            </Label>
+            </RadioButton>
           </div>
           <div className="flex items-center gap-1">
-            <Radio
-              id="public"
-              name="publish"
+            <RadioButton
               value="public"
-              className="peer hidden"
+              name="publish"
               onChange={(e) => setFilter(e.target.value)}
-            />
-            <Label
-              htmlFor="public"
-              className="cursor-pointer rounded-sm px-3 py-1 duration-300 ease-in-out peer-checked:bg-primary peer-checked:text-white peer-hover:bg-primary peer-hover:text-white md:text-lg"
             >
               Publik
-            </Label>
+            </RadioButton>
           </div>
           <div className="flex items-center gap-1">
-            <Radio
-              id="private"
-              name="publish"
+            <RadioButton
               value="private"
-              className="peer hidden"
+              name="publish"
               onChange={(e) => setFilter(e.target.value)}
-            />
-            <Label
-              htmlFor="private"
-              className="cursor-pointer rounded-sm px-3 py-1 duration-300 ease-in-out peer-checked:bg-primary peer-checked:text-white peer-hover:bg-primary peer-hover:text-white md:text-lg"
             >
               Private
-            </Label>
+            </RadioButton>
           </div>
         </fieldset>
       </div>

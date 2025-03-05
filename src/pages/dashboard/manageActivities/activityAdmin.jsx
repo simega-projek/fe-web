@@ -219,14 +219,17 @@ export default function ActivityAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Detail"}
                         icon={FaFileInvoice}
                         to={`/kegiatan/${event?.ID}/${event?.title}`}
                       />
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdateForm(event?.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(event?.ID)}
                       />

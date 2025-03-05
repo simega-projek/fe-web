@@ -188,10 +188,12 @@ export default function CategoryAdmin() {
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdateForm(category.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(category.ID)}
                       />

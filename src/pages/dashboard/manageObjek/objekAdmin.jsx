@@ -181,14 +181,17 @@ export default function ObjekAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Detail"}
                         icon={FaFileInvoice}
                         to={`/objek/${objects.ID}/${objects.nama_objek}`}
                       />
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdateForm(objects.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(objects.ID)}
                       />

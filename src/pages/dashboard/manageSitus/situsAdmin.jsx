@@ -186,10 +186,12 @@ export default function SitusAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdateForm(site?.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(site?.ID)}
                       />

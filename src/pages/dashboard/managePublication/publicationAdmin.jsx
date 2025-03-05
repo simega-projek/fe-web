@@ -1,5 +1,4 @@
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -12,20 +11,27 @@ import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 
 import { FaFileInvoice } from "react-icons/fa6";
-import { GiStoneBust } from "react-icons/gi";
 
 import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
+import { GrValidate } from "react-icons/gr";
 import { useDebounce } from "use-debounce";
+import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import Loading from "../../../components/Elements/Loading/Loading";
 import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
-import { deleteObject, getAllObject } from "../../../services/object.service";
+import {
+  deleteObject,
+  getAllObject,
+  updateObject,
+} from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
-import { GrValidate } from "react-icons/gr";
+import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
+// import CreateObjek from "./CreateObjek";
+import UpdateObjek from "../manageObjek/UpdateObjek";
 
 export default function PublicationAdmin() {
   const [search, setSearch] = useState("");
@@ -38,23 +44,26 @@ export default function PublicationAdmin() {
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
 
   const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
-  const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
-  const handleOpenCreateForm = () => {
-    setIsOpenCreateForm(!isOpenCreateForm);
-    setIsOpenUpdateForm(false);
+
+  const [selectedObjectData, setSelectedObjectData] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleOpenUpdateForm = (id) => {
+    setSelectedId(id);
+    setIsOpenUpdateForm(true);
     setMessageError(null);
     setMessageSuccess(null);
     toView("top");
   };
 
-  const handleOpenUpdateForm = (id) => {
-    setSelectedId(id);
-    setIsOpenUpdateForm(true);
-    setIsOpenCreateForm(false);
-    setMessageError(null);
-    setMessageSuccess(null);
-    toView("top");
+  const handleOpenDetailModal = (objectData) => {
+    setIsDetailModalOpen(true);
+    setSelectedObjectData(objectData);
+    console.log(selectedObjectData);
   };
+
+  // Function to close the detail modal
 
   const fetchObject = async () => {
     try {
@@ -84,6 +93,43 @@ export default function PublicationAdmin() {
     fetchObject();
   };
 
+  const handlePublish = async (e) => {
+    setIsLoading(true);
+    const value = e.target.value; // Ambil nilai dari tombol yang ditekan
+    const { ID, lintang, bujur, deskripsi, site_id, category_id, gambar } =
+      selectedObjectData || {};
+
+    // Buat objek data
+    const data = {
+      nama_objek: value,
+      lintang,
+      bujur,
+      deskripsi,
+      site_id,
+      category_id,
+      gambar,
+    };
+
+    try {
+      const res = await updateObject(ID, data);
+      if (res.error) {
+        setMessageError(res.message);
+        setMessageSuccess(null);
+      } else {
+        setMessageSuccess(res.message);
+        setMessageError(null);
+        setIsDetailModalOpen(false);
+        fetchObject();
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  console.log(isLoading);
+
   useEffect(() => {
     fetchObject();
   }, [debouncedSearch]);
@@ -92,8 +138,15 @@ export default function PublicationAdmin() {
 
   return (
     <>
+      <UpdateObjek
+        isOpenUpdate={isOpenUpdateForm}
+        id={selectedId}
+        onSuccess={fetchObject}
+        onClose={() => setIsOpenUpdateForm(false)}
+      />
+
       {/* table data */}
-      <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
+      <hr />
       <TitleSection className="my-5 flex px-3 underline">
         <GrValidate /> Validasi Publikasi Objek
       </TitleSection>
@@ -109,14 +162,7 @@ export default function PublicationAdmin() {
               icon={FaSearch}
               placeholder="Cari berdasarkan Objek dan kategori..."
             />
-          </div>
-          <div className="ml-2">
-            <Button
-              onClick={handleOpenCreateForm}
-              className="bg-primary text-xl font-bold focus:ring-blackboard"
-            >
-              +
-            </Button>
+            <DetailModal />
           </div>
         </div>
 
@@ -135,7 +181,7 @@ export default function PublicationAdmin() {
         </div>
 
         {/* table */}
-        <div className="mt-5 overflow-x-auto">
+        <div className="scrollbar mt-5 overflow-x-auto">
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
@@ -166,18 +212,22 @@ export default function PublicationAdmin() {
                       {objects.site.nama_situs ?? "-"}
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
+                      {/* open detail */}
                       <ButtonControls
+                        name={"Detail"}
                         icon={FaFileInvoice}
-                        to={`/objek/${objects.ID}/${objects.nama_objek}`}
+                        onClick={() => handleOpenDetailModal(objects)}
                       />
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdateForm(objects.ID)}
                       />
-                      {/* <ButtonControls
+                      <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(objects.ID)}
-                      /> */}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -202,6 +252,33 @@ export default function PublicationAdmin() {
           onClose={() => setIsOpenModalDelete(false)}
         />
       )}
+
+      <DetailModal
+        openModal={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        title={selectedObjectData?.nama_objek}
+        img={selectedObjectData?.gambar}
+        category={selectedObjectData?.category?.category}
+        desc={selectedObjectData?.deskripsi}
+      >
+        <p className="text- font-bold">Publis sebagai</p>
+        <ButtonFunc
+          className="bg-primary text-white"
+          onClick={handlePublish}
+          value="Public"
+          disabled={isLoading}
+        >
+          Publik
+        </ButtonFunc>
+        <ButtonFunc
+          className="bg-tan text-white"
+          onClick={handlePublish}
+          value="Private"
+          disabled={isLoading}
+        >
+          Private
+        </ButtonFunc>
+      </DetailModal>
     </>
   );
 }

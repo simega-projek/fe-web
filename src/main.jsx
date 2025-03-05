@@ -136,7 +136,7 @@ const route = createBrowserRouter([
         element: <ObjectPersebaran />,
       },
       {
-        path: "validasi-publikasi",
+        path: "validasi-publikasi/",
         element: <PublicationAdmin />,
       },
     ],

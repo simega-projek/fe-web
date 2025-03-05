@@ -196,14 +196,17 @@ export default function ArticleAdmin() {
                     </TableCell>
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Detail"}
                         icon={FaFileInvoice}
                         to={`/artikel/${article?.ID}/${article?.title}`}
                       />
                       <ButtonControls
+                        name={"Edit"}
                         icon={FaEdit}
                         onClick={() => handleOpenUpdate(article.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(article.ID)}
                       />

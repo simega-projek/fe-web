@@ -199,10 +199,12 @@ export default function UserAdmin() {
 
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
+                        name={"Reset Password"}
                         icon={FaEdit}
                         onClick={() => handleOpenResetModal(admin?.ID)}
                       />
                       <ButtonControls
+                        name={"Hapus Akun"}
                         icon={MdDeleteForever}
                         onClick={() => handleOpenDeleteModal(admin?.ID)}
                       />
