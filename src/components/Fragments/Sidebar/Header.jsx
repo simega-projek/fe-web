@@ -1,6 +1,6 @@
 "use client";
 import { Button, Modal } from "flowbite-react";
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,6 +25,17 @@ export default function Header() {
   function handleisDropdown() {
     setisDropdown(!isDropdown);
   }
+
+  useEffect(() => {
+    const handleCloseDropdown = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target))
+        setisDropdown(false);
+    };
+    document.addEventListener("mousedown", handleCloseDropdown);
+    return () => {
+      document.removeEventListener("mousedown", handleCloseDropdown);
+    };
+  }, [dropdownRef]);
 
   return (
     <>
