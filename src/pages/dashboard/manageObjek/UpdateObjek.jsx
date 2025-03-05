@@ -176,9 +176,6 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     if (isLoading) window.location.reload();
   };
 
-  if (roleAuth === "superadmin" || roleProfile === "superadmin")
-    console.log(roleAuth, roleProfile, "yes");
-
   useEffect(() => {
     if (id) fetchOneObject();
   }, [id]);
