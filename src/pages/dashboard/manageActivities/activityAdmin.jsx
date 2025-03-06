@@ -175,7 +175,7 @@ export default function ActivityAdmin() {
 
         {/* table */}
         <div className="scrollbar mt-5 overflow-x-auto">
-          <Table hoverable>
+          <Table hoverable className="scrollbar md:table-fixed">
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Kegiatan</TableHeadCell>
@@ -193,7 +193,7 @@ export default function ActivityAdmin() {
                     <TableCell className="whitespace-normal">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+                    <TableCell className="whitespace-normal break-words font-medium text-gray-900 dark:text-white">
                       {event?.title}
                     </TableCell>
                     <TableCell

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import maxWord from "../../../utils/maxWord";
+import { Badge } from "flowbite-react";
 
 export default function CardSitus(props) {
   const {
@@ -9,6 +10,7 @@ export default function CardSitus(props) {
     title,
     desc,
     publish = "Publik",
+    category,
   } = props;
 
   const isPublic = ["public", "Public", "publik", "Publik"].includes(publish);
@@ -36,12 +38,8 @@ export default function CardSitus(props) {
         <div className="absolute bottom-0 left-0 z-20 m-2 pl-1 text-white md:m-5">
           <p className="mb-2 text-base font-bold md:text-base lg:text-lg">
             {title}
+            <p className="text-base text-white/70">{category}</p>
           </p>
-
-          <div
-            className="truncate text-wrap text-base md:text-base"
-            dangerouslySetInnerHTML={{ __html: desc }}
-          ></div>
         </div>
       </div>
     </Link>

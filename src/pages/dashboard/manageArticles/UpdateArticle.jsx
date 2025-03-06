@@ -212,7 +212,7 @@ export default function UpdateArticle({
           className="m-3 bg-primary text-white disabled:cursor-no-drop"
           disabled={isLoading}
         >
-          {isLoading ? "isLoading" : "Simpan"}
+          {isLoading ? "Loading" : "Simpan"}
         </ButtonFunc>
         <ButtonFunc className="bg-tan" onClick={handleBtnCancel}>
           Batal

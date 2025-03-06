@@ -126,6 +126,8 @@ export default function PersebaranPage() {
                   desc={o?.propinsi}
                   to={`/objek/${o?.ID}/${o?.nama_objek}`}
                   img={o?.gambar}
+                  category={o?.category.category}
+                  publish={"Publik"}
                 />
               ))
             : !isLoading && (
