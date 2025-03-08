@@ -1,4 +1,4 @@
-import { TextInput } from "flowbite-react";
+import { Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
@@ -12,14 +12,21 @@ import { getAllEvent } from "../../services/event.service";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
+import { toView } from "../../utils/toView";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
-  const [dataEventsCS, setDataEventsCS] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [isLoading, setisLoading] = useState(false);
 
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
+
+  const [onPagination, setOnPagination] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const CONTENT_PER_PAGE = 8;
 
   useEffect(() => {
     AOS.init({
@@ -31,9 +38,21 @@ export default function KegiatanPage() {
   const fetchEvents = async () => {
     setisLoading(true);
     try {
-      const events = await getAllEvent(50, debouncedSearch);
-      setDataEvents(events.data);
-      // console.log(events.data);
+      const events = await getAllEvent(
+        CONTENT_PER_PAGE,
+        debouncedSearch,
+        currentPage,
+      );
+      // descending
+      const sortedData = events.data.sort(
+        (a, b) => new Date(b.start_date) - new Date(a.start_date),
+      );
+
+      setDataEvents(sortedData);
+      setFilteredEvents(sortedData);
+
+      setOnPagination(events?.pagination);
+      setCurrentPage(events?.pagination?.currentPage);
     } catch (err) {
       console.log(err);
     } finally {
@@ -41,26 +60,27 @@ export default function KegiatanPage() {
     }
   };
 
-  const fetchEventsComingSoon = async () => {
-    setisLoading(true);
-    try {
-      const events = await getAllEvent(50, "Akan Datang");
-      setDataEventsCS(events.data);
-      // console.log(events.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setisLoading(false);
+  const handleFilter = (e) => {
+    const filterStatus = e.target.value;
+    setFilter(filterStatus);
+    if (filterStatus) {
+      const filtered = dataEvents.filter(
+        (item) => item.status === e.target.value,
+      );
+      setFilteredEvents(filtered);
+    } else {
+      setFilteredEvents(dataEvents);
     }
+  };
+
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
   };
 
   useEffect(() => {
     fetchEvents();
-  }, [debouncedSearch]);
-
-  useEffect(() => {
-    fetchEventsComingSoon();
-  }, []);
+  }, [debouncedSearch, currentPage]);
 
   return (
     <>
@@ -76,15 +96,15 @@ export default function KegiatanPage() {
         </div>
       </HeroSection>
 
-      <div className="mx-auto mt-5 w-full px-5 lg:w-1/2">
-        <TextInput
-          icon={FaSearch}
-          placeholder="Cari Kegiatan..."
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-        />
-      </div>
+      {/* search and filter */}
+      <FilterEvent
+        search={search}
+        onSearch={(e) => setSearch(e.target.value)}
+        filter={filter}
+        onFilter={handleFilter}
+      />
 
+      {/* data event */}
       <div className="flex flex-col">
         {isLoading && (
           <div className="mx-auto mt-5">
@@ -93,11 +113,11 @@ export default function KegiatanPage() {
         )}
 
         <div
-          className="flex flex-wrap justify-center gap-5 p-12"
+          className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
           data-aos="fade-up"
         >
-          {Array.isArray(dataEvents) && dataEvents?.length > 0
-            ? dataEvents.map((item) => (
+          {Array.isArray(filteredEvents) && filteredEvents?.length > 0
+            ? filteredEvents.map((item) => (
                 <CardArtikel
                   to={`/kegiatan/${item.ID}/${item.title}`}
                   key={item?.ID}
@@ -105,6 +125,7 @@ export default function KegiatanPage() {
                   date={item?.start_date}
                   img={item?.image}
                   source={item?.users?.fullname}
+                  status={item?.status}
                 ></CardArtikel>
               ))
             : !isLoading && (
@@ -115,38 +136,36 @@ export default function KegiatanPage() {
         </div>
       </div>
 
-      <div className="flex flex-col px-12">
-        <div className="container">
-          <TitleSection className="ps-5 pt-5">
-            Kegiatan akan datang
-          </TitleSection>
-        </div>
-        <div className="scrollbar flex gap-5 overflow-x-auto p-5">
-          {isLoading && (
-            <div className="mx-auto">
-              <isLoading />
-            </div>
-          )}
-          {dataEventsCS?.length > 0
-            ? dataEventsCS
-                ?.slice(0, 6)
-                .map((item) => (
-                  <CardKegiatanHome
-                    to={`/kegiatan/${item.ID}/${item.title}`}
-                    key={item?.ID}
-                    title={item?.title}
-                    className="flex-shrink-0 md:touch-pan-x"
-                    date={item?.start_date}
-                    img={item?.image}
-                  />
-                ))
-            : !isLoading && (
-                <p className="mx-auto my-5 text-center text-red-500">
-                  data {search} tidak ditemukan
-                </p>
-              )}
-        </div>
+      {/* Pagination */}
+      <div className="mb-5 flex flex-col items-center justify-center">
+        {isLoading ? null : (
+          <PaginationPage
+            currentPage={currentPage}
+            totalPages={onPagination?.totalPages}
+            onPageChange={onPageChange}
+          />
+        )}
       </div>
     </>
   );
 }
+
+const FilterEvent = ({ search, onSearch, filter, onFilter }) => {
+  return (
+    <div className="mx-auto mt-5 flex w-full gap-2 px-10 lg:w-1/2">
+      <TextInput
+        icon={FaSearch}
+        placeholder="Cari Kegiatan..."
+        onChange={onSearch}
+        value={search}
+        className="w-full"
+      />
+      <Select value={filter} onChange={onFilter} className="w-1/2">
+        <option value={""}>Status</option>
+        <option value={"Akan Datang"}>Akan Datang</option>
+        <option value={"Proses"}>Sedang Berlangsung</option>
+        <option value={"Selesai"}>Selesai</option>
+      </Select>
+    </div>
+  );
+};

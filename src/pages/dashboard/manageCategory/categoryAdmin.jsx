@@ -1,5 +1,7 @@
 import {
   Button,
+  Pagination,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +31,9 @@ import {
 import { toView } from "../../../utils/toView";
 import CreateCategory from "./CreateCategory";
 import UpdateCategories from "./UpdateCategory";
+import ReactPaginate from "react-paginate";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 
 export default function CategoryAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -39,11 +44,18 @@ export default function CategoryAdmin() {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [categoryData, setCategoryData] = useState([]);
+  const [onPagination, setOnPagination] = useState(false);
+
   const [searchData, setSearchData] = useState("");
   const [searchDebounce] = useDebounce(searchData, 1000);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+
+  const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -68,14 +80,19 @@ export default function CategoryAdmin() {
   };
 
   const fetchCategory = async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
-      const category = await getAllCategory(100, searchDebounce);
+      const category = await getAllCategory(
+        contentPage,
+        searchDebounce,
+        currentPage,
+      );
       setCategoryData(category.data);
+      setOnPagination(category.pagination);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -94,6 +111,11 @@ export default function CategoryAdmin() {
     handleSuccess();
   };
 
+  const onPageChange = (e) => {
+    setCurrentPage(e);
+  };
+
+  console.log(contentPage);
   // console.log(categoryData);
   const handleSuccess = () => {
     fetchCategory();
@@ -101,10 +123,10 @@ export default function CategoryAdmin() {
 
   useEffect(() => {
     fetchCategory();
-  }, [searchDebounce]);
+  }, [searchDebounce, currentPage, contentPage]);
 
   return (
-    <div>
+    <div className="">
       <CreateCategory
         isOpenCreate={isOpenCreateForm}
         onClose={handleOpenCreateForm}
@@ -127,12 +149,17 @@ export default function CategoryAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
+          <div className="lg:w-2-3 flex w-full">
             <TextInput
               icon={FaSearch}
               placeholder="Cari Kategori..."
               value={searchData}
               onChange={(e) => setSearchData(e.target.value)}
+            />
+            {/* filter tampilan data */}.
+            <FilterPage
+              onChange={(e) => setContentPage(e.target.value)}
+              value={contentPage}
             />
           </div>
           <div className="ml-2">
@@ -161,7 +188,6 @@ export default function CategoryAdmin() {
             ))}
         </div>
 
-        {/* table */}
         <div className="mt-5 overflow-x-auto">
           <Table hoverable>
             <TableHead>
@@ -176,16 +202,22 @@ export default function CategoryAdmin() {
             </TableHead>
 
             <TableBody className="divide-y">
-              {categoryData?.length > 0 &&
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center">
+                    <Loading />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                categoryData?.length > 0 &&
                 categoryData?.map((category, index) => (
                   <TableRow key={category.ID}>
                     <TableCell className="whitespace-normal">
-                      {index + 1}
+                      {startIndex + index}
                     </TableCell>
                     <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
                       {category.category ?? "-"}
                     </TableCell>
-
                     <TableCell className="mx-auto items-center justify-center lg:flex">
                       <ButtonControls
                         name={"Edit"}
@@ -199,17 +231,21 @@ export default function CategoryAdmin() {
                       />
                     </TableCell>
                   </TableRow>
-                ))}
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
       </div>
 
-      {fetchLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={onPagination?.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
 
       {isOpenModalDelete && (
         <PopupConfirm

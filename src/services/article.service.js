@@ -1,11 +1,11 @@
 import axios from "axios";
 import { fetchDataApi } from "./service";
 
-export const getAllArticles = async (content = 100, search = "") => {
+export const getAllArticles = async (content = 100, search = "", page = 1) => {
   try {
     return await fetchDataApi(
       "GET",
-      `articles?content=${content}&search=${search}`,
+      `articles?page=${page}&content=${content}&search=${search}`,
     );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };

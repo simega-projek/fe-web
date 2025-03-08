@@ -3,15 +3,28 @@ import { formatDate } from "../../../utils/formatDate";
 import formattedDate from "../../../utils/formattedDate";
 import TitleSection from "../../Elements/TitleSection";
 import parse from "html-react-parser";
+import { Badge } from "flowbite-react";
 
 export const Detail = (props) => {
-  const { title, img = "/images/hero-img.png", date, desc } = props;
+  const {
+    title,
+    img = "/images/hero-img.png",
+    date,
+    desc,
+    category,
+    publish,
+  } = props;
 
   const dateFormatted = formattedDate(date);
 
   return (
     <div className="flex flex-col">
-      <TitleSection>{title}</TitleSection>
+      <div className="flex justify-between">
+        <TitleSection>{title}</TitleSection>
+        <Badge size={"xl"} color={"success"}>
+          {publish}
+        </Badge>
+      </div>
       {/* <span className="mb-2 mt-5">{dateFormatted} </span> */}
       <div className="mt-5 max-w-2xl md:max-w-md">
         <img
