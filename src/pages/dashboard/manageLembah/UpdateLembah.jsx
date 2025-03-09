@@ -3,8 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { getOneValley, updateValley } from "../../../services/valley.service";
 import {
   getKecamatan,
@@ -203,16 +202,12 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
         </div>
 
         {/* alert */}
-        {(messageError && (
-          <FailAllert setMessageError={setMessageError}>
-            {messageError}
-          </FailAllert>
-        )) ||
-          (messageSuccess && (
-            <SuccessAlert setMessageSuccess={setMessageSuccess}>
-              {messageSuccess}
-            </SuccessAlert>
-          ))}
+        <AlertMessage
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         <form onSubmit={handleUpdateValley} className="flex flex-wrap">
           <ContainerInput>

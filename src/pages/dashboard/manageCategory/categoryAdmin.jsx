@@ -1,7 +1,5 @@
 import {
   Button,
-  Pagination,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -21,9 +19,10 @@ import { ButtonControls } from "../../../components/Elements/Buttons/ButtonContr
 
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import {
   deleteCategory,
   getAllCategory,
@@ -31,9 +30,6 @@ import {
 import { toView } from "../../../utils/toView";
 import CreateCategory from "./CreateCategory";
 import UpdateCategories from "./UpdateCategory";
-import ReactPaginate from "react-paginate";
-import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
-import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 
 export default function CategoryAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -50,11 +46,10 @@ export default function CategoryAdmin() {
   const [dataPage, setDataPage] = useState(false);
 
   const [searchData, setSearchData] = useState("");
-  const [searchDebounce] = useDebounce(searchData, 1000);
+  const [debouncedSearch] = useDebounce(searchData, 1000);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [contentPage, setContentPage] = useState(10);
-
   const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
@@ -84,7 +79,7 @@ export default function CategoryAdmin() {
     try {
       const category = await getAllCategory(
         contentPage,
-        searchDebounce,
+        debouncedSearch,
         currentPage,
       );
       setCategoryData(category.data);
@@ -113,9 +108,10 @@ export default function CategoryAdmin() {
 
   const onPageChange = (e) => {
     setCurrentPage(e);
+    toView("top");
   };
 
-  console.log(contentPage);
+  // console.log(contentPage);
   // console.log(categoryData);
   const handleSuccess = () => {
     fetchCategory();
@@ -123,7 +119,7 @@ export default function CategoryAdmin() {
 
   useEffect(() => {
     fetchCategory();
-  }, [searchDebounce, currentPage, contentPage]);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   return (
     <div className="">
@@ -139,7 +135,6 @@ export default function CategoryAdmin() {
         id={selectedId}
       />
 
-      {/* table data */}
       <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
         <BiLibrary /> Data Kategori
@@ -149,20 +144,21 @@ export default function CategoryAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="lg:w-2-3 flex w-full">
+          <div className="w-full md:w-1/2">
             <TextInput
+              className="w-full"
               icon={FaSearch}
               placeholder="Cari Kategori..."
               value={searchData}
               onChange={(e) => setSearchData(e.target.value)}
             />
+          </div>
+          <div className="flex gap-2">
             {/* filter tampilan data */}.
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}
             />
-          </div>
-          <div className="ml-2">
             <Button
               onClick={handleOpenCreateForm}
               className="bg-primary text-xl font-bold focus:ring-blackboard"
@@ -173,20 +169,14 @@ export default function CategoryAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <>
-                <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                  {messageSuccess}
-                </SuccessAlert>
-              </>
-            ))}
-        </div>
+        <AlertMessage
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
+
+        {/* table data */}
 
         <div className="mt-5 overflow-x-auto">
           <Table hoverable>
@@ -201,39 +191,14 @@ export default function CategoryAdmin() {
               </TableHeadCell>
             </TableHead>
 
-            <TableBody className="divide-y">
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center">
-                    <Loading />
-                  </TableCell>
-                </TableRow>
-              ) : (
-                categoryData?.length > 0 &&
-                categoryData?.map((category, index) => (
-                  <TableRow key={category.ID}>
-                    <TableCell className="whitespace-normal">
-                      {startIndex + index}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {category.category ?? "-"}
-                    </TableCell>
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdateForm(category.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(category.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
+            <TableData
+              isLoading={isLoading}
+              categoryData={categoryData}
+              startIndex={startIndex}
+              searchData={searchData}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+              handleOpenUpdateForm={handleOpenUpdateForm}
+            />
           </Table>
         </div>
       </div>
@@ -258,3 +223,55 @@ export default function CategoryAdmin() {
     </div>
   );
 }
+
+const TableData = ({
+  isLoading,
+  categoryData,
+  startIndex,
+  searchData,
+  handleOpenDeleteModal,
+  handleOpenUpdateForm,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={3} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : categoryData?.length > 0 ? (
+        categoryData?.map((category, index) => (
+          <TableRow key={category.ID}>
+            <TableCell className="whitespace-normal">
+              {startIndex + index}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {category.category ?? "-"}
+            </TableCell>
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdateForm(category.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(category.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={3} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

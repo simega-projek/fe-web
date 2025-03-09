@@ -10,6 +10,7 @@ import { PaginationPage } from "../../components/Fragments/Paginator/PaginationP
 import { getAllObject } from "../../services/object.service";
 import { getAllSite } from "../../services/site.service";
 import { toView } from "../../utils/toView";
+import Aos from "aos";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -23,6 +24,13 @@ export default function PersebaranPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
+
+  useEffect(() => {
+    Aos.init({
+      duration: 700,
+      once: false,
+    });
+  }, []);
 
   const fetchObjects = async () => {
     setIsLoading(true);
@@ -113,7 +121,10 @@ export default function PersebaranPage() {
         {isLoading ? (
           <Loading />
         ) : (
-          <div className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4">
+          <div
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            data-aos="fade-up"
+          >
             {dataObejcts?.length > 0
               ? dataObejcts?.map((o) => (
                   <CardSitus

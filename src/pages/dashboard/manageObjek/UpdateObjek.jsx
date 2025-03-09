@@ -20,7 +20,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const role = useSelector((state) => state.auth.userData);
   let roleAuth = role?.info?.role;
   let roleProfile = role?.data?.role;
-  console.log({ roleAuth, roleProfile });
+  // console.log({ roleAuth, roleProfile });
 
   const [nameObject, setNameObject] = useState("");
   const [lintang, setLintang] = useState("");

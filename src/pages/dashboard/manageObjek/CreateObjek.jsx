@@ -13,15 +13,23 @@ import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { useDebounce } from "use-debounce";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { useSelector } from "react-redux";
 
 export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef("");
   const imageRef = useRef(null);
 
+  const role = useSelector((state) => state.auth.userData);
+
+  let roleAuth = role?.info?.role;
+  let roleProfile = role?.data?.role;
+
   const [nameObject, setNameObject] = useState("");
   const [lintang, setLintang] = useState("");
   const [bujur, setBujur] = useState("");
   const [valley, setValley] = useState("");
+  const [publish, setPublish] = useState("pending");
   const [videos, setVideos] = useState([]); //multiple video
   const [image, setImage] = useState(null);
   const [selectedSite, setSelectedSite] = useState(0);
@@ -178,16 +186,13 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        className={"mt-5"}
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* Form */}
       <form onSubmit={handleCreateObject} className="flex flex-wrap">
@@ -318,6 +323,31 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             File harus berformat .jpg, .jpeg, .png
           </small>
         </ContainerInput>
+
+        {/* status publish */}
+        {roleAuth === "superadmin" ||
+        roleProfile === "superadmin" ||
+        roleAuth === "validator" ||
+        roleProfile === "validator" ? (
+          <ContainerInput>
+            <Label
+              htmlFor="publish"
+              value="Publish"
+              className="mb-2 block text-base"
+            />
+            <select
+              id="publish"
+              className="w-full rounded-md"
+              onChange={(e) => setPublish(e.target.value)}
+              disabled={isLoading}
+              value={publish}
+            >
+              <option value={"pending"}>Pending</option>
+              <option value={"public"}>Public</option>
+              <option value={"private"}>Private</option>
+            </select>
+          </ContainerInput>
+        ) : null}
 
         <ContainerInput>
           {imagePreview && (

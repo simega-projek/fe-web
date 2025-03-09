@@ -5,8 +5,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import {
   getOneCategory,
   updateCategory,
@@ -104,16 +103,12 @@ export default function UpdateCategories({
 
       {/* alert */}
 
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* create form */}
       <form onSubmit={handleUpdateCategory} className="flex flex-wrap">

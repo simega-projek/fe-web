@@ -110,7 +110,7 @@ export default function KegiatanPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
             data-aos="fade-up"
           >
             {Array.isArray(filteredEvents) && filteredEvents?.length > 0
@@ -150,7 +150,7 @@ export default function KegiatanPage() {
 
 const FilterEvent = ({ search, onSearch, filter, onFilter }) => {
   return (
-    <div className="mx-auto mt-5 flex w-full gap-2 px-10 md:w-1/2">
+    <div className="mx-auto mt-5 flex w-full gap-2 px-10 md:w-2/3">
       <TextInput
         icon={FaSearch}
         placeholder="Cari Kegiatan..."

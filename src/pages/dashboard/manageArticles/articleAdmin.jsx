@@ -28,6 +28,10 @@ import UpdateArticle from "./UpdateArticle";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import Loading from "../../../components/Elements/Loading/Loading";
 import { toView } from "../../../utils/toView";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { useDebounce } from "use-debounce";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 
 export default function ArticleAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -38,7 +42,15 @@ export default function ArticleAdmin() {
   const [articleData, setArticleData] = useState([]);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [dataPage, setDataPage] = useState(false);
+  const [searchData, setSearchData] = useState("");
+  const [debouncedSearch] = useDebounce(searchData, 1000);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -64,13 +76,23 @@ export default function ArticleAdmin() {
 
   const fetchArticle = async () => {
     try {
-      setFetchLoading(true);
-      const article = await getAllArticles(50);
-      setArticleData(article.data);
+      setIsLoading(true);
+      const article = await getAllArticles(
+        contentPage,
+        debouncedSearch,
+        currentPage,
+      );
+
+      const sortedData = article.data.sort(
+        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
+      );
+
+      setArticleData(sortedData);
+      setDataPage(article.pagination);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -94,9 +116,14 @@ export default function ArticleAdmin() {
     fetchArticle();
   };
 
+  const onPageChange = (e) => {
+    setCurrentPage(e);
+    toView("top");
+  };
+
   useEffect(() => {
     fetchArticle();
-  }, []);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   // console.log(articleData);
   // console.log(fetchArticle);
@@ -126,10 +153,20 @@ export default function ArticleAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
-            <TextInput icon={FaSearch} placeholder="Cari Artikel & Berita..." />
+          <div className="w-full md:w-1/2">
+            <TextInput
+              icon={FaSearch}
+              placeholder="Cari Artikel & Berita..."
+              className="w-full"
+              value={searchData}
+              onChange={(e) => setSearchData(e.target.value)}
+            />
           </div>
-          <div className="ml-2">
+          <div className="flex gap-2">
+            <FilterPage
+              onChange={(e) => setContentPage(e.target.value)}
+              value={contentPage}
+            />
             <Button
               onClick={handleOpenCreateForm}
               className="bg-primary text-xl font-bold focus:ring-blackboard"
@@ -140,18 +177,13 @@ export default function ArticleAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+        <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         {/* table */}
         <div className="mt-5 overflow-x-auto">
@@ -165,64 +197,26 @@ export default function ArticleAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
-            <TableBody className="divide-y">
-              {articleData?.length > 0 &&
-                articleData?.map((article, index) => (
-                  <TableRow key={article.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {article.title ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {formatDate(article.CreatedAt) ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <img
-                        src={article.image}
-                        alt={article.title}
-                        className="h-10"
-                      />
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <a
-                        href={article.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <AiOutlineFolderView />
-                      </a>
-                    </TableCell>
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Detail"}
-                        icon={FaFileInvoice}
-                        to={`/artikel/${article?.ID}/${article?.title}`}
-                      />
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdate(article.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(article.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            <TableData
+              isLoading={isLoading}
+              searchData={searchData}
+              data={articleData}
+              startIndex={startIndex}
+              handleOpenUpdate={handleOpenUpdate}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+            />
           </Table>
         </div>
       </div>
 
-      {fetchLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
 
       {isOpenModalDelete && (
         <PopupConfirm
@@ -235,3 +229,71 @@ export default function ArticleAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  data,
+  startIndex,
+  handleOpenUpdate,
+  handleOpenDeleteModal,
+  isLoading,
+  searchData,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={6} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((article, index) => (
+          <TableRow key={article.ID}>
+            <TableCell className="whitespace-normal">
+              {index + startIndex}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {article.title ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {formatDate(article.CreatedAt) ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              <img src={article.image} alt={article.title} className="h-10" />
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              <a href={article.file} target="_blank" rel="noopener noreferrer">
+                <AiOutlineFolderView />
+              </a>
+            </TableCell>
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Detail"}
+                icon={FaFileInvoice}
+                to={`/artikel/${article?.ID}/${article?.title}`}
+              />
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdate(article.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(article.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

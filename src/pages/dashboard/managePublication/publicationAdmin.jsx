@@ -37,7 +37,7 @@ export default function PublicationAdmin() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
   const [objectData, setObjectData] = useState([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
@@ -237,7 +237,7 @@ export default function PublicationAdmin() {
       </div>
 
       {/* loading fetching */}
-      {fetchLoading ? (
+      {isLoading ? (
         <div className="mt-10">
           <Loading />
         </div>

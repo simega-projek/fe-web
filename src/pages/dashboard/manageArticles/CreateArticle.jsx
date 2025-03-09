@@ -3,14 +3,12 @@ import JoditEditor from "jodit-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import TitleSection from "../../../components/Elements/TitleSection";
-import { createArticle } from "../../../services/article.service";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { toView } from "../../../utils/toView";
-import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
-import { set } from "date-fns";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { createArticle } from "../../../services/article.service";
+import { toView } from "../../../utils/toView";
 
 export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef(null);
@@ -69,10 +67,10 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
       setMessageError("Judul artikel diisi");
       toView("top");
       return;
-    } else if (!file) {
-      setMessageError("File artikel diisi");
-      toView("top");
-      return;
+      // } else if (!file) {
+      //   setMessageError("File artikel diisi");
+      //   toView("top");
+      //   return;
     } else if (!image) {
       setMessageError("Gambar artikel diisi");
       toView("top");
@@ -126,16 +124,12 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* create form */}
       <form onSubmit={handleCreateArticle} className="flex flex-wrap">

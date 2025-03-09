@@ -4,8 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import {
   getOneArticle,
@@ -134,16 +133,12 @@ export default function UpdateArticle({
       <hr className="my-5" />
 
       {/* Alert */}
-      {messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )}
-      {messageSuccess && (
-        <SuccessAlert setMessageSuccess={setMessageSuccess}>
-          {messageSuccess}
-        </SuccessAlert>
-      )}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* Form */}
       <form onSubmit={handleUpdateArticle}>

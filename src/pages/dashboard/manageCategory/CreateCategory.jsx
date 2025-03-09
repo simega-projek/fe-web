@@ -1,14 +1,12 @@
+import { Button, Label, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { Button, Dropdown, Label, TextInput } from "flowbite-react";
 
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import { getSulawesiTengah } from "../../../services/wilIndonesia.service";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { createCategory } from "../../../services/category.service";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 
 export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
   const [category, setCategory] = useState("");
@@ -69,16 +67,12 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* create form */}
       <div className="flex flex-wrap">

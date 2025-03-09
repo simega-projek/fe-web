@@ -16,16 +16,17 @@ import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { deleteSite, getAllSite } from "../../../services/site.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
 import CreateSitus from "./CreateSitus";
 import UpdateSitus from "./UpdateSitus";
-import { useDebounce } from "use-debounce";
 
 export default function SitusAdmin() {
   const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
@@ -34,13 +35,18 @@ export default function SitusAdmin() {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectedId, setSelectedId] = useState(null);
   const [siteData, setSiteData] = useState("");
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
+
+  const [dataPage, setDataPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -79,15 +85,22 @@ export default function SitusAdmin() {
   };
 
   const fetchSite = async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
-      const site = await getAllSite(200, debouncedSearch);
+      const site = await getAllSite(contentPage, debouncedSearch, currentPage);
+
       setSiteData(site.data);
+      setDataPage(site.pagination);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
+  };
+
+  const onPageChange = (e) => {
+    setCurrentPage(e);
+    toView("top");
   };
 
   const handleSuccess = () => {
@@ -96,7 +109,7 @@ export default function SitusAdmin() {
 
   useEffect(() => {
     fetchSite();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   // console.log(selectedId);
   return (
@@ -123,7 +136,7 @@ export default function SitusAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
+          <div className="w-full lg:w-1/2">
             <TextInput
               icon={FaSearch}
               placeholder="Cari Situs..."
@@ -131,7 +144,11 @@ export default function SitusAdmin() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="ml-2">
+          <div className="flex gap-2">
+            <FilterPage
+              onChange={(e) => setContentPage(e.target.value)}
+              value={contentPage}
+            />
             <Button
               onClick={handleOpenCreateForm}
               className="bg-primary text-xl font-bold focus:ring-blackboard"
@@ -142,21 +159,16 @@ export default function SitusAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+        <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         {/* table */}
-        <div className="mt-5 overflow-x-auto">
+        <div className="scrollbar mt-5 overflow-x-auto">
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
@@ -166,49 +178,27 @@ export default function SitusAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
-            <TableBody className="divide-y">
-              {siteData?.length > 0 &&
-                siteData?.map((site, index) => (
-                  <TableRow key={site?.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {site?.nama_situs ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {site?.lembah.lembah ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {getDataByIndex(site?.desa_kelurahan, 0) ??
-                        site?.desa_kelurahan ??
-                        "-"}
-                    </TableCell>
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdateForm(site?.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(site?.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            <TableData
+              isLoading={isLoading}
+              data={siteData}
+              startIndex={startIndex}
+              searchData={search}
+              handleOpenUpdateForm={handleOpenUpdateForm}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+            />
           </Table>
         </div>
       </div>
 
-      {/* loading fetching */}
-      {fetchLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          className={"mt-5"}
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
 
       {/* delete modal */}
       {isOpenModalDelete && (
@@ -222,3 +212,63 @@ export default function SitusAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  isLoading,
+  data,
+  startIndex,
+  searchData,
+  handleOpenUpdateForm,
+  handleOpenDeleteModal,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={5} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((site, index) => (
+          <TableRow key={site?.ID}>
+            <TableCell className="whitespace-normal">
+              {index + startIndex}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {site?.nama_situs ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {site?.lembah.lembah ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {getDataByIndex(site?.desa_kelurahan, 0) ??
+                site?.desa_kelurahan ??
+                "-"}
+            </TableCell>
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdateForm(site?.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(site?.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

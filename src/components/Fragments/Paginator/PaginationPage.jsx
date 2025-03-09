@@ -1,13 +1,20 @@
 import { Pagination } from "flowbite-react";
 import { toView } from "../../../utils/toView";
 
-export const PaginationPage = ({ currentPage, totalPages, onPageChange }) => {
+export const PaginationPage = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+  className,
+}) => {
   // component utama
   // const onPageChange = (e) => {
   //   setCurrentPage(e);
   // };
   return (
-    <div className="flex flex-col items-center justify-center gap-3 md:flex-row md:items-baseline">
+    <div
+      className={`flex flex-col items-center justify-center gap-3 md:flex-row md:items-baseline ${className}`}
+    >
       <button
         onClick={() => {
           onPageChange(1) && toView("top");

@@ -38,7 +38,7 @@ export default function UserAdmin() {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
@@ -57,14 +57,14 @@ export default function UserAdmin() {
   };
 
   const fetchAdmin = async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       const res = await getAllAdmin(50, debouncedSearch);
       setAdminData(res?.data);
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -216,7 +216,7 @@ export default function UserAdmin() {
         </div>
       </div>
 
-      {fetchLoading ? (
+      {isLoading ? (
         <div className="mt-10">
           <Loading />
         </div>

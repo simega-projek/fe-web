@@ -1,19 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { getOneSite, updateSite } from "../../../services/site.service";
 import { getAllValley } from "../../../services/valley.service";
-import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { getKelurahan } from "../../../services/wilIndonesia.service";
+import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import {
-  createSite,
-  getOneSite,
-  updateSite,
-} from "../../../services/site.service";
 
 export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [siteName, setSiteName] = useState("");
@@ -195,16 +190,12 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* form pembuatan situs */}
       <form onSubmit={handeUpdateSite} className="flex flex-wrap">

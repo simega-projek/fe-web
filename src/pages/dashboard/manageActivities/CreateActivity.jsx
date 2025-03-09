@@ -10,6 +10,7 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { createEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 
 export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const editorInput = useRef(null);
@@ -20,7 +21,7 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [regisLink, setRegisLink] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Akan Datang");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -144,16 +145,12 @@ export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* create form */}
       <form onSubmit={handleCreateActivity} className="flex flex-wrap">

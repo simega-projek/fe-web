@@ -10,6 +10,7 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { getOneEvent, updateEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 
 export default function UpdateActivity({
   id,
@@ -168,16 +169,12 @@ export default function UpdateActivity({
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* create form */}
       <form onSubmit={handleUpdateActivity} className="flex flex-wrap">

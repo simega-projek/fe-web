@@ -21,7 +21,7 @@ export default function HomePage() {
   const [dataEvents, setDataEvents] = useState([]);
   const [dataArticles, setDataArticles] = useState([]);
 
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     AOS.init({
@@ -30,7 +30,7 @@ export default function HomePage() {
     });
   }, []);
   const fetchDataApi = async () => {
-    setFetchLoading(true);
+    setIsLoading(true);
     try {
       const objects = await getAllObject(3);
       setDataObjects(objects.data);
@@ -46,7 +46,7 @@ export default function HomePage() {
     } catch (err) {
       console.log(err);
     } finally {
-      setFetchLoading(false);
+      setIsLoading(false);
     }
   };
 

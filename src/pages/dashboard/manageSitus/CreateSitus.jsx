@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { Button, Label, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import { getAllValley } from "../../../services/valley.service";
-import { getDataByIndex } from "../../../utils/getDataByIndex";
-import { getKelurahan } from "../../../services/wilIndonesia.service";
-import { toView } from "../../../utils/toView";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { createSite } from "../../../services/site.service";
+import { getAllValley } from "../../../services/valley.service";
+import { getKelurahan } from "../../../services/wilIndonesia.service";
+import { getDataByIndex } from "../../../utils/getDataByIndex";
+import { toView } from "../../../utils/toView";
 
 export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   const [situsName, setSitusName] = useState("");
@@ -152,16 +151,12 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* form pembuatan situs */}
       <form onSubmit={handleCreateSite} className="flex flex-wrap">

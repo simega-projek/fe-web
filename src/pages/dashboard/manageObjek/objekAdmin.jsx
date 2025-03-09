@@ -1,5 +1,6 @@
 import {
   Button,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -27,12 +28,15 @@ import { deleteObject, getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
 import CreateObjek from "./CreateObjek";
 import UpdateObjek from "./UpdateObjek";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 
 export default function ObjekAdmin() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
   const [objectData, setObjectData] = useState([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
@@ -40,6 +44,14 @@ export default function ObjekAdmin() {
 
   const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
   const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
+
+  const [filterObject, setFilterObject] = useState(null);
+  const [filter, setFilter] = useState("");
+  const [dataPage, setDataPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage + 1;
+
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
     setIsOpenUpdateForm(false);
@@ -58,12 +70,30 @@ export default function ObjekAdmin() {
   };
 
   const fetchObject = async () => {
+    setIsLoading(true);
     try {
-      const objects = await getAllObject(200, debouncedSearch);
-      setObjectData(objects.data);
+      const objects = await getAllObject(
+        contentPage,
+        debouncedSearch,
+        currentPage,
+      );
+
+      const sortedData = objects.data.sort(
+        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
+      );
+      setObjectData(sortedData);
+      setFilterObject(sortedData);
+      setDataPage(objects.pagination);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
   };
 
   const handleOpenDeleteModal = (id) => {
@@ -85,9 +115,24 @@ export default function ObjekAdmin() {
     fetchObject();
   };
 
+  const handleFilter = (e) => {
+    const filterStatus = e.target.value;
+    setFilter(filterStatus);
+    if (filterStatus) {
+      const filtered = objectData.filter(
+        (item) => item.publish === e.target.value,
+      );
+      setFilterObject(filtered);
+    } else {
+      setFilterObject(objectData);
+    }
+  };
+
+  // console.log(filterObject);
+
   useEffect(() => {
     fetchObject();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   // console.log({ selectedId });
 
@@ -116,15 +161,17 @@ export default function ObjekAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
-            <TextInput
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              icon={FaSearch}
-              placeholder="Cari berdasarkan Objek dan kategori..."
+          <FilterObject
+            publish={filter}
+            onPublish={handleFilter}
+            search={search}
+            onSearch={(e) => setSearch(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <FilterPage
+              onChange={(e) => setContentPage(e.target.value)}
+              value={contentPage}
             />
-          </div>
-          <div className="ml-2">
             <Button
               onClick={handleOpenCreateForm}
               className="bg-primary text-xl font-bold focus:ring-blackboard"
@@ -135,18 +182,13 @@ export default function ObjekAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+        <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         {/* table */}
         <div className="mt-5 overflow-x-auto">
@@ -156,59 +198,30 @@ export default function ObjekAdmin() {
               <TableHeadCell className="w-2/5">Objek</TableHeadCell>
               <TableHeadCell className="w-1/5">Kategori</TableHeadCell>
               <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
-              <TableHeadCell className="w-1/5">Situs</TableHeadCell>
+              <TableHeadCell className="w-1/5">Status</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
-            <TableBody className="divide-y">
-              {objectData?.length > 0 &&
-                objectData?.map((objects, index) => (
-                  <TableRow key={objects.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {objects.nama_objek ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.category.category ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.site.lembah.lembah ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.site.nama_situs ?? "-"}
-                    </TableCell>
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Detail"}
-                        icon={FaFileInvoice}
-                        to={`/objek/${objects.ID}/${objects.nama_objek}`}
-                      />
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdateForm(objects.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(objects.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            {/* table data */}
+            <TableData
+              data={filterObject}
+              isLoading={isLoading}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+              handleOpenUpdateForm={handleOpenUpdateForm}
+              searchData={search}
+              startIndex={startIndex}
+            />
           </Table>
         </div>
       </div>
 
-      {/* loading fetching */}
-      {fetchLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
 
       {/* delete modal */}
       {isOpenModalDelete && (
@@ -222,3 +235,159 @@ export default function ObjekAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  data,
+  isLoading,
+  startIndex,
+  handleOpenDeleteModal,
+  handleOpenUpdateForm,
+  searchData,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={6} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((objects, index) => (
+          <TableRow key={objects.ID}>
+            <TableCell className="whitespace-normal">
+              {index + startIndex}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {objects.nama_objek ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {objects.category.category ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {objects.site.lembah.lembah ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              <span
+                class={`rounded-full px-2.5 py-0.5 text-sm font-medium ${objects.publish === "public" ? "bg-green-100 text-green-800" : objects.publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
+              >
+                {objects.publish ?? null}
+              </span>
+            </TableCell>
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Detail"}
+                icon={FaFileInvoice}
+                to={`/objek/${objects.ID}/${objects.nama_objek}`}
+              />
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdateForm(objects.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(objects.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};
+
+const FilterObject = ({
+  search,
+  onSearch,
+  site,
+  onSite,
+  publish,
+  onPublish,
+  valley,
+  onValley,
+}) => {
+  const [valleyData, setValleyData] = useState([]);
+  const [siteData, setSiteData] = useState([]);
+
+  // const fetchDataFilter = async () => {
+  //   try {
+  //     const valley = await getAllValley();
+  //     const site = await getAllSite();
+
+  //     const sortValley = valley.data.sort((a, b) => {
+  //       return a.lembah.localeCompare(b.lembah);
+  //     });
+
+  //     const sortSite = site.data.sort((a, b) => {
+  //       return a.nama_situs.localeCompare(b.nama_situs);
+  //     });
+
+  //     setValleyData(sortValley);
+
+  //     setSiteData(sortSite);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchDataFilter();
+  // }, []);
+  return (
+    <div className="flex w-full gap-2 md:w-3/4">
+      <TextInput
+        icon={FaSearch}
+        placeholder="Cari Kegiatan..."
+        onChange={onSearch}
+        value={search}
+        className="w-1/2"
+      />
+
+      {/* publish */}
+      <Select value={publish} onChange={onPublish} className="w-1/4">
+        <option value={""} className="bg-light">
+          Status
+        </option>
+        <option value={"pending"}>Pending</option>
+        <option value={"public"}>Publik</option>
+        <option value={"private"}>Privat</option>
+      </Select>
+
+      {/* situs */}
+      {/* <Select value={site} onChange={onSite} className="w-1/3">
+        <option value={""} className="bg-light">
+          Situs
+        </option>
+
+        {siteData?.map((s) => (
+          <option value={s?.ID} key={s?.ID}>
+            {s?.nama_situs}
+          </option>
+        ))}
+      </Select> */}
+
+      {/* lembah */}
+      {/* <Select value={valley} onChange={onValley} className="w-1/3">
+        <option value={""} className="bg-light">
+          Lembah
+        </option>
+
+        {valleyData?.map((d) => (
+          <option value={d?.ID} key={d?.ID}>
+            {d?.lembah}
+          </option>
+        ))}
+      </Select> */}
+    </div>
+  );
+};

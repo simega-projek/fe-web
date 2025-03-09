@@ -88,8 +88,8 @@ export default function ArtikelPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4"
-            data-aos="zoom-in"
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            data-aos="fade-up"
           >
             {Array.isArray(dataArticles) && dataArticles?.length > 0
               ? dataArticles?.map((article) => (

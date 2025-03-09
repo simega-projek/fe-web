@@ -29,6 +29,9 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { toView } from "../../../utils/toView";
 import UpdateLembah from "./UpdateLembah";
 import { useDebounce } from "use-debounce";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 
 export default function LembahAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -40,10 +43,15 @@ export default function LembahAdmin() {
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
+
+  const [dataPage, setDataPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -68,12 +76,19 @@ export default function LembahAdmin() {
   };
 
   const fetchValley = async () => {
+    setIsLoading(true);
     try {
-      const res = await getAllValley(200, debouncedSearch);
-      // console.log(res);
-      setValleyData(res.data);
+      const valley = await getAllValley(
+        contentPage,
+        debouncedSearch,
+        currentPage,
+      );
+
+      setValleyData(valley.data);
+      setDataPage(valley.pagination);
     } catch (err) {
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -98,9 +113,14 @@ export default function LembahAdmin() {
     fetchValley();
   };
 
+  const onPageChange = (e) => {
+    setCurrentPage(e);
+    toView("top");
+  };
+
   useEffect(() => {
     fetchValley();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   return (
     <>
@@ -124,7 +144,7 @@ export default function LembahAdmin() {
       <hr />
       <div className="mt-5 w-full px-3">
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
+          <div className="w-full lg:w-1/2">
             <TextInput
               icon={FaSearch}
               placeholder="Cari Lembah..."
@@ -132,7 +152,11 @@ export default function LembahAdmin() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="ml-2">
+          <div className="flex gap-2">
+            <FilterPage
+              onChange={(e) => setContentPage(e.target.value)}
+              value={contentPage}
+            />
             <Button
               onClick={handleOpenCreateForm}
               className="bg-primary text-xl font-bold focus:ring-blackboard"
@@ -143,18 +167,14 @@ export default function LembahAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+
+        <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         <div className="mt-5 overflow-x-auto">
           <Table hoverable>
@@ -166,50 +186,27 @@ export default function LembahAdmin() {
               <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
-            <TableBody className="divide-y">
-              {valleyData?.length > 0 &&
-                valleyData?.map((valley, index) => (
-                  <TableRow key={valley?.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {valley?.lembah ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {valley?.provinsi ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {getDataByIndex(valley?.kabupaten_kota, 0) ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {getDataByIndex(valley?.kecamatan, 0) ?? "-"}
-                    </TableCell>
 
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdateForm(valley?.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(valley?.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            {/* table data */}
+            <TableData
+              searchData={search}
+              isLoading={isLoading}
+              data={valleyData}
+              handleOpenUpdateForm={handleOpenUpdateForm}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+            />
           </Table>
         </div>
       </div>
 
-      {fetchLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+        />
+      )}
 
       {isOpenModalDelete && (
         <PopupConfirm
@@ -222,3 +219,62 @@ export default function LembahAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  isLoading,
+  data,
+  handleOpenUpdateForm,
+  handleOpenDeleteModal,
+  searchData,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={6} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((valley, index) => (
+          <TableRow key={valley?.ID}>
+            <TableCell className="whitespace-normal">{index + 1}</TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {valley?.lembah ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {valley?.provinsi ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {getDataByIndex(valley?.kabupaten_kota, 0) ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {getDataByIndex(valley?.kecamatan, 0) ?? "-"}
+            </TableCell>
+
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdateForm(valley?.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(valley?.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

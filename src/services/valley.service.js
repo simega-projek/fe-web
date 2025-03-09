@@ -1,10 +1,14 @@
 import { fetchDataApi } from "./service";
 
-export const getAllValley = async (content = 100, search = "") => {
+export const getAllValley = async (
+  content = 9999999999,
+  search = "",
+  page = 1,
+) => {
   try {
     return await fetchDataApi(
       "GET",
-      `lembah?content=${content}&search=${search}`,
+      `lembah?page=${page}&content=${content}&search=${search}`,
     );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };
