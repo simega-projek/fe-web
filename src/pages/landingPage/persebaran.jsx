@@ -6,31 +6,38 @@ import { useDebounce } from "use-debounce";
 import Loading from "../../components/Elements/Loading/Loading";
 import CardSitus from "../../components/Fragments/Cards/CardSitus";
 import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
+import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../services/object.service";
 import { getAllSite } from "../../services/site.service";
+import { toView } from "../../utils/toView";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
   const [isLoading, setIsLoading] = useState(true);
-  const [maps, setMaps] = useState([]);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("all");
-  const [resultSearch, setResultSearch] = useState([]);
-
-  const [categories, setCategories] = useState([]);
-  const [dataSites, setDataSites] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [dataObejcts, setDataObejcts] = useState([]);
+  const [dataPage, setDataPage] = useState(null);
 
+  const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const CONTENT_PER_PAGE = 8;
 
   const fetchObjects = async () => {
     setIsLoading(true);
     try {
-      const objects = await getAllObject(50, debouncedSearch);
-      setDataObejcts(objects.data);
-      // console.log(objects);
+      const objects = await getAllObject(
+        CONTENT_PER_PAGE,
+        debouncedSearch,
+        currentPage,
+      );
+      const sortedData = objects.data.sort(
+        (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
+      );
+      setDataObejcts(sortedData);
+      setDataPage(objects.pagination);
+      console.log(dataObejcts);
     } catch (err) {
       console.log(err);
     } finally {
@@ -38,22 +45,13 @@ export default function PersebaranPage() {
     }
   };
 
-  const fetchSites = async () => {
-    try {
-      const sites = await getAllSite();
-      setDataSites(sites?.data);
-    } catch (err) {
-      console.log(err);
-    }
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
   };
-
-  useEffect(() => {
-    fetchSites();
-  }, []);
-
   useEffect(() => {
     fetchObjects();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage]);
 
   // const fetchMarkers = useMemo(
   //   () =>
@@ -74,7 +72,7 @@ export default function PersebaranPage() {
 
   return (
     <>
-      <div className="pb-16">
+      <div className="">
         <div className="mx-auto">
           <div className="flex w-full flex-wrap justify-center">
             <div className="w-full">
@@ -102,7 +100,7 @@ export default function PersebaranPage() {
         </div>
       </div>
 
-      <div className="mx-auto mt-5 w-full px-5 lg:w-1/2">
+      <div className="mx-auto mt-5 w-full px-10 md:w-1/2">
         <TextInput
           icon={FaSearch}
           type="text"
@@ -111,31 +109,41 @@ export default function PersebaranPage() {
         />
       </div>
 
-      <div className="mt-10">
-        {isLoading && (
-          <div className="mx-auto">
-            <Loading />
+      <div className="mt-5">
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4">
+            {dataObejcts?.length > 0
+              ? dataObejcts?.map((o) => (
+                  <CardSitus
+                    key={o?.ID}
+                    title={o?.nama_objek}
+                    desc={o?.propinsi}
+                    to={`/objek/${o?.ID}/${o?.nama_objek}`}
+                    img={o?.gambar}
+                    category={o?.category.category}
+                    publish={"Publik"}
+                  />
+                ))
+              : !isLoading && (
+                  <p className="my-5 text-red-500">
+                    data {search} tidak ditemukan
+                  </p>
+                )}
           </div>
         )}
-        <div className="flex size-auto flex-wrap justify-center gap-5 px-5 pb-5">
-          {dataObejcts?.length > 0
-            ? dataObejcts?.map((o) => (
-                <CardSitus
-                  key={o?.ID}
-                  title={o?.nama_objek}
-                  desc={o?.propinsi}
-                  to={`/objek/${o?.ID}/${o?.nama_objek}`}
-                  img={o?.gambar}
-                  category={o?.category.category}
-                  publish={"Publik"}
-                />
-              ))
-            : !isLoading && (
-                <p className="my-5 text-center text-red-500">
-                  data {search} tidak ditemukan
-                </p>
-              )}
-        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="mb-5 flex flex-col items-center justify-center">
+        {isLoading ? null : (
+          <PaginationPage
+            currentPage={currentPage}
+            totalPages={dataPage?.totalPages}
+            onPageChange={onPageChange}
+          />
+        )}
       </div>
     </>
   );

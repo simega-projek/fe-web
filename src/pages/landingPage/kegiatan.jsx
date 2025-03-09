@@ -24,7 +24,7 @@ export default function KegiatanPage() {
   const [filter, setFilter] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
 
-  const [onPagination, setOnPagination] = useState(null);
+  const [dataPage, setDataPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
 
@@ -51,7 +51,7 @@ export default function KegiatanPage() {
       setDataEvents(sortedData);
       setFilteredEvents(sortedData);
 
-      setOnPagination(events?.pagination);
+      setDataPage(events?.pagination);
       setCurrentPage(events?.pagination?.currentPage);
     } catch (err) {
       console.log(err);
@@ -105,35 +105,33 @@ export default function KegiatanPage() {
       />
 
       {/* data event */}
-      <div className="flex flex-col">
-        {isLoading && (
-          <div className="mx-auto mt-5">
-            <Loading />
+      <div className="mt-5">
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4"
+            data-aos="fade-up"
+          >
+            {Array.isArray(filteredEvents) && filteredEvents?.length > 0
+              ? filteredEvents.map((item) => (
+                  <CardArtikel
+                    to={`/kegiatan/${item.ID}/${item.title}`}
+                    key={item?.ID}
+                    title={item?.title}
+                    date={item?.start_date}
+                    img={item?.image}
+                    source={item?.users?.fullname}
+                    status={item?.status}
+                  ></CardArtikel>
+                ))
+              : !isLoading && (
+                  <p className="my-5 text-red-500">
+                    data {search} tidak ditemukan
+                  </p>
+                )}
           </div>
         )}
-
-        <div
-          className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
-          data-aos="fade-up"
-        >
-          {Array.isArray(filteredEvents) && filteredEvents?.length > 0
-            ? filteredEvents.map((item) => (
-                <CardArtikel
-                  to={`/kegiatan/${item.ID}/${item.title}`}
-                  key={item?.ID}
-                  title={item?.title}
-                  date={item?.start_date}
-                  img={item?.image}
-                  source={item?.users?.fullname}
-                  status={item?.status}
-                ></CardArtikel>
-              ))
-            : !isLoading && (
-                <p className="my-5 text-center text-red-500">
-                  data {search} tidak ditemukan
-                </p>
-              )}
-        </div>
       </div>
 
       {/* Pagination */}
@@ -141,7 +139,7 @@ export default function KegiatanPage() {
         {isLoading ? null : (
           <PaginationPage
             currentPage={currentPage}
-            totalPages={onPagination?.totalPages}
+            totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
           />
         )}
@@ -152,7 +150,7 @@ export default function KegiatanPage() {
 
 const FilterEvent = ({ search, onSearch, filter, onFilter }) => {
   return (
-    <div className="mx-auto mt-5 flex w-full gap-2 px-10 lg:w-1/2">
+    <div className="mx-auto mt-5 flex w-full gap-2 px-10 md:w-1/2">
       <TextInput
         icon={FaSearch}
         placeholder="Cari Kegiatan..."

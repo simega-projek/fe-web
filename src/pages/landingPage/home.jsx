@@ -29,34 +29,17 @@ export default function HomePage() {
       once: false,
     });
   }, []);
-  const fetchObjects = async () => {
+  const fetchDataApi = async () => {
     setFetchLoading(true);
     try {
       const objects = await getAllObject(3);
       setDataObjects(objects.data);
       // console.log(objects.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setFetchLoading(false);
-    }
-  };
 
-  const fetchEvents = async () => {
-    setFetchLoading(true);
-    try {
       const events = await getAllEvent(3);
       setDataEvents(events.data);
       // console.log(events.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setFetchLoading(false);
-    }
-  };
-  const fetchArticles = async () => {
-    setFetchLoading(true);
-    try {
+
       const articles = await getAllArticles(3);
       setDataArticles(articles.data);
       // console.log(articles.data);
@@ -72,9 +55,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    fetchObjects();
-    fetchArticles();
-    fetchEvents();
+    fetchDataApi();
   }, []);
 
   return (
@@ -149,7 +130,7 @@ export default function HomePage() {
                   title={obj?.nama_objek}
                   to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
                   desc={obj?.deskripsi}
-                  img={obj?.gambar}
+                  img={obj?.image}
                 ></CardSitusHome>
               ))}
             </div>
@@ -187,6 +168,7 @@ export default function HomePage() {
                       key={keg?.ID}
                       date={keg?.start_date}
                       title={keg?.title}
+                      img={keg?.image}
                     />
                   ))}
             </div>
@@ -213,13 +195,14 @@ export default function HomePage() {
             </div>
 
             <div
-              className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
+              // className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
+              className="grid grid-cols-2 justify-items-center gap-5 px-5 md:grid-cols-3 md:px-10 lg:w-full"
               data-aos="zoom-in"
             >
               {dataArticles?.slice(0, 4).map((artikel) => (
                 <CardArtikel
                   to={`/artikel/${artikel?.ID}/${artikel?.title}`}
-                  image={artikel?.image}
+                  img={artikel?.image}
                   key={artikel?.ID}
                   title={artikel?.title}
                   date={artikel?.CreatedAt}

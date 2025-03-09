@@ -47,7 +47,7 @@ export default function CategoryAdmin() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [categoryData, setCategoryData] = useState([]);
-  const [onPagination, setOnPagination] = useState(false);
+  const [dataPage, setDataPage] = useState(false);
 
   const [searchData, setSearchData] = useState("");
   const [searchDebounce] = useDebounce(searchData, 1000);
@@ -88,7 +88,7 @@ export default function CategoryAdmin() {
         currentPage,
       );
       setCategoryData(category.data);
-      setOnPagination(category.pagination);
+      setDataPage(category.pagination);
     } catch (err) {
       console.log(err);
     } finally {
@@ -242,7 +242,7 @@ export default function CategoryAdmin() {
       {isLoading ? null : (
         <PaginationPage
           currentPage={currentPage}
-          totalPages={onPagination?.totalPages}
+          totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
         />
       )}

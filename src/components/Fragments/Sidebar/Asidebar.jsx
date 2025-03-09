@@ -31,9 +31,7 @@ export const Asidebars = () => {
       className={`${isSidebarOpen ? "translate-x-0" : "-translate-x-40"} $scrollbar fixed z-30 flex h-screen w-64 -translate-x-48 transform bg-primary transition duration-1000 ease-in-out`}
     >
       {/* <!-- open sidebar button --> */}
-      <div
-        className={`flex h-full flex-col ${isSidebarOpen ? "w-full" : "w-0"}`}
-      >
+      <div className={`flex h-full flex-col ${isSidebarOpen ? "w-full" : ""}`}>
         <div
           className={`max-toolbar ${isSidebarOpen ? "translate-x-0" : "translate-x-24 scale-x-0"} absolute -right-6 top-2 flex h-12 w-full transform items-center justify-between rounded-full border-4 border-white bg-primary transition duration-300 ease-in dark:border-[#0F172A]`}
         >

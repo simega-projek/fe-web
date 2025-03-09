@@ -1,21 +1,20 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { Button, ButtonGroup, Pagination, TextInput } from "flowbite-react";
-import { useCallback, useEffect, useState } from "react";
+import { TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
 import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import { Paginator } from "../../components/Fragments/Paginator/Paginator";
+import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
 import { getAllArticles } from "../../services/article.service";
-import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { toView } from "../../utils/toView";
 
 export default function ArtikelPage() {
   const [dataArticles, setDataArticles] = useState([]);
-  const [onPagination, setOnPagination] = useState(null);
+  const [dataPage, setDataPage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -46,7 +45,7 @@ export default function ArtikelPage() {
       );
 
       setDataArticles(sortedData);
-      setOnPagination(articles?.pagination);
+      setDataPage(articles?.pagination);
       setCurrentPage(articles?.pagination?.currentPage);
     } catch (err) {
       console.log(err);
@@ -75,7 +74,7 @@ export default function ArtikelPage() {
           </TextBlink>
         </div>
       </HeroSection>
-      <div className="mx-auto mt-5 w-full px-10 lg:w-1/2">
+      <div className="mx-auto mt-5 w-full px-10 md:w-1/2">
         <TextInput
           icon={FaSearch}
           placeholder="Cari Artikel & berita..."
@@ -84,41 +83,41 @@ export default function ArtikelPage() {
         />
       </div>
 
-      {isLoading ? (
-        <div className="mt-5">
+      <div className="mt-5">
+        {isLoading ? (
           <Loading />
-        </div>
-      ) : (
-        <div
-          className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
-          data-aos="zoom-in"
-        >
-          {Array.isArray(dataArticles) && dataArticles?.length > 0
-            ? dataArticles?.map((article) => (
-                <CardArtikel
-                  // className="w-1/2"
-                  key={article?.ID}
-                  title={article?.title}
-                  to={`/artikel/${article?.ID}/${article?.title}`}
-                  date={article?.CreatedAt}
-                  source={article?.users?.fullname}
-                  img={article?.image}
-                />
-              ))
-            : !isLoading && (
-                <p className="my-5 text-center text-red-500">
-                  data {search} tidak ditemukan
-                </p>
-              )}
-        </div>
-      )}
+        ) : (
+          <div
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 last:flex last:justify-center md:grid-cols-3 lg:grid-cols-4"
+            data-aos="zoom-in"
+          >
+            {Array.isArray(dataArticles) && dataArticles?.length > 0
+              ? dataArticles?.map((article) => (
+                  <CardArtikel
+                    // className="w-1/2"
+                    key={article?.ID}
+                    title={article?.title}
+                    to={`/artikel/${article?.ID}/${article?.title}`}
+                    date={article?.CreatedAt}
+                    source={article?.users?.fullname}
+                    img={article?.image}
+                  />
+                ))
+              : !isLoading && (
+                  <p className="my-5 text-red-500">
+                    data {search} tidak ditemukan
+                  </p>
+                )}
+          </div>
+        )}
+      </div>
 
       {/* Pagination */}
       <div className="mb-5 flex flex-col items-center justify-center">
         {isLoading ? null : (
           <PaginationPage
             currentPage={currentPage}
-            totalPages={onPagination?.totalPages}
+            totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
           />
         )}

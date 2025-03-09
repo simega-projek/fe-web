@@ -18,7 +18,8 @@ export default function CardSitus(props) {
   return (
     <Link
       to={to}
-      className={`flex w-full flex-wrap transition-all duration-300 hover:shadow-lg md:w-1/3 lg:w-1/4 lg:items-center`}
+      // className={`flex w-full flex-wrap transition-all duration-300 hover:shadow-lg md:w-1/3 lg:w-1/4 lg:items-center`}
+      className={`flex w-full flex-wrap transition-all duration-300 hover:shadow-lg lg:items-center`}
     >
       <div className="group relative mx-auto h-64 overflow-hidden rounded-lg shadow-2xl md:h-72 lg:h-80">
         <div className="absolute right-0 top-0 z-20 px-1 text-white">

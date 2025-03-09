@@ -25,7 +25,7 @@ export default function CardArtikel(props) {
       <div
         className={`relative flex flex-grow flex-col px-3 py-5 ${status ? "pb-12" : ""}`}
       >
-        <h1 className="mb-5 truncate text-wrap text-base font-semibold hover:text-primary lg:text-xl">
+        <h1 className="mb-5 truncate text-sm font-semibold hover:text-primary md:text-wrap md:text-base lg:text-xl">
           {title}
         </h1>
         <div className="absolute bottom-0 left-0 right-0 z-20 px-3 py-1">
