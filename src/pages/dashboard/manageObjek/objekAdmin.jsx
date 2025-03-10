@@ -1,13 +1,11 @@
 import {
   Button,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
-  TextInput,
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
@@ -15,26 +13,23 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { FaFileInvoice } from "react-icons/fa6";
 import { GiStoneBust } from "react-icons/gi";
 
-import { FaEdit, FaSearch } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { deleteObject, getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
 import CreateObjek from "./CreateObjek";
+import { FilterObject } from "./FilterObjek";
 import UpdateObjek from "./UpdateObjek";
-import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
-import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
-import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 
 export default function ObjekAdmin() {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
   const [objectData, setObjectData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [messageError, setMessageError] = useState(null);
@@ -45,12 +40,17 @@ export default function ObjekAdmin() {
   const [isOpenUpdateForm, setIsOpenUpdateForm] = useState(false);
   const [isOpenCreateForm, setIsOpenCreateForm] = useState(false);
 
-  const [filterObject, setFilterObject] = useState(null);
-  const [filter, setFilter] = useState("");
   const [dataPage, setDataPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [contentPage, setContentPage] = useState(10);
   const startIndex = (currentPage - 1) * contentPage + 1;
+  // filter
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [publish, setPublish] = useState("");
+  const [valley, setValley] = useState("");
+  const [site, setSite] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleOpenCreateForm = () => {
     setIsOpenCreateForm(!isOpenCreateForm);
@@ -76,13 +76,16 @@ export default function ObjekAdmin() {
         contentPage,
         debouncedSearch,
         currentPage,
+        valley,
+        site,
+        category,
+        publish,
       );
 
       const sortedData = objects.data.sort(
         (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
       );
       setObjectData(sortedData);
-      setFilterObject(sortedData);
       setDataPage(objects.pagination);
     } catch (err) {
       console.log(err);
@@ -94,6 +97,14 @@ export default function ObjekAdmin() {
   const onPageChange = (e) => {
     toView("top");
     setCurrentPage(e);
+  };
+
+  const handleResetFilter = () => {
+    setSearch("");
+    setPublish("");
+    setValley("");
+    setSite("");
+    setCategory("");
   };
 
   const handleOpenDeleteModal = (id) => {
@@ -115,24 +126,19 @@ export default function ObjekAdmin() {
     fetchObject();
   };
 
-  const handleFilter = (e) => {
-    const filterStatus = e.target.value;
-    setFilter(filterStatus);
-    if (filterStatus) {
-      const filtered = objectData.filter(
-        (item) => item.publish === e.target.value,
-      );
-      setFilterObject(filtered);
-    } else {
-      setFilterObject(objectData);
-    }
-  };
-
-  // console.log(filterObject);
-
   useEffect(() => {
     fetchObject();
-  }, [debouncedSearch, currentPage, contentPage]);
+  }, [
+    debouncedSearch,
+    currentPage,
+    contentPage,
+    publish,
+    valley,
+    site,
+    category,
+  ]);
+
+  // console.log({ objectData });
 
   // console.log({ selectedId });
 
@@ -162,19 +168,28 @@ export default function ObjekAdmin() {
         {/* search & button create */}
         <div className="flex justify-between">
           <FilterObject
-            publish={filter}
-            onPublish={handleFilter}
             search={search}
             onSearch={(e) => setSearch(e.target.value)}
+            valley={valley}
+            onValley={(e) => setValley(e.target.value)}
+            site={site}
+            onSite={(e) => setSite(e.target.value)}
+            category={category}
+            onCategory={(e) => setCategory(e.target.value)}
+            publish={publish}
+            onPublish={(e) => setPublish(e.target.value)}
+            onReset={handleResetFilter}
+            objectData={objectData}
           />
-          <div className="flex gap-2">
+          <div className="ml-2 flex flex-col-reverse gap-2 lg:flex-row">
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}
+              className={"ml-0"}
             />
             <Button
               onClick={handleOpenCreateForm}
-              className="bg-primary text-xl font-bold focus:ring-blackboard"
+              className="bg-primary text-xl font-bold text-white hover:bg-tan focus:ring-tan"
             >
               +
             </Button>
@@ -204,7 +219,7 @@ export default function ObjekAdmin() {
 
             {/* table data */}
             <TableData
-              data={filterObject}
+              data={objectData}
               isLoading={isLoading}
               handleOpenDeleteModal={handleOpenDeleteModal}
               handleOpenUpdateForm={handleOpenUpdateForm}
@@ -215,11 +230,13 @@ export default function ObjekAdmin() {
         </div>
       </div>
 
+      {/* pagination */}
       {isLoading ? null : (
         <PaginationPage
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 
@@ -268,11 +285,15 @@ const TableData = ({
               {objects.site.lembah.lembah ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              <span
-                class={`rounded-full px-2.5 py-0.5 text-sm font-medium ${objects.publish === "public" ? "bg-green-100 text-green-800" : objects.publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
-              >
-                {objects.publish ?? null}
-              </span>
+              {objects.publish ? (
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${objects.publish === "public" ? "bg-green-100 text-green-800" : objects.publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
+                >
+                  {objects.publish ?? null}
+                </span>
+              ) : (
+                "-"
+              )}
             </TableCell>
             <TableCell className="mx-auto items-center justify-center lg:flex">
               <ButtonControls
@@ -303,91 +324,5 @@ const TableData = ({
         )
       )}
     </TableBody>
-  );
-};
-
-const FilterObject = ({
-  search,
-  onSearch,
-  site,
-  onSite,
-  publish,
-  onPublish,
-  valley,
-  onValley,
-}) => {
-  const [valleyData, setValleyData] = useState([]);
-  const [siteData, setSiteData] = useState([]);
-
-  // const fetchDataFilter = async () => {
-  //   try {
-  //     const valley = await getAllValley();
-  //     const site = await getAllSite();
-
-  //     const sortValley = valley.data.sort((a, b) => {
-  //       return a.lembah.localeCompare(b.lembah);
-  //     });
-
-  //     const sortSite = site.data.sort((a, b) => {
-  //       return a.nama_situs.localeCompare(b.nama_situs);
-  //     });
-
-  //     setValleyData(sortValley);
-
-  //     setSiteData(sortSite);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchDataFilter();
-  // }, []);
-  return (
-    <div className="flex w-full gap-2 md:w-3/4">
-      <TextInput
-        icon={FaSearch}
-        placeholder="Cari Kegiatan..."
-        onChange={onSearch}
-        value={search}
-        className="w-1/2"
-      />
-
-      {/* publish */}
-      <Select value={publish} onChange={onPublish} className="w-1/4">
-        <option value={""} className="bg-light">
-          Status
-        </option>
-        <option value={"pending"}>Pending</option>
-        <option value={"public"}>Publik</option>
-        <option value={"private"}>Privat</option>
-      </Select>
-
-      {/* situs */}
-      {/* <Select value={site} onChange={onSite} className="w-1/3">
-        <option value={""} className="bg-light">
-          Situs
-        </option>
-
-        {siteData?.map((s) => (
-          <option value={s?.ID} key={s?.ID}>
-            {s?.nama_situs}
-          </option>
-        ))}
-      </Select> */}
-
-      {/* lembah */}
-      {/* <Select value={valley} onChange={onValley} className="w-1/3">
-        <option value={""} className="bg-light">
-          Lembah
-        </option>
-
-        {valleyData?.map((d) => (
-          <option value={d?.ID} key={d?.ID}>
-            {d?.lembah}
-          </option>
-        ))}
-      </Select> */}
-    </div>
   );
 };

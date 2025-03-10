@@ -10,28 +10,21 @@ import {
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaSearch } from "react-icons/fa";
-import { FaFileInvoice } from "react-icons/fa6";
-import { MdDeleteForever } from "react-icons/md";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { GiValley } from "react-icons/gi";
-import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import { deleteValley, getAllValley } from "../../../services/valley.service";
-import CreateObjek from "./CreateLembah";
-import Loading from "../../../components/Elements/Loading/Loading";
-import {
-  getKabupaten,
-  getKecamatan,
-} from "../../../services/wilIndonesia.service";
-import { getDataByIndex } from "../../../utils/getDataByIndex";
-import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import { toView } from "../../../utils/toView";
-import UpdateLembah from "./UpdateLembah";
+import { MdDeleteForever } from "react-icons/md";
 import { useDebounce } from "use-debounce";
+import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
+import Loading from "../../../components/Elements/Loading/Loading";
+import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { deleteValley, getAllValley } from "../../../services/valley.service";
+import { getDataByIndex } from "../../../utils/getDataByIndex";
+import { toView } from "../../../utils/toView";
+import CreateObjek from "./CreateLembah";
+import UpdateLembah from "./UpdateLembah";
 
 export default function LembahAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -144,7 +137,7 @@ export default function LembahAdmin() {
       <hr />
       <div className="mt-5 w-full px-3">
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/2">
+          <div className="w-full md:w-1/2">
             <TextInput
               icon={FaSearch}
               placeholder="Cari Lembah..."
@@ -205,6 +198,7 @@ export default function LembahAdmin() {
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 

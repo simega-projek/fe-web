@@ -1,10 +1,18 @@
 import { fetchDataApi } from "./service";
 
-export const getAllObject = async (content = 100, search = "", page = 1) => {
+export const getAllObject = async (
+  content = 100,
+  search = "",
+  page = 1,
+  lembah = "",
+  site = "",
+  category = "",
+  publish = "",
+) => {
   try {
     return await fetchDataApi(
       "GET",
-      `object?page=${page}&content=${content}&search=${search}`,
+      `object?page=${page}&content=${content}&search=${search}&lembah=${lembah}&site=${site}&category=${category}&publish=${publish}`,
     );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };

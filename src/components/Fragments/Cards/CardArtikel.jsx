@@ -32,7 +32,7 @@ export default function CardArtikel(props) {
           <p className="border-t-2 text-sm text-light lg:text-base">
             {status ? (
               <span
-                class={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status === "Akan Datang" ? "bg-green-100 text-green-800" : status === "Proses" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
+                className={`rounded-full px-2.5 py-0.5 text-[0.5rem] font-medium md:text-xs ${status === "Akan Datang" ? "bg-green-100 text-green-800" : status === "Proses" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
               >
                 {status}
               </span>

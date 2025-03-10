@@ -25,3 +25,19 @@ export const AlertMessage = ({
     </div>
   );
 };
+
+// paste on root component
+
+// const [messageError, setMessageError] = useState(null);
+// const [messageSuccess, setMessageSuccess] = useState(null);
+
+{
+  /* <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
+        */
+}

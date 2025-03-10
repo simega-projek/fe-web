@@ -28,6 +28,7 @@ import { toView } from "../../../utils/toView";
 import { setIsLoading } from "../../../redux/slices/authSlice";
 import Loading from "../../../components/Elements/Loading/Loading";
 import { useDebounce } from "use-debounce";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -137,8 +138,9 @@ export default function UserAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
+          <div className="w-full lg:w-1/2">
             <TextInput
+              // className="w-full"
               icon={FaSearch}
               placeholder="Cari Akun Admin..."
               value={search}
@@ -156,18 +158,13 @@ export default function UserAdmin() {
         </div>
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+        <AlertMessage
+          className={"mt-5"}
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         {/* table */}
         <div className="mt-5 overflow-x-auto">

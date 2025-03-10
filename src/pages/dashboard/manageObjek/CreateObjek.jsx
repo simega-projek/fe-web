@@ -1,35 +1,27 @@
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
-import ManyInputText from "../../../components/Elements/Inputs/ManyInputText";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { getAllCategory } from "../../../services/category.service";
 import { createObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
-import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
-import { useDebounce } from "use-debounce";
-import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
-import { useSelector } from "react-redux";
 
 export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef("");
   const imageRef = useRef(null);
 
-  const role = useSelector((state) => state.auth.userData);
-
-  let roleAuth = role?.info?.role;
-  let roleProfile = role?.data?.role;
-
   const [nameObject, setNameObject] = useState("");
   const [lintang, setLintang] = useState("");
   const [bujur, setBujur] = useState("");
   const [valley, setValley] = useState("");
-  const [publish, setPublish] = useState("pending");
+  const [publish, setPublish] = useState("");
   const [videos, setVideos] = useState([]); //multiple video
   const [image, setImage] = useState(null);
   const [selectedSite, setSelectedSite] = useState(0);
@@ -59,6 +51,8 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     if (imageRef.current) {
       imageRef.current.value = null;
     }
+
+    setPublish("");
 
     toView("top");
   };
@@ -140,6 +134,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     formData.append("category_id", selectedCategory);
     formData.append("video", videos);
     formData.append("gambar", image);
+    formData.append("publish", "public");
 
     setIsLoading(true);
     try {
@@ -169,6 +164,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     }
   }, [isOpenCreate]);
 
+  // console.log(publish);
   useEffect(() => {
     fetchData();
   }, []);
@@ -187,7 +183,6 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
 
       {/* alert */}
       <AlertMessage
-        className={"mt-5"}
         messageError={messageError}
         messageSuccess={messageSuccess}
         setMessageError={setMessageError}
@@ -244,7 +239,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
           />
           <TextInput
             id="garisLintang"
-            type="text"
+            type="number"
             sizing="md"
             placeholder="-0.9052080924767166"
             value={lintang}
@@ -261,7 +256,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
           />
           <TextInput
             id="garisBujur"
-            type="text"
+            type="number"
             sizing="md"
             placeholder="119.85368178963921"
             value={bujur}
@@ -323,31 +318,6 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             File harus berformat .jpg, .jpeg, .png
           </small>
         </ContainerInput>
-
-        {/* status publish */}
-        {roleAuth === "superadmin" ||
-        roleProfile === "superadmin" ||
-        roleAuth === "validator" ||
-        roleProfile === "validator" ? (
-          <ContainerInput>
-            <Label
-              htmlFor="publish"
-              value="Publish"
-              className="mb-2 block text-base"
-            />
-            <select
-              id="publish"
-              className="w-full rounded-md"
-              onChange={(e) => setPublish(e.target.value)}
-              disabled={isLoading}
-              value={publish}
-            >
-              <option value={"pending"}>Pending</option>
-              <option value={"public"}>Public</option>
-              <option value={"private"}>Private</option>
-            </select>
-          </ContainerInput>
-        ) : null}
 
         <ContainerInput>
           {imagePreview && (

@@ -104,9 +104,9 @@ export default function ArtikelPage() {
                   />
                 ))
               : !isLoading && (
-                  <p className="my-5 text-red-500">
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
                     data {search} tidak ditemukan
-                  </p>
+                  </div>
                 )}
           </div>
         )}
@@ -119,6 +119,7 @@ export default function ArtikelPage() {
             currentPage={currentPage}
             totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
+            totalItems={dataPage?.totalItems}
           />
         )}
       </div>

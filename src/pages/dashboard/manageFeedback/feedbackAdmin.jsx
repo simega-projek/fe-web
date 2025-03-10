@@ -1,23 +1,105 @@
-import React from "react";
+import { TextInput } from "flowbite-react";
+import React, { useEffect, useState } from "react";
 import { BiSolidMessageDetail } from "react-icons/bi";
-import TitleSection from "../../../components/Elements/TitleSection";
-import { Dropdown, DropdownItem, TextInput } from "flowbite-react";
-import { FaSearch } from "react-icons/fa";
-import InputDropdown from "../../../components/Elements/Inputs/InputDropdown";
+import { FaSearch, FaUndoAlt } from "react-icons/fa";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
+import TitleSection from "../../../components/Elements/TitleSection";
 import { CardFeedback } from "../../../components/Fragments/Cards/CardFeedback";
+import {
+  deleteFeedback,
+  getAllFeedback,
+} from "../../../services/feedback.service";
+import { useDebounce } from "use-debounce";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
+import Loading from "../../../components/Elements/Loading/Loading";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { toView } from "../../../utils/toView";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterFeedback } from "./FilterFeedback";
 
 export const FeedbackAdmin = () => {
-  const dayDate = () => {
-    const day = [];
-    for (let i = 1; i <= 31; i++) {
-      day.push(i);
-    }
+  const [dataFeedback, setDataFeedback] = useState([]);
+  const [dataPage, setDataPage] = useState(false);
 
-    return day;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedId, setSelectedId] = useState(null);
+  const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [messageError, setMessageError] = useState(null);
+  const [messageSuccess, setMessageSuccess] = useState(null);
+
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+
+  // filter
+  const [date, setDate] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedYear] = useDebounce(year, 1000);
+
+  const fetchFeedback = async () => {
+    setIsLoading(true);
+    try {
+      const feedback = await getAllFeedback(
+        contentPage,
+        debouncedSearch,
+        currentPage,
+        date,
+        month,
+        year,
+      );
+      const sortedData = feedback.data.sort(
+        (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt),
+      );
+      setDataFeedback(sortedData);
+      setDataPage(feedback.pagination);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
-  const day = dayDate();
+
+  const handleDeleteFeedback = async () => {
+    const res = await deleteFeedback(selectedId);
+    // console.log("delete = ", res);
+
+    if (res.error) {
+      setMessageError(res.message);
+      setMessageSuccess(null);
+      setIsOpenModalDelete(false);
+    } else {
+      setMessageError(null);
+      setMessageSuccess(res.message);
+    }
+    setIsOpenModalDelete(false);
+    fetchFeedback();
+  };
+
+  const handleOpenDeleteModal = (id) => {
+    setSelectedId(id);
+    setIsOpenModalDelete(true);
+  };
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
+  };
+
+  const handleResetFilter = () => {
+    setSearch("");
+    setDate("");
+    setMonth("");
+    setYear("");
+  };
+
+  useEffect(() => {
+    fetchFeedback();
+  }, [currentPage, debouncedSearch, date, month, debouncedYear, contentPage]);
 
   return (
     <div className="px-3">
@@ -28,167 +110,89 @@ export const FeedbackAdmin = () => {
       <hr />
 
       {/* search & button filter */}
-      <div className="my-5 flex w-full flex-wrap gap-3 md:flex-nowrap md:justify-center">
-        {/* search */}
-        <div className="w-full md:w-1/2">
-          <TextInput
-            //   value={search}
-            //   onChange={(e) => setSearch(e.target.value)}
-            icon={FaSearch}
-            placeholder="Cari berdasarkan nama..."
-          />
-        </div>
+      <div className="my-5 flex w-full justify-between">
+        <FilterFeedback
+          date={date}
+          month={month}
+          year={year}
+          search={search}
+          onDate={(e) => setDate(e.target.value)}
+          onMonth={(e) => setMonth(e.target.value)}
+          onYear={(e) => setYear(e.target.value)}
+          onSearch={(e) => setSearch(e.target.value)}
+          onReset={handleResetFilter}
+          isLoading={isLoading}
+        />
 
-        {/* tanggal */}
-        <div className="w-full md:w-1/6">
-          <select
-            id="day"
-            className="w-full rounded-md"
-            //   onChange={handleCategoryChange}
-            //   disabled={isLoading}
-            //   value={selectedCategory}
-          >
-            <option>Tanggal</option>
-            {day.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* bulan */}
-        <div className="w-full md:w-1/6">
-          <select
-            id="month"
-            className="w-full rounded-md"
-            //   onChange={handleCategoryChange}
-            //   disabled={isLoading}
-            //   value={selectedCategory}
-          >
-            <option>Bulan</option>
-            {months?.map((month) => (
-              <option key={month.id} value={month.id}>
-                {month.month}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* tahun */}
-        <div className="w-full md:w-1/6">
-          <TextInput
-            id="year"
-            type="number"
-            placeholder="Tahun"
-            //   value={nameObject}
-            //   onChange={(e) => setNameObject(e.target.value)}
-            //   disabled={isLoading}
-          />
-        </div>
-
-        <div className="w-full md:w-1/6">
-          <ButtonFunc>Cari</ButtonFunc>
-        </div>
+        <FilterPage
+          onChange={(e) => setContentPage(e.target.value)}
+          value={contentPage}
+        />
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        {dataFeedback.map((fd) => (
-          <CardFeedback
-            key={fd.id}
-            name={fd.name}
-            address={fd.address}
-            date={fd.date.toLocaleDateString("id-ID", {
-              day: "2-digit",
-              month: "long",
-              weekday: "long",
-              year: "numeric",
-            })}
-            message={fd.message}
-          />
-        ))}
-      </div>
+      {/* alert */}
+      <AlertMessage
+        className={"mb-3"}
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
+
+      {/* data feedback */}
+      <FeedbackData
+        data={dataFeedback}
+        isLoading={isLoading}
+        search={search}
+        handleOpenDeleteModal={handleOpenDeleteModal}
+      />
+
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
+        />
+      )}
+
+      {isOpenModalDelete && (
+        <PopupConfirm
+          title={"menghapus data feedback"}
+          isOpen={isOpenModalDelete}
+          onClick={handleDeleteFeedback}
+          onClose={() => setIsOpenModalDelete(false)}
+        />
+      )}
     </div>
   );
 };
 
-const date = new Date(new Date() - Math.random() * 1e12);
-const date1 = new Date(new Date() - Math.random() * 1e12);
-const date2 = new Date(new Date() - Math.random() * 1e12);
-// console.log(date);
-
-const months = [
-  {
-    id: 1,
-    month: "Januari",
-  },
-  {
-    id: 2,
-    month: "Februari",
-  },
-  {
-    id: 3,
-    month: "Maret",
-  },
-  {
-    id: 4,
-    month: "April",
-  },
-  {
-    id: 5,
-    month: "Mei",
-  },
-  {
-    id: 6,
-    month: "Juni",
-  },
-  {
-    id: 7,
-    month: "Juli",
-  },
-  {
-    id: 8,
-    month: "Agustus",
-  },
-  {
-    id: 9,
-    month: "September",
-  },
-  {
-    id: 10,
-    month: "Oktober",
-  },
-  {
-    id: 11,
-    month: "November",
-  },
-  {
-    id: 12,
-    month: "Desember",
-  },
-];
-const dataFeedback = [
-  {
-    id: 1,
-    name: "Andi",
-    address: "08521859158x",
-    message: "Pelayanan tidak baik",
-    date: date,
-  },
-  {
-    id: 2,
-    name: "Andi",
-    address: "08521859158x",
-    message:
-      "Aute incididunt incididunt enim consequat quis sit sunt eiusmod. Aute duis consequat voluptate quis qui cupidatat pariatur sint minim. Nostrud do voluptate eiusmod sunt fugiat excepteur sit exercitation est ex aliqua qui. Est reprehenderit est deserunt non labore.",
-    date: date1,
-  },
-  {
-    id: 3,
-    name: "Andi",
-    address: "08521859158x",
-    message:
-      "Eiusmod Lorem officia consequat amet. Ex reprehenderit ullamco exercitation et officia do veniam amet id eu velit consectetur ut est. Incididunt aute voluptate qui est Lorem velit proident elit quis duis officia enim. Exercitation elit adipisicing consectetur deserunt do qui id pariatur amet quis in proident. Pariatur voluptate velit cupidatat deserunt. Et elit eiusmod adipisicing proident adipisicing minim. Ipsum nulla elit adipisicing ea labore esse.Lorem aute cillum quis et voluptate exercitation cillum consequat consectetur voluptate labore. Velit fugiat tempor labore esse sunt. Mollit excepteur amet minim minim. Laborum Lorem laboris ex exercitation esse magna esse culpa tempor nisi. Pariatur incididunt veniam nostrud incididunt voluptate non magna nulla elit cillum ipsum ipsum. Nulla cillum elit nisi anim cillum adipisicing minim deserunt. Laboris commodo mollit ipsum labore amet.Deserunt do in adipisicing aliquip minim consectetur commodo sit velit aute. Aute irure do ut reprehenderit commodo reprehenderit id. Enim dolor ea nisi nulla fugiat irure quis aute do laborum ut. Incididunt anim ut id sunt excepteur reprehenderit ipsum ad nisi. Dolor incididunt nulla eu veniam ea enim in. Mollit adipisicing occaecat nulla irure magna dolor ad laboris veniam nisi. Cupidatat nostrud ipsum labore esse amet duis et nostrud.",
-    date: date2,
-  },
-];
+const FeedbackData = ({ data, isLoading, search, handleOpenDeleteModal }) => {
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {isLoading ? (
+        <div className="col-span-2 text-center">
+          <Loading />
+        </div>
+      ) : data?.length > 0 ? (
+        data.map((fd) => (
+          <CardFeedback
+            key={fd.ID}
+            name={fd.name}
+            address={fd.email_telp}
+            date={fd.CreatedAt}
+            message={fd.message}
+            onDelete={() => handleOpenDeleteModal(fd.ID)}
+          />
+        ))
+      ) : (
+        !isLoading && (
+          <div className="col-span-2 text-center text-red-500">
+            data {search} tidak ditemukan
+          </div>
+        )
+      )}
+    </div>
+  );
+};

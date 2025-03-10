@@ -1,9 +1,14 @@
 import { fetchDataApi } from "./service";
-export const getAllEvent = async (content, search = "", page = 1) => {
+export const getAllEvent = async (
+  content,
+  search = "",
+  page = 1,
+  status = "",
+) => {
   try {
     return await fetchDataApi(
       "GET",
-      `events?page=${page}&content=${content}&search=${search}`,
+      `events?page=${page}&content=${content}&search=${search}&status=${status}`,
     );
   } catch (err) {
     return { error: true, message: err.message, statusCode: err.statusCode };

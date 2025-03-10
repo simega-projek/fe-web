@@ -27,6 +27,7 @@ import CreateActivity from "./CreateActivity";
 import UpdateActivity from "./UpdateActivity";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { FilterEvent } from "./FilterEvent";
 
 export default function ActivityAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -39,12 +40,10 @@ export default function ActivityAdmin() {
 
   const [selectedId, setSelectedId] = useState(null);
   const [eventData, setEventData] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
-  // const querySearch = searchParams.get("search")
 
+  // search and filter
   const [searchData, setSearchData] = useState("");
-  const [filter, setFilter] = useState("");
-
+  const [status, setStatus] = useState("");
   const [debouncedSearch] = useDebounce(searchData, 1000);
 
   const [dataPage, setDataPage] = useState(false);
@@ -100,6 +99,7 @@ export default function ActivityAdmin() {
         contentPage,
         debouncedSearch,
         currentPage,
+        status,
       );
 
       const sortedData = events.data.sort(
@@ -108,25 +108,11 @@ export default function ActivityAdmin() {
 
       // console.log(sortedData);
       setEventData(sortedData);
-      setFilteredEvents(sortedData);
       setDataPage(events.pagination);
     } catch (err) {
       console.log(err);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleFilter = (e) => {
-    const filterStatus = e.target.value;
-    setFilter(filterStatus);
-    if (filterStatus) {
-      const filtered = eventData.filter(
-        (item) => item.status === e.target.value,
-      );
-      setFilteredEvents(filtered);
-    } else {
-      setFilteredEvents(eventData);
     }
   };
 
@@ -141,7 +127,9 @@ export default function ActivityAdmin() {
 
   useEffect(() => {
     fetchEvent();
-  }, [debouncedSearch, currentPage, contentPage]);
+  }, [debouncedSearch, currentPage, contentPage, status]);
+
+  console.log({ searchData, status });
 
   return (
     <>
@@ -170,19 +158,21 @@ export default function ActivityAdmin() {
           <FilterEvent
             search={searchData}
             onSearch={(e) => setSearchData(e.target.value)}
-            filter={filter}
-            onFilter={handleFilter}
+            status={status}
+            onStatus={(e) => setStatus(e.target.value)}
           />
 
-          <div className="flex gap-2">
-            {/* filter tampilan data */}.
+          {/* //filter tampilan data */}
+
+          <div className="ml-2 flex flex-col-reverse gap-2 md:flex-row">
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}
+              className={"ml-0"}
             />
             <Button
               onClick={handleOpenCreateForm}
-              className="bg-primary text-xl font-bold focus:ring-blackboard"
+              className="bg-primary text-xl font-bold text-white hover:bg-tan focus:ring-tan"
             >
               +
             </Button>
@@ -201,18 +191,20 @@ export default function ActivityAdmin() {
 
         {/* table */}
         <div className="scrollbar mt-5 overflow-x-auto">
-          <Table hoverable className="scrollbar overflow-x-auto md:table-fixed">
+          <Table hoverable className="scrollbar overflow-x-auto lg:table-fixed">
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Kegiatan</TableHeadCell>
-              <TableHeadCell className="w-1/5">Link Pendaftaran</TableHeadCell>
+              <TableHeadCell className="hidden w-1/5 lg:table-cell">
+                Link Pendaftaran
+              </TableHeadCell>
               <TableHeadCell className="w-1/5">Gambar</TableHeadCell>
               <TableHeadCell className="w-1/5">Tanggal Kegiatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Status</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
             <TableData
-              data={filteredEvents}
+              data={eventData}
               startIndex={startIndex}
               isLoading={isLoading}
               searchData={searchData}
@@ -230,6 +222,7 @@ export default function ActivityAdmin() {
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 
@@ -272,7 +265,7 @@ const TableData = ({
               {event?.title}
             </TableCell>
             <TableCell
-              className="truncate whitespace-normal text-wrap"
+              className="hidden w-1/5 truncate whitespace-normal text-wrap lg:table-cell"
               style={{ tableLayout: "fixed" }}
             >
               <a href={event?.registration_link} target="_blank" className="">
@@ -286,7 +279,11 @@ const TableData = ({
               {formatDate(event?.start_date) ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {event?.status ?? "-"}
+              <span
+                className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${event.status === "Akan Datang" ? "bg-green-100 text-green-800" : event.status === "Proses" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
+              >
+                {event?.status ?? "-"}
+              </span>
             </TableCell>
             <TableCell className="mx-auto items-center justify-center lg:flex">
               <ButtonControls
@@ -317,25 +314,5 @@ const TableData = ({
         )
       )}
     </TableBody>
-  );
-};
-
-const FilterEvent = ({ search, onSearch, filter, onFilter }) => {
-  return (
-    <div className="flex w-full gap-2 lg:w-1/2">
-      <TextInput
-        icon={FaSearch}
-        placeholder="Cari Kegiatan..."
-        onChange={onSearch}
-        value={search}
-        className="w-full"
-      />
-      <Select value={filter} onChange={onFilter} className="w-1/2">
-        <option value={""}>Status</option>
-        <option value={"Akan Datang"}>Akan Datang</option>
-        <option value={"Proses"}>Sedang Berlangsung</option>
-        <option value={"Selesai"}>Selesai</option>
-      </Select>
-    </div>
   );
 };

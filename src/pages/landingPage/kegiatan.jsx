@@ -1,12 +1,8 @@
-import { Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import { useDebounce } from "use-debounce";
 import Loading from "../../components/Elements/Loading/Loading";
 import TextBlink from "../../components/Elements/TextBlink/TextBlink";
-import TitleSection from "../../components/Elements/TitleSection";
 import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import { CardKegiatanHome } from "../../components/Fragments/Cards/HomeCardKegiatan";
 import { HeroSection } from "../../components/Fragments/Sections/Hero";
 import { getAllEvent } from "../../services/event.service";
 
@@ -14,15 +10,17 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { toView } from "../../utils/toView";
+import { FilterEvent } from "../dashboard/manageActivities/FilterEvent";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [isLoading, setisLoading] = useState(false);
 
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("");
-  const [debouncedSearch] = useDebounce(search, 700);
+  // search and filter
+  const [searchData, setSearchData] = useState("");
+  const [status, setStatus] = useState("");
+  const [debouncedSearch] = useDebounce(searchData, 1000);
 
   const [dataPage, setDataPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,6 +40,7 @@ export default function KegiatanPage() {
         CONTENT_PER_PAGE,
         debouncedSearch,
         currentPage,
+        status,
       );
       // descending
       const sortedData = events.data.sort(
@@ -49,7 +48,6 @@ export default function KegiatanPage() {
       );
 
       setDataEvents(sortedData);
-      setFilteredEvents(sortedData);
 
       setDataPage(events?.pagination);
       setCurrentPage(events?.pagination?.currentPage);
@@ -60,19 +58,6 @@ export default function KegiatanPage() {
     }
   };
 
-  const handleFilter = (e) => {
-    const filterStatus = e.target.value;
-    setFilter(filterStatus);
-    if (filterStatus) {
-      const filtered = dataEvents.filter(
-        (item) => item.status === e.target.value,
-      );
-      setFilteredEvents(filtered);
-    } else {
-      setFilteredEvents(dataEvents);
-    }
-  };
-
   const onPageChange = (e) => {
     toView("top");
     setCurrentPage(e);
@@ -80,7 +65,7 @@ export default function KegiatanPage() {
 
   useEffect(() => {
     fetchEvents();
-  }, [debouncedSearch, currentPage]);
+  }, [debouncedSearch, currentPage, status]);
 
   return (
     <>
@@ -97,12 +82,14 @@ export default function KegiatanPage() {
       </HeroSection>
 
       {/* search and filter */}
-      <FilterEvent
-        search={search}
-        onSearch={(e) => setSearch(e.target.value)}
-        filter={filter}
-        onFilter={handleFilter}
-      />
+      <div className="mt-5 flex w-full justify-center px-10">
+        <FilterEvent
+          search={searchData}
+          onSearch={(e) => setSearchData(e.target.value)}
+          status={status}
+          onStatus={(e) => setStatus(e.target.value)}
+        />
+      </div>
 
       {/* data event */}
       <div className="mt-5">
@@ -110,11 +97,11 @@ export default function KegiatanPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-5 px-10 md:grid-cols-3 lg:grid-cols-4"
             data-aos="fade-up"
           >
-            {Array.isArray(filteredEvents) && filteredEvents?.length > 0
-              ? filteredEvents.map((item) => (
+            {Array.isArray(dataEvents) && dataEvents?.length > 0
+              ? dataEvents.map((item) => (
                   <CardArtikel
                     to={`/kegiatan/${item.ID}/${item.title}`}
                     key={item?.ID}
@@ -126,9 +113,9 @@ export default function KegiatanPage() {
                   ></CardArtikel>
                 ))
               : !isLoading && (
-                  <p className="my-5 text-red-500">
-                    data {search} tidak ditemukan
-                  </p>
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
+                    data {searchData} tidak ditemukan
+                  </div>
                 )}
           </div>
         )}
@@ -141,29 +128,10 @@ export default function KegiatanPage() {
             currentPage={currentPage}
             totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
+            totalItems={dataPage?.totalItems}
           />
         )}
       </div>
     </>
   );
 }
-
-const FilterEvent = ({ search, onSearch, filter, onFilter }) => {
-  return (
-    <div className="mx-auto mt-5 flex w-full gap-2 px-10 md:w-2/3">
-      <TextInput
-        icon={FaSearch}
-        placeholder="Cari Kegiatan..."
-        onChange={onSearch}
-        value={search}
-        className="w-full"
-      />
-      <Select value={filter} onChange={onFilter} className="w-1/2">
-        <option value={""}>Status</option>
-        <option value={"Akan Datang"}>Akan Datang</option>
-        <option value={"Proses"}>Sedang Berlangsung</option>
-        <option value={"Selesai"}>Selesai</option>
-      </Select>
-    </div>
-  );
-};

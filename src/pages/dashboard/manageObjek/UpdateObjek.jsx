@@ -1,18 +1,17 @@
 import { Button, FileInput, Label, TextInput } from "flowbite-react";
 import JoditEditor from "jodit-react";
 import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { getAllCategory } from "../../../services/category.service";
 import { getOneObject, updateObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
-import { useSelector } from "react-redux";
 
 export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
@@ -31,6 +30,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [description, setDescription] = useState("");
   const [debounceDescription] = useDebounce(description, 800);
+  const [publish, setPublish] = useState("");
 
   const [originalImage, setOriginalImage] = useState(null);
 
@@ -121,6 +121,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     formData.append("category_id", selectedCategory);
     formData.append("video", videos);
     formData.append("gambar", image ? image : originalImage);
+    formData.append("publish", publish);
 
     setIsLoading(true);
     try {
@@ -152,18 +153,20 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const fetchOneObject = async () => {
     setIsLoading(true);
     try {
-      const object = await getOneObject(id);
+      const res = await getOneObject(id);
+      const object = res?.data;
 
-      setNameObject(object?.data.nama_objek);
-      setLintang(object?.data.lintang);
-      setBujur(object?.data.bujur);
-      setDescription(object?.data.deskripsi);
-      setImage(object?.data.gambar);
-      setImagePreview(object?.data.gambar);
-      setSelectedSite(object?.data.site_id);
-      setSelectedCategory(object?.data.category_id);
-      setVideos(object?.data.video.split(","));
-      setOriginalImage(object?.data.gambar);
+      setNameObject(object?.nama_objek);
+      setLintang(object?.lintang);
+      setBujur(object?.bujur);
+      setDescription(object?.deskripsi);
+      setImage(object?.gambar);
+      setImagePreview(object?.gambar);
+      setSelectedSite(object?.site_id);
+      setSelectedCategory(object?.category_id);
+      setVideos(object?.video.split(","));
+      setOriginalImage(object?.gambar);
+      setPublish(object?.publish);
     } catch (err) {
       console.log(err);
     } finally {
@@ -197,19 +200,17 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
       </div>
 
       {/* alert */}
-      {(messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )) ||
-        (messageSuccess && (
-          <SuccessAlert setMessageSuccess={setMessageSuccess}>
-            {messageSuccess}
-          </SuccessAlert>
-        ))}
+
+      <AlertMessage
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       {/* Form */}
       <form onSubmit={handleUpdateObject} className="flex flex-wrap">
+        {/* nama objek */}
         <ContainerInput>
           <Label
             htmlFor="objek"
@@ -228,6 +229,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
         </ContainerInput>
 
+        {/* category */}
         <ContainerInput>
           <Label
             htmlFor="category"
@@ -250,6 +252,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           </select>
         </ContainerInput>
 
+        {/* lintang */}
         <ContainerInput>
           <Label
             htmlFor="garisLintang"
@@ -258,7 +261,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
           <TextInput
             id="garisLintang"
-            type="text"
+            type="number"
             sizing="md"
             value={lintang}
             onChange={(e) => setLintang(e.target.value)}
@@ -266,6 +269,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
         </ContainerInput>
 
+        {/* bujur */}
         <ContainerInput>
           <Label
             htmlFor="garisBujur"
@@ -274,7 +278,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
           <TextInput
             id="garisBujur"
-            type="text"
+            type="number"
             sizing="md"
             value={bujur}
             onChange={(e) => setBujur(e.target.value)}
@@ -282,6 +286,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
         </ContainerInput>
 
+        {/* lembah */}
         <ContainerInput>
           <Label
             htmlFor="lembah"
@@ -297,6 +302,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
         </ContainerInput>
 
+        {/* situs */}
         <ContainerInput>
           <Label
             htmlFor="situs"
@@ -319,6 +325,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           </select>
         </ContainerInput>
 
+        {/* gambar */}
         <ContainerInput>
           <Label
             htmlFor="picture"
@@ -336,6 +343,34 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             File asli: ${originalImage}
           </p>
         </ContainerInput>
+
+        {/* publish */}
+        {/* status publish */}
+        {roleAuth === "superadmin" ||
+        roleProfile === "superadmin" ||
+        roleAuth === "validator" ||
+        roleProfile === "validator" ? (
+          <ContainerInput>
+            <Label
+              htmlFor="publish"
+              value="Publish"
+              className="mb-2 block text-base"
+            />
+            <select
+              id="publish"
+              className="w-full rounded-md"
+              onChange={(e) => setPublish(e.target.value)}
+              disabled={isLoading}
+              value={publish}
+            >
+              <option value={"pending"}>Pending</option>
+              <option value={"public"}>Publik</option>
+              <option value={"private"}>Privat</option>
+            </select>
+          </ContainerInput>
+        ) : null}
+
+        {/* preview image */}
         <ContainerInput>
           {imagePreview && (
             <ImagePreview src={imagePreview} onClose={handleClosePreview} />

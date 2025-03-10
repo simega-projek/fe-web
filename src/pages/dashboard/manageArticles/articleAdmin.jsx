@@ -215,6 +215,7 @@ export default function ArticleAdmin() {
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 

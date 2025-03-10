@@ -1,3 +1,4 @@
+import Aos from "aos";
 import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
@@ -8,9 +9,8 @@ import CardSitus from "../../components/Fragments/Cards/CardSitus";
 import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
 import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../services/object.service";
-import { getAllSite } from "../../services/site.service";
 import { toView } from "../../utils/toView";
-import Aos from "aos";
+import { FilterObject } from "../dashboard/managePublication/FilterPublication";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -19,11 +19,15 @@ export default function PersebaranPage() {
   const [dataObejcts, setDataObejcts] = useState([]);
   const [dataPage, setDataPage] = useState(null);
 
-  const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
-
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
+
+  // filter
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [valley, setValley] = useState("");
+  const [site, setSite] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     Aos.init({
@@ -39,6 +43,10 @@ export default function PersebaranPage() {
         CONTENT_PER_PAGE,
         debouncedSearch,
         currentPage,
+        valley,
+        site,
+        category,
+        "pending",
       );
       const sortedData = objects.data.sort(
         (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
@@ -57,30 +65,21 @@ export default function PersebaranPage() {
     toView("top");
     setCurrentPage(e);
   };
+
+  const handleResetFilter = () => {
+    setSearch("");
+    setValley("");
+    setSite("");
+    setCategory("");
+  };
+
   useEffect(() => {
     fetchObjects();
-  }, [debouncedSearch, currentPage]);
-
-  // const fetchMarkers = useMemo(
-  //   () =>
-  //     dataObejcts.map((o) => (
-  //       <Marker position={[o?.lintang, o?.bujur]} key={o?.ID}>
-  //         <Popup>
-  //           <PopupMap
-  //             id={o?.ID}
-  //             titleObject={o?.nama_objek}
-  //             titleSitus={o?.site?.nama_situs}
-  //             desc=""
-  //           />
-  //         </Popup>
-  //       </Marker>
-  //     )),
-  //   [],
-  // );
+  }, [debouncedSearch, currentPage, valley, site, category]);
 
   return (
     <>
-      <div className="">
+      <div>
         <div className="mx-auto">
           <div className="flex w-full flex-wrap justify-center">
             <div className="w-full">
@@ -108,12 +107,17 @@ export default function PersebaranPage() {
         </div>
       </div>
 
-      <div className="mx-auto mt-5 w-full px-10 md:w-1/2">
-        <TextInput
-          icon={FaSearch}
-          type="text"
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari Megalit..."
+      <div className="mt-5 flex w-full justify-center px-10">
+        <FilterObject
+          search={search}
+          onSearch={(e) => setSearch(e.target.value)}
+          valley={valley}
+          onValley={(e) => setValley(e.target.value)}
+          site={site}
+          onSite={(e) => setSite(e.target.value)}
+          category={category}
+          onCategory={(e) => setCategory(e.target.value)}
+          onReset={handleResetFilter}
         />
       </div>
 
@@ -138,9 +142,9 @@ export default function PersebaranPage() {
                   />
                 ))
               : !isLoading && (
-                  <p className="my-5 text-red-500">
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
                     data {search} tidak ditemukan
-                  </p>
+                  </div>
                 )}
           </div>
         )}
@@ -153,6 +157,7 @@ export default function PersebaranPage() {
             currentPage={currentPage}
             totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
+            totalItems={dataPage?.totalItems}
           />
         )}
       </div>

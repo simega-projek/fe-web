@@ -146,7 +146,6 @@ export default function CategoryAdmin() {
         <div className="flex justify-between">
           <div className="w-full md:w-1/2">
             <TextInput
-              className="w-full"
               icon={FaSearch}
               placeholder="Cari Kategori..."
               value={searchData}
@@ -209,6 +208,7 @@ export default function CategoryAdmin() {
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 

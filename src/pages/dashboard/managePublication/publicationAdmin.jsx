@@ -5,14 +5,13 @@ import {
   TableHead,
   TableHeadCell,
   TableRow,
-  TextInput,
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 
 import { FaFileInvoice } from "react-icons/fa6";
 
-import { FaEdit, FaSearch } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
@@ -20,22 +19,22 @@ import { GrValidate } from "react-icons/gr";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import Loading from "../../../components/Elements/Loading/Loading";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
 import {
   deleteObject,
   getAllObject,
   updateObject,
 } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
-import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
 // import CreateObjek from "./CreateObjek";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import UpdateObjek from "../manageObjek/UpdateObjek";
+import { FilterObject } from "./FilterPublication";
 
 export default function PublicationAdmin() {
-  const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
   const [objectData, setObjectData] = useState([]);
 
   const [messageError, setMessageError] = useState(null);
@@ -48,6 +47,18 @@ export default function PublicationAdmin() {
   const [selectedObjectData, setSelectedObjectData] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [dataPage, setDataPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage;
+
+  // filter
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [valley, setValley] = useState("");
+  const [site, setSite] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleOpenUpdateForm = (id) => {
     setSelectedId(id);
@@ -66,11 +77,27 @@ export default function PublicationAdmin() {
   // Function to close the detail modal
 
   const fetchObject = async () => {
+    setIsLoading(true);
     try {
-      const objects = await getAllObject(200, debouncedSearch);
-      setObjectData(objects.data);
+      const objects = await getAllObject(
+        contentPage,
+        debouncedSearch,
+        currentPage,
+        valley,
+        site,
+        category,
+        "pending",
+      );
+
+      const sortedData = objects.data.sort(
+        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
+      );
+      setObjectData(sortedData);
+      setDataPage(objects.pagination);
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,18 +123,27 @@ export default function PublicationAdmin() {
   const handlePublish = async (e) => {
     setIsLoading(true);
     const value = e.target.value; // Ambil nilai dari tombol yang ditekan
-    const { ID, lintang, bujur, deskripsi, site_id, category_id, gambar } =
-      selectedObjectData || {};
-
-    // Buat objek data
-    const data = {
-      nama_objek: value,
+    const {
+      ID,
       lintang,
       bujur,
       deskripsi,
       site_id,
       category_id,
       gambar,
+      nama_objek,
+    } = selectedObjectData || {};
+
+    // Buat objek data
+    const data = {
+      nama_objek,
+      lintang,
+      bujur,
+      deskripsi,
+      site_id,
+      category_id,
+      gambar,
+      publish: value,
     };
 
     try {
@@ -128,11 +164,21 @@ export default function PublicationAdmin() {
     }
   };
 
-  console.log(isLoading);
+  const handleResetFilter = () => {
+    setSearch("");
+    setValley("");
+    setSite("");
+    setCategory("");
+  };
+
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
+  };
 
   useEffect(() => {
     fetchObject();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage, contentPage, valley, site, category]);
 
   // console.log({ selectedId });
 
@@ -155,30 +201,32 @@ export default function PublicationAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/3">
-            <TextInput
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              icon={FaSearch}
-              placeholder="Cari berdasarkan Objek dan kategori..."
-            />
-            <DetailModal />
-          </div>
+          <FilterObject
+            search={search}
+            onSearch={(e) => setSearch(e.target.value)}
+            valley={valley}
+            onValley={(e) => setValley(e.target.value)}
+            site={site}
+            onSite={(e) => setSite(e.target.value)}
+            category={category}
+            onCategory={(e) => setCategory(e.target.value)}
+            onReset={handleResetFilter}
+          />
+          <FilterPage
+            onChange={(e) => setContentPage(e.target.value)}
+            value={contentPage}
+          />
         </div>
+        {/* <DetailModal /> */}
 
         {/* alert */}
-        <div className="mt-5">
-          {(messageError && (
-            <FailAllert setMessageError={setMessageError}>
-              {messageError}
-            </FailAllert>
-          )) ||
-            (messageSuccess && (
-              <SuccessAlert setMessageSuccess={setMessageSuccess}>
-                {messageSuccess}
-              </SuccessAlert>
-            ))}
-        </div>
+        <AlertMessage
+          className="mt-5"
+          messageError={messageError}
+          messageSuccess={messageSuccess}
+          setMessageError={setMessageError}
+          setMessageSuccess={setMessageSuccess}
+        />
 
         {/* table */}
         <div className="scrollbar mt-5 overflow-x-auto">
@@ -191,57 +239,28 @@ export default function PublicationAdmin() {
               <TableHeadCell className="w-1/5">Situs</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
-
-            <TableBody className="divide-y">
-              {objectData?.length > 0 &&
-                objectData?.map((objects, index) => (
-                  <TableRow key={objects.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {objects.nama_objek ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.category.category ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.site.lembah.lembah ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {objects.site.nama_situs ?? "-"}
-                    </TableCell>
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      {/* open detail */}
-                      <ButtonControls
-                        name={"Detail"}
-                        icon={FaFileInvoice}
-                        onClick={() => handleOpenDetailModal(objects)}
-                      />
-                      <ButtonControls
-                        name={"Edit"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenUpdateForm(objects.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(objects.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            <TableData
+              data={objectData}
+              startIndex={startIndex}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+              handleOpenDetailModal={handleOpenDetailModal}
+              handleOpenUpdateForm={handleOpenUpdateForm}
+              searchData={search}
+              isLoading={isLoading}
+            />
           </Table>
         </div>
       </div>
 
-      {/* loading fetching */}
-      {isLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
+        />
+      )}
 
       {/* delete modal */}
       {isOpenModalDelete && (
@@ -265,7 +284,7 @@ export default function PublicationAdmin() {
         <ButtonFunc
           className="bg-primary text-white"
           onClick={handlePublish}
-          value="Public"
+          value="public"
           disabled={isLoading}
         >
           Publik
@@ -273,7 +292,7 @@ export default function PublicationAdmin() {
         <ButtonFunc
           className="bg-tan text-white"
           onClick={handlePublish}
-          value="Private"
+          value="private"
           disabled={isLoading}
         >
           Private
@@ -282,3 +301,71 @@ export default function PublicationAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  data,
+  startIndex,
+  handleOpenDetailModal,
+  handleOpenUpdateForm,
+  handleOpenDeleteModal,
+  isLoading,
+  searchData,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={6} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((objects, index) => (
+          <TableRow key={objects.ID}>
+            <TableCell className="whitespace-normal">
+              {index + startIndex + 1}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {objects.nama_objek ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {objects.category.category ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {objects.site.lembah.lembah ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {objects.site.nama_situs ?? "-"}
+            </TableCell>
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              {/* open detail */}
+              <ButtonControls
+                name={"Detail"}
+                icon={FaFileInvoice}
+                onClick={() => handleOpenDetailModal(objects)}
+              />
+              <ButtonControls
+                name={"Edit"}
+                icon={FaEdit}
+                onClick={() => handleOpenUpdateForm(objects.ID)}
+              />
+              <ButtonControls
+                name={"Hapus"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(objects.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={6} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

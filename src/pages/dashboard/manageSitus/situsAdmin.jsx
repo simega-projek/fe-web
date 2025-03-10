@@ -136,7 +136,7 @@ export default function SitusAdmin() {
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
         <div className="flex justify-between">
-          <div className="w-full lg:w-1/2">
+          <div className="w-full md:w-1/2">
             <TextInput
               icon={FaSearch}
               placeholder="Cari Situs..."
@@ -197,6 +197,7 @@ export default function SitusAdmin() {
           currentPage={currentPage}
           totalPages={dataPage?.totalPages}
           onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems}
         />
       )}
 

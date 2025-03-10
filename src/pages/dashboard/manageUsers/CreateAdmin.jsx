@@ -1,4 +1,4 @@
-import { Button, Label, TextInput } from "flowbite-react";
+import { Button, Label, Select, TextInput } from "flowbite-react";
 import React, { useState } from "react";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
@@ -7,6 +7,7 @@ import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
 import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createAdmin } from "../../../services/superAdmin.service";
 import { toView } from "../../../utils/toView";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 
 export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
   const [fullname, setFullname] = useState("");
@@ -15,6 +16,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
 
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
@@ -32,7 +34,8 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
       trimmedFullname === "" ||
       trimmedNik === "" ||
       trimmedUsername === "" ||
-      trimmedEmail === ""
+      trimmedEmail === "" ||
+      role === ""
     ) {
       setMessageError("Isi semua kolom");
       toView("top");
@@ -57,6 +60,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
+    formData.append("role", role);
     try {
       setIsLoading(true);
       const res = await createAdmin(formData);
@@ -91,10 +95,12 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setRole("");
   };
 
   // console.log({ messageError });
   // console.log(messageSuccess);
+  // console.log({ role });
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
@@ -107,17 +113,13 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
       </div>
 
       {/* alert */}
-      {messageError && (
-        <FailAllert setMessageError={setMessageError}>
-          {messageError}
-        </FailAllert>
-      )}
-
-      {messageSuccess && (
-        <SuccessAlert setMessageSuccess={setMessageSuccess}>
-          {messageSuccess}
-        </SuccessAlert>
-      )}
+      <AlertMessage
+        className={"my-3"}
+        messageError={messageError}
+        messageSuccess={messageSuccess}
+        setMessageError={setMessageError}
+        setMessageSuccess={setMessageSuccess}
+      />
 
       <form onSubmit={handleRegistration}>
         {/* create form */}
@@ -148,7 +150,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               autoFocus
               id="nip"
               required
-              type="text"
+              type="number"
               name="nik"
               sizing="md"
               value={nik}
@@ -192,6 +194,20 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+          </ContainerInput>
+
+          {/* role */}
+          <ContainerInput>
+            <div className="mb-2 block">
+              <Label htmlFor="role" value="Role" className="text-base" />
+            </div>
+            <Select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value={""} className="bg-light">
+                Pilih Role
+              </option>
+              <option value={"admin"}>Admin</option>
+              <option value={"validator"}>Validator</option>
+            </Select>
           </ContainerInput>
 
           {/* password */}

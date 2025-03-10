@@ -1,40 +1,35 @@
 import Aos from "aos";
-import { Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import CardSitus from "../../../components/Fragments/Cards/CardSitus";
 import { PopupMap } from "../../../components/Fragments/Cards/PopupMap";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
-import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
-import { getAllValley } from "../../../services/valley.service";
-import { getAllSite } from "../../../services/site.service";
+import { FilterObject } from "./FilterObjek";
 
 export default function ObjectPersebaran() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
   const [isLoading, setIsLoading] = useState(true);
 
-  const [dataObejcts, setDataObejcts] = useState([]);
-  const [filterObject, setFilterObject] = useState({});
+  const [dataObjects, setDataObjects] = useState([]);
+
   const [dataPage, setDataPage] = useState(null);
 
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [contentPage, setContentPage] = useState(10);
+  const [contentPage, setContentPage] = useState(12);
 
-  useEffect(() => {
-    Aos.init({
-      duration: 700,
-      once: false,
-    });
-  }, []);
+  // filter
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  const [publish, setPublish] = useState("");
+  const [valley, setValley] = useState("");
+  const [site, setSite] = useState("");
+  const [filterSite, setFilterSite] = useState(null);
+  const [category, setCategory] = useState("");
 
   const fetchObjects = async () => {
     setIsLoading(true);
@@ -43,14 +38,18 @@ export default function ObjectPersebaran() {
         contentPage,
         debouncedSearch,
         currentPage,
+        valley,
+        site,
+        category,
+        publish,
       );
       const sortedData = objects.data.sort(
         (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
       );
-      setDataObejcts(sortedData);
-      setFilterObject(sortedData);
+      setDataObjects(sortedData);
+
       setDataPage(objects.pagination);
-      console.log(dataObejcts);
+      // console.log(dataObjects);
     } catch (err) {
       console.log(err);
     } finally {
@@ -58,26 +57,37 @@ export default function ObjectPersebaran() {
     }
   };
 
-  const handleFilter = (e) => {
-    const filterStatus = e.target.value;
-    setFilter(filterStatus);
-    if (filterStatus) {
-      const filtered = dataObejcts.filter(
-        (item) => item.publish === e.target.value,
-      );
-      setFilterObject(filtered);
-    } else {
-      setFilterObject(dataObejcts);
-    }
+  const handleResetFilter = () => {
+    setSearch("");
+    setPublish("");
+    setValley("");
+    setSite("");
+    setCategory("");
   };
 
   const onPageChange = (e) => {
     toView("top");
     setCurrentPage(e);
   };
+
+  const handleValley = (e) => {
+    const value = e.target.value; // Get the selected value
+    const selectedIndex = e.target.selectedIndex; // Get the index of the selected option
+    const title = e.target.options[selectedIndex].title;
+    setValley(value);
+    setFilterSite(title);
+  };
   useEffect(() => {
     fetchObjects();
-  }, [debouncedSearch, currentPage, contentPage]);
+  }, [
+    debouncedSearch,
+    currentPage,
+    contentPage,
+    publish,
+    valley,
+    site,
+    category,
+  ]);
 
   return (
     <>
@@ -90,7 +100,7 @@ export default function ObjectPersebaran() {
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {dataObejcts?.map((o) => (
+                {dataObjects?.map((o) => (
                   <Marker position={[o.lintang, o.bujur]} key={o.ID}>
                     <Popup>
                       <PopupMap
@@ -109,13 +119,22 @@ export default function ObjectPersebaran() {
         </div>
       </div>
 
-      <div className="mt-5 flex w-full justify-between px-10">
+      <div className="mt-5 flex w-full justify-between">
         <FilterObject
           search={search}
           onSearch={(e) => setSearch(e.target.value)}
-          publish={filter}
-          onPublish={handleFilter}
+          valley={valley}
+          onValley={handleValley}
+          site={site}
+          onSite={(e) => setSite(e.target.value)}
+          category={category}
+          onCategory={(e) => setCategory(e.target.value)}
+          publish={publish}
+          onPublish={(e) => setPublish(e.target.value)}
+          onReset={handleResetFilter}
+          filterSite={filterSite}
         />
+
         <FilterPage
           onChange={(e) => setContentPage(e.target.value)}
           value={contentPage}
@@ -124,14 +143,13 @@ export default function ObjectPersebaran() {
 
       <div className="mt-5">
         {isLoading ? (
-          <Loading />
+          <div className="col-span-2 md:col-span-3 lg:col-span-4">
+            <Loading />
+          </div>
         ) : (
-          <div
-            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
-            data-aos="fade-up"
-          >
-            {filterObject?.length > 0
-              ? filterObject?.map((o) => (
+          <div className="grid grid-cols-2 justify-items-center gap-5 py-5 md:grid-cols-3 lg:grid-cols-4">
+            {dataObjects?.length > 0
+              ? dataObjects?.map((o) => (
                   <CardSitus
                     key={o?.ID}
                     title={o?.nama_objek}
@@ -139,13 +157,13 @@ export default function ObjectPersebaran() {
                     to={`/objek/${o?.ID}/${o?.nama_objek}`}
                     img={o?.gambar}
                     category={o?.category.category}
-                    publish={"Publik"}
+                    publish={o?.publish}
                   />
                 ))
               : !isLoading && (
-                  <p className="my-5 text-red-500">
+                  <div className="col-span-2 text-red-500 md:col-span-3 lg:col-span-4">
                     data {search} tidak ditemukan
-                  </p>
+                  </div>
                 )}
           </div>
         )}
@@ -158,95 +176,10 @@ export default function ObjectPersebaran() {
             currentPage={currentPage}
             totalPages={dataPage?.totalPages}
             onPageChange={onPageChange}
+            totalItems={dataPage?.totalItems}
           />
         )}
       </div>
     </>
   );
 }
-
-const FilterObject = ({
-  search,
-  onSearch,
-  site,
-  onSite,
-  publish,
-  onPublish,
-  valley,
-  onValley,
-}) => {
-  const [valleyData, setValleyData] = useState([]);
-  const [siteData, setSiteData] = useState([]);
-
-  // const fetchDataFilter = async () => {
-  //   try {
-  //     const valley = await getAllValley();
-  //     const site = await getAllSite();
-
-  //     const sortValley = valley.data.sort((a, b) => {
-  //       return a.lembah.localeCompare(b.lembah);
-  //     });
-
-  //     const sortSite = site.data.sort((a, b) => {
-  //       return a.nama_situs.localeCompare(b.nama_situs);
-  //     });
-
-  //     setValleyData(sortValley);
-
-  //     setSiteData(sortSite);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchDataFilter();
-  // }, []);
-  return (
-    <div className="flex w-full gap-2 md:w-3/4">
-      <TextInput
-        icon={FaSearch}
-        placeholder="Cari Kegiatan..."
-        onChange={onSearch}
-        value={search}
-        className="w-full"
-      />
-
-      {/* publish */}
-      <Select value={publish} onChange={onPublish} className="w-1/3">
-        <option value={""} className="bg-light">
-          Status
-        </option>
-        <option value={"pending"}>Pending</option>
-        <option value={"public"}>Publik</option>
-        <option value={"private"}>Privat</option>
-      </Select>
-
-      {/* situs */}
-      {/* <Select value={site} onChange={onSite} className="w-1/3">
-        <option value={""} className="bg-light">
-          Situs
-        </option>
-
-        {siteData?.map((s) => (
-          <option value={s?.ID} key={s?.ID}>
-            {s?.nama_situs}
-          </option>
-        ))}
-      </Select> */}
-
-      {/* lembah */}
-      {/* <Select value={valley} onChange={onValley} className="w-1/3">
-        <option value={""} className="bg-light">
-          Lembah
-        </option>
-
-        {valleyData?.map((d) => (
-          <option value={d?.ID} key={d?.ID}>
-            {d?.lembah}
-          </option>
-        ))}
-      </Select> */}
-    </div>
-  );
-};

@@ -110,7 +110,10 @@ export const Asidebars = () => {
               />
             </>
           )}
-          {(roleAuth === "superadmin" || roleProfile === "superadmin") && (
+          {(roleAuth === "superadmin" ||
+            roleProfile === "superadmin" ||
+            roleAuth === "validator" ||
+            roleProfile === "validator") && (
             <SidebarItem
               label={"Validasi Publikasi"}
               to={"validasi-publikasi"}

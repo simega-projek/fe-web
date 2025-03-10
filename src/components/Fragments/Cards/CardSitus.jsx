@@ -9,11 +9,9 @@ export default function CardSitus(props) {
     img = "/images/hero-img.png",
     title,
     desc,
-    publish = "Publik",
+    publish,
     category,
   } = props;
-
-  const isPublic = ["public", "Public", "publik", "Publik"].includes(publish);
 
   return (
     <Link
@@ -24,11 +22,11 @@ export default function CardSitus(props) {
       <div className="group relative mx-auto h-64 overflow-hidden rounded-lg shadow-2xl md:h-72 lg:h-80">
         <div className="absolute right-0 top-0 z-20 px-1 text-white">
           {/* belum selesai penamaan publik nya */}
-          <p
-            className={`mt-1 rounded-full bg-white/45 px-2 py-1 text-xs font-bold ${isPublic ? "text-green-600" : "text-primary"}`}
+          <span
+            className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${publish === "public" ? "bg-green-100 text-green-800" : publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
           >
-            {publish}
-          </p>
+            {publish ?? null}
+          </span>
         </div>
         <img
           src={img}
