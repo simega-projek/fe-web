@@ -12,9 +12,6 @@ import { HeroSection } from "../../components/Fragments/Sections/Hero";
 import { getAllArticles } from "../../services/article.service";
 import { getAllEvent } from "../../services/event.service";
 import { getAllObject } from "../../services/object.service";
-import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
-import TextBlink from "../../components/Elements/TextBlink/TextBlink";
-import { HiOutlineGlobe } from "react-icons/hi";
 
 export default function HomePage() {
   const [dataObjects, setDataObjects] = useState([]);
@@ -32,15 +29,15 @@ export default function HomePage() {
   const fetchDataApi = async () => {
     setIsLoading(true);
     try {
-      const objects = await getAllObject(3);
+      const objects = await getAllObject(3, "", 1, "", "", "", "public");
       setDataObjects(objects.data);
       // console.log(objects.data);
 
-      const events = await getAllEvent(3);
+      const events = await getAllEvent(4);
       setDataEvents(events.data);
       // console.log(events.data);
 
-      const articles = await getAllArticles(3);
+      const articles = await getAllArticles(6);
       setDataArticles(articles.data);
       // console.log(articles.data);
     } catch (err) {
@@ -49,6 +46,8 @@ export default function HomePage() {
       setIsLoading(false);
     }
   };
+
+  // console.log(dataObjects);
 
   const shuffleArray = (array) => {
     return array.sort(() => Math.random() - 0.5);
@@ -114,72 +113,66 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="situs" className="bg-tan bg-[url('/images/bg1.svg')] py-20">
+      <section
+        id="situs"
+        className="bg-tan bg-[url('/images/bg1.svg')] px-5 pt-10"
+      >
         <div className="container mx-auto">
-          <div className="flex flex-wrap">
-            <div className="w-full text-center md:mb-5">
-              <TitleSection>Situs</TitleSection>
-            </div>
-            <div
-              data-aos="fade-up"
-              className="mx-auto flex w-10/12 flex-wrap justify-center gap-3 md:gap-5 lg:w-full lg:gap-10 lg:p-10"
+          <TitleSection className="mb-5 text-center">Situs</TitleSection>
+          <div data-aos="fade-up" className="grid w-full grid-cols-1 gap-5">
+            {dataObjects?.map((obj) => (
+              <CardSitusHome
+                date={obj?.UpdatedAt}
+                key={obj?.ID}
+                title={obj?.nama_objek}
+                to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
+                desc={obj?.deskripsi}
+                img={obj?.gambar}
+              ></CardSitusHome>
+            ))}
+          </div>
+          <div className="mx-auto mt-8 w-10/12 md:w-1/2">
+            <ButtonLink
+              to={`/persebaran`}
+              className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}
             >
-              {dataObjects?.map((obj) => (
-                <CardSitusHome
-                  key={obj?.ID}
-                  title={obj?.nama_objek}
-                  to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
-                  desc={obj?.deskripsi}
-                  img={obj?.image}
-                ></CardSitusHome>
-              ))}
-            </div>
-            <div className="mx-auto mt-8 w-10/12 lg:w-8/12">
-              <ButtonLink
-                to={`/persebaran`}
-                className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white lg:w-6/12`}
-              >
-                Persebaran Megalitikum
-              </ButtonLink>
-            </div>
+              Persebaran Megalitikum
+            </ButtonLink>
           </div>
         </div>
       </section>
 
       <section
         id="kegiatan"
-        className="bg-tan bg-[url('/images/bg1.svg')] py-20"
+        className="bg-tan bg-[url('/images/bg1.svg')] px-5 py-10"
       >
         <div className="container mx-auto">
-          <div className="flex flex-wrap justify-center">
-            <div className="mb-10 w-full text-center">
-              <TitleSection>Kegiatan</TitleSection>
-            </div>
-            <div
-              className="mx-auto flex w-8/12 flex-wrap gap-10 md:w-full md:justify-center lg:w-full"
-              data-aos="fade-down"
+          <TitleSection className="mb-5 text-center">Kegiatan</TitleSection>
+          <div
+            className="grid w-full grid-cols-1 gap-5 pb-5 md:grid-cols-3"
+            data-aos="fade-down"
+          >
+            {Array.isArray(dataEvents) &&
+              dataEvents
+                ?.slice(0, 3)
+                .map((keg) => (
+                  <CardKegiatanHome
+                    to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                    key={keg?.ID}
+                    date={keg?.start_date}
+                    title={keg?.title}
+                    img={keg?.image}
+                  />
+                ))}
+          </div>
+
+          <div className="mx-auto mt-8 w-10/12 md:w-1/2">
+            <ButtonLink
+              to={`/kegiatan`}
+              className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}
             >
-              {Array.isArray(dataEvents) &&
-                dataEvents
-                  .slice(0, 3)
-                  .map((keg) => (
-                    <CardKegiatanHome
-                      to={`/kegiatan/${keg?.ID}/${keg?.title}`}
-                      key={keg?.ID}
-                      date={keg?.start_date}
-                      title={keg?.title}
-                      img={keg?.image}
-                    />
-                  ))}
-            </div>
-            <div className="mt-8 w-8/12">
-              <ButtonLink
-                to={`/kegiatan`}
-                className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white lg:w-6/12`}
-              >
-                Lihat Semua Kegiatan
-              </ButtonLink>
-            </div>
+              Lihat Semua Kegiatan
+            </ButtonLink>
           </div>
         </div>
       </section>
@@ -196,7 +189,7 @@ export default function HomePage() {
 
             <div
               // className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
-              className="grid grid-cols-2 justify-items-center gap-5 px-5 md:grid-cols-3 md:px-10 lg:w-full"
+              className="grid grid-cols-2 justify-items-center gap-5 px-5 md:grid-cols-3 md:px-10 lg:w-full lg:grid-cols-4"
               data-aos="zoom-in"
             >
               {dataArticles?.slice(0, 4).map((artikel) => (
@@ -210,10 +203,10 @@ export default function HomePage() {
                 />
               ))}
             </div>
-            <div className="mx-auto mt-8 w-10/12 lg:w-8/12">
+            <div className="mx-auto mt-8 w-10/12 md:w-1/2">
               <ButtonLink
                 to={`/artikel`}
-                className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white lg:w-6/12`}
+                className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}
               >
                 Lihat Artikel & Berita Lainnya
               </ButtonLink>

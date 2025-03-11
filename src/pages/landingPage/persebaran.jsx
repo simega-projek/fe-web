@@ -46,7 +46,7 @@ export default function PersebaranPage() {
         valley,
         site,
         category,
-        "pending",
+        "public",
       );
       const sortedData = objects.data.sort(
         (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
@@ -138,7 +138,7 @@ export default function PersebaranPage() {
                     to={`/objek/${o?.ID}/${o?.nama_objek}`}
                     img={o?.gambar}
                     category={o?.category.category}
-                    publish={"Publik"}
+                    publish={o?.publish}
                   />
                 ))
               : !isLoading && (

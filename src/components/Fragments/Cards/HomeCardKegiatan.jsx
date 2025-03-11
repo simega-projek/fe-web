@@ -15,7 +15,7 @@ export const CardKegiatanHome = (props) => {
 
   return (
     <div
-      className={`w-full transition-all duration-300 hover:shadow-lg md:flex md:w-5/12 md:items-center lg:w-1/4 ${className}`}
+      className={`w-full transition-all duration-300 hover:shadow-lg md:flex md:items-center ${className}`}
     >
       <Link to={to}>
         <div className="group relative mx-auto aspect-[11/12] overflow-hidden rounded-lg shadow-2xl md:h-4/6 lg:h-4/6">

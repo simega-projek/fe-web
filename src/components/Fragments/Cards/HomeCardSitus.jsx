@@ -43,16 +43,20 @@ import React from "react";
 import maxWord from "../../../utils/maxWord";
 import parse from "html-react-parser";
 import { Link } from "react-router-dom";
+import formattedDate from "../../../utils/formattedDate";
 
 export const CardSitusHome = (props) => {
-  const { img = "/images/hero-img.png", desc, to, title } = props;
+  const { img = "/images/hero-img.png", desc, to, title, date } = props;
 
-  const wordLimit = maxWord(desc, 200);
+  const formatedDate = formattedDate(date);
+
   return (
     <article className="flex bg-transparent shadow-2xl transition hover:shadow-xl">
-      <div className="rotate-180 p-2 [writing-mode:_vertical-lr]"></div>
+      <div className="rotate-180 p-2 [writing-mode:_vertical-lr]">
+        {formatedDate}
+      </div>
 
-      <div className="hidden sm:block sm:basis-56">
+      <div className="sm:block sm:basis-56">
         <img
           alt={title}
           src={img}
