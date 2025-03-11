@@ -1,6 +1,6 @@
 import Aos from "aos";
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import CardSitus from "../../../components/Fragments/Cards/CardSitus";
@@ -111,6 +111,7 @@ export default function ObjectPersebaran() {
                         desc=""
                       />
                     </Popup>
+                    <Tooltip sticky>{o.nama_objek}</Tooltip>
                   </Marker>
                 ))}
               </MapContainer>

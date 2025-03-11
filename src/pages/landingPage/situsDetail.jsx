@@ -1,11 +1,9 @@
-import ReactPlayer from "react-player/lazy";
-import { useParams } from "react-router-dom";
-import { getOneArticle, getTechCrunch } from "../../services/article.service";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
 import videosData from "../../data/videos.json";
-import TitleSection from "../../components/Elements/TitleSection";
+import { getTechCrunch } from "../../services/article.service";
 import { getOneObject } from "../../services/object.service";
 import { toView } from "../../utils/toView";
 
@@ -67,9 +65,9 @@ export default function SitusDetail() {
           ) : (
             <Detail
               date={situs?.CreatedAt}
-              title={situs.nama_objek}
-              img={situs.gambar}
-              desc={situs.deskripsi}
+              title={situs?.nama_objek}
+              img={situs?.gambar}
+              desc={situs?.deskripsi}
             />
           )}
         </div>

@@ -149,24 +149,22 @@ export default function HomePage() {
         <div className="container mx-auto">
           <TitleSection className="mb-5 text-center">Kegiatan</TitleSection>
           <div
-            className="grid w-full grid-cols-1 gap-5 pb-5 md:grid-cols-3"
+            className="grid w-full grid-cols-2 gap-2 pb-5 md:grid-cols-4"
             data-aos="fade-down"
           >
             {Array.isArray(dataEvents) &&
-              dataEvents
-                ?.slice(0, 3)
-                .map((keg) => (
-                  <CardKegiatanHome
-                    to={`/kegiatan/${keg?.ID}/${keg?.title}`}
-                    key={keg?.ID}
-                    date={keg?.start_date}
-                    title={keg?.title}
-                    img={keg?.image}
-                  />
-                ))}
+              dataEvents?.map((keg) => (
+                <CardKegiatanHome
+                  to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                  key={keg?.ID}
+                  date={keg?.start_date}
+                  title={keg?.title}
+                  img={keg?.image}
+                />
+              ))}
           </div>
 
-          <div className="mx-auto mt-8 w-10/12 md:w-1/2">
+          <div className="mx-auto mt-5 w-10/12 md:w-1/2">
             <ButtonLink
               to={`/kegiatan`}
               className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}
@@ -179,7 +177,7 @@ export default function HomePage() {
 
       <section
         id="artikel"
-        className="bg-[url('/images/bg2.svg')] bg-no-repeat py-20"
+        className="bg-[url('/images/bg2.svg')] bg-no-repeat py-12"
       >
         <div className="">
           <div className="flex flex-wrap">
@@ -189,7 +187,7 @@ export default function HomePage() {
 
             <div
               // className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
-              className="grid grid-cols-2 justify-items-center gap-5 px-5 md:grid-cols-3 md:px-10 lg:w-full lg:grid-cols-4"
+              className="grid grid-cols-2 justify-items-center gap-2 px-5 md:grid-cols-3 md:px-10 lg:w-full lg:grid-cols-4"
               data-aos="zoom-in"
             >
               {dataArticles?.slice(0, 4).map((artikel) => (

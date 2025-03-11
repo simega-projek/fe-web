@@ -24,7 +24,7 @@ import ErrorPage from "../../pages/404";
 
 export default function MainLayout() {
   const error = useRouteError();
-  console.log(error); // Pastikan error ditangkap dengan benar
+  // console.log(error); // Pastikan error ditangkap dengan benar
 
   return (
     <div className="flex min-h-screen flex-col">

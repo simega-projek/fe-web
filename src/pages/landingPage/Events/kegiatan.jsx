@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import Loading from "../../components/Elements/Loading/Loading";
-import TextBlink from "../../components/Elements/TextBlink/TextBlink";
-import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllEvent } from "../../services/event.service";
+import Loading from "../../../components/Elements/Loading/Loading";
+import TextBlink from "../../../components/Elements/TextBlink/TextBlink";
+import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
+import { HeroSection } from "../../../components/Fragments/Sections/Hero";
+import { getAllEvent } from "../../../services/event.service";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
-import { toView } from "../../utils/toView";
-import { FilterEvent } from "../dashboard/manageActivities/FilterEvent";
+import { useDispatch } from "react-redux";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { setIsPages } from "../../../redux/slices/pagesSlice";
+import { toView } from "../../../utils/toView";
+import { FilterEvent } from "../../dashboard/manageActivities/FilterEvent";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [isLoading, setisLoading] = useState(false);
 
   // search and filter
@@ -22,9 +23,13 @@ export default function KegiatanPage() {
   const [status, setStatus] = useState("");
   const [debouncedSearch] = useDebounce(searchData, 700);
 
-  const [dataPage, setDataPage] = useState(null);
+  const [dataPage, setDataPage] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
+
+  // state management
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     AOS.init({
@@ -49,14 +54,17 @@ export default function KegiatanPage() {
 
       setDataEvents(sortedData);
 
-      setDataPage(events?.pagination);
       setCurrentPage(events?.pagination?.currentPage);
+      setDataPage(events?.pagination);
+      dispatch(setIsPages(events?.pagination));
     } catch (err) {
       console.log(err);
     } finally {
       setisLoading(false);
     }
   };
+
+  console.log(dataPage);
 
   const onPageChange = (e) => {
     toView("top");

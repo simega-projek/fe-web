@@ -262,6 +262,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           <TextInput
             id="garisLintang"
             type="number"
+            placeholder="-0.9052080924767166"
             sizing="md"
             value={lintang}
             onChange={(e) => setLintang(e.target.value)}
@@ -280,6 +281,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             id="garisBujur"
             type="number"
             sizing="md"
+            placeholder="119.85368178963921"
             value={bujur}
             onChange={(e) => setBujur(e.target.value)}
             disabled={isLoading}
@@ -325,26 +327,6 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           </select>
         </ContainerInput>
 
-        {/* gambar */}
-        <ContainerInput>
-          <Label
-            htmlFor="picture"
-            value="Gambar"
-            className="mb-2 block text-base"
-          />
-          {/* <ManyInputImage onImageChange={setImage} /> */}
-          <FileInput
-            onChange={handleImageChange}
-            accept="image/*"
-            disabled={isLoading}
-            ref={imageRef}
-          />
-          <p className="truncate text-xs text-gray-400">
-            File asli: ${originalImage}
-          </p>
-        </ContainerInput>
-
-        {/* publish */}
         {/* status publish */}
         {roleAuth === "superadmin" ||
         roleProfile === "superadmin" ||
@@ -369,6 +351,25 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             </select>
           </ContainerInput>
         ) : null}
+
+        {/* gambar */}
+        <ContainerInput>
+          <Label
+            htmlFor="picture"
+            value="Gambar"
+            className="mb-2 block text-base"
+          />
+          {/* <ManyInputImage onImageChange={setImage} /> */}
+          <FileInput
+            onChange={handleImageChange}
+            accept="image/*"
+            disabled={isLoading}
+            ref={imageRef}
+          />
+          <p className="truncate text-xs text-gray-400">
+            File asli: ${originalImage}
+          </p>
+        </ContainerInput>
 
         {/* preview image */}
         <ContainerInput>

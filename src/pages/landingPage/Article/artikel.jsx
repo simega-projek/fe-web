@@ -3,14 +3,16 @@ import "aos/dist/aos.css";
 import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { useDebounce } from "use-debounce";
-import Loading from "../../components/Elements/Loading/Loading";
-import TextBlink from "../../components/Elements/TextBlink/TextBlink";
-import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
-import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../../services/article.service";
-import { toView } from "../../utils/toView";
+import Loading from "../../../components/Elements/Loading/Loading";
+import TextBlink from "../../../components/Elements/TextBlink/TextBlink";
+import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { HeroSection } from "../../../components/Fragments/Sections/Hero";
+import { setIsPages } from "../../../redux/slices/pagesSlice";
+import { getAllArticles } from "../../../services/article.service";
+import { toView } from "../../../utils/toView";
 
 export default function ArtikelPage() {
   const [dataArticles, setDataArticles] = useState([]);
@@ -21,6 +23,9 @@ export default function ArtikelPage() {
   const [debouncedSearch] = useDebounce(search, 700);
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
+
+  // redux
+  const dispatch = useDispatch();
 
   useEffect(() => {
     AOS.init({
@@ -38,7 +43,7 @@ export default function ArtikelPage() {
         currentPage,
       );
 
-      console.log(articles);
+      // console.log(articles);
 
       const sortedData = articles.data.sort(
         (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
@@ -47,6 +52,7 @@ export default function ArtikelPage() {
       setDataArticles(sortedData);
       setDataPage(articles?.pagination);
       setCurrentPage(articles?.pagination?.currentPage);
+      dispatch(setIsPages(articles?.pagination));
     } catch (err) {
       console.log(err);
     } finally {
@@ -105,6 +111,7 @@ export default function ArtikelPage() {
                 ))
               : !isLoading && (
                   <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
+                    {" "}
                     data {search} tidak ditemukan
                   </div>
                 )}

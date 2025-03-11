@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { BiLibrary, BiSolidMessageDetail } from "react-icons/bi";
 import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
-import { GrValidate } from "react-icons/gr";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
+import { GrValidate } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
 

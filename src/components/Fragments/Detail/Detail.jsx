@@ -1,9 +1,7 @@
-import HTMLReactParser from "html-react-parser/lib/index";
-import { formatDate } from "../../../utils/formatDate";
+import { Badge } from "flowbite-react";
+import parse from "html-react-parser";
 import formattedDate from "../../../utils/formattedDate";
 import TitleSection from "../../Elements/TitleSection";
-import parse from "html-react-parser";
-import { Badge } from "flowbite-react";
 
 export const Detail = (props) => {
   const {
@@ -13,6 +11,8 @@ export const Detail = (props) => {
     desc,
     category,
     publish,
+    file,
+    linkEvent,
   } = props;
 
   const dateFormatted = formattedDate(date);
@@ -25,7 +25,6 @@ export const Detail = (props) => {
           {publish}
         </Badge>
       </div>
-      {/* <span className="mb-2 mt-5">{dateFormatted} </span> */}
       <div className="mt-5 max-w-2xl md:max-w-md">
         <img
           src={img}
@@ -33,12 +32,32 @@ export const Detail = (props) => {
           className="h-full w-full object-cover object-center"
         />
       </div>
+      <span className="mb-2 mt-5 italic">{dateFormatted} </span>
+      {linkEvent ? (
+        <p className="mb-2 mt-5 italic">
+          Cek Link Kegiatan &rarr;{" "}
+          <a href={linkEvent} className="text-blue-500" target="_blank">
+            {" "}
+            {linkEvent}{" "}
+          </a>
+        </p>
+      ) : null}
+      {file ? (
+        <a
+          href={file}
+          target="_blank"
+          className="mb-2 mt-5 italic text-blue-500"
+        >
+          Lihat dokumen{" "}
+        </a>
+      ) : null}
+
       <div
-        className="mt-5 break-words text-lg md:text-xl"
+        className="break-words text-lg md:text-xl"
         // dangerouslySetInnerHTML={{ __html: desc }}
       >
         {/* {HTMLReactParser(desc)} */}
-        {parse(desc)}
+        {parse(String(desc))}
       </div>
     </div>
   );
