@@ -41,7 +41,7 @@ export default function SitusAdmin() {
   const [siteData, setSiteData] = useState("");
 
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
 
   const [dataPage, setDataPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);

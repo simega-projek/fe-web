@@ -42,4 +42,4 @@ export const FilterEvent = ({ search, onSearch, status, onStatus }) => {
 //             // search and filter
 //   const [searchData, setSearchData] = useState("");
 //   const [status, setStatus] = useState("");
-//   const [debouncedSearch] = useDebounce(searchData, 1000);
+//   const [debouncedSearch] = useDebounce(searchData, 700);

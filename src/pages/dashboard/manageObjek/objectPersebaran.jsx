@@ -24,7 +24,7 @@ export default function ObjectPersebaran() {
 
   // filter
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
   const [publish, setPublish] = useState("");
   const [valley, setValley] = useState("");
   const [site, setSite] = useState("");

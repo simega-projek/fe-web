@@ -24,7 +24,7 @@ export default function PersebaranPage() {
 
   // filter
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
   const [valley, setValley] = useState("");
   const [site, setSite] = useState("");
   const [category, setCategory] = useState("");

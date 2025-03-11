@@ -42,7 +42,7 @@ export default function UserAdmin() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);

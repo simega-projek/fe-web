@@ -20,7 +20,7 @@ export default function KegiatanPage() {
   // search and filter
   const [searchData, setSearchData] = useState("");
   const [status, setStatus] = useState("");
-  const [debouncedSearch] = useDebounce(searchData, 1000);
+  const [debouncedSearch] = useDebounce(searchData, 700);
 
   const [dataPage, setDataPage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);

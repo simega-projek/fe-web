@@ -46,7 +46,7 @@ export default function ArticleAdmin() {
 
   const [dataPage, setDataPage] = useState(false);
   const [searchData, setSearchData] = useState("");
-  const [debouncedSearch] = useDebounce(searchData, 1000);
+  const [debouncedSearch] = useDebounce(searchData, 700);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [contentPage, setContentPage] = useState(10);

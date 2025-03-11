@@ -44,7 +44,7 @@ export default function ActivityAdmin() {
   // search and filter
   const [searchData, setSearchData] = useState("");
   const [status, setStatus] = useState("");
-  const [debouncedSearch] = useDebounce(searchData, 1000);
+  const [debouncedSearch] = useDebounce(searchData, 700);
 
   const [dataPage, setDataPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);

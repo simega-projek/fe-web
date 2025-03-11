@@ -39,7 +39,7 @@ export default function LembahAdmin() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
 
   const [dataPage, setDataPage] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);

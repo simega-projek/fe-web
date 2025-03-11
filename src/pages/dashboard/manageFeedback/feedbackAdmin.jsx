@@ -39,8 +39,8 @@ export const FeedbackAdmin = () => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 1000);
-  const [debouncedYear] = useDebounce(year, 1000);
+  const [debouncedSearch] = useDebounce(search, 700);
+  const [debouncedYear] = useDebounce(year, 700);
 
   const fetchFeedback = async () => {
     setIsLoading(true);

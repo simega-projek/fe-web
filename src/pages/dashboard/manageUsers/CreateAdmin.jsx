@@ -70,7 +70,7 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
         setMessageSuccess(null);
         toView("top");
       } else {
-        console.log("success", res);
+        // console.log("success", res);
 
         setMessageSuccess(res.message);
         setMessageError(null);
