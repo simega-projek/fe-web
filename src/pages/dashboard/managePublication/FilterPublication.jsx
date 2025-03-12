@@ -164,7 +164,7 @@ export const FilterObject = ({
         </Select>
 
         {/* Reset Button */}
-        <div className="z-50 ms-1 flex w-full justify-end md:w-1/12 md:items-center">
+        <div className="ms-1 flex w-full justify-end md:w-1/12 md:items-center">
           <ButtonControls name={"Reset"} icon={FaUndoAlt} onClick={onReset} />
         </div>
       </div>

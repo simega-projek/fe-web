@@ -70,9 +70,9 @@ export const CardSitusHome = (props) => {
             <h3 className="font-bold uppercase text-gray-900">{title}</h3>
           </Link>
 
-          <p className="mt-2 line-clamp-3 truncate text-wrap text-sm/relaxed text-gray-700">
+          <div className="mt-2 line-clamp-3 truncate text-wrap text-sm/relaxed text-gray-700">
             {parse(String(desc))}
-          </p>
+          </div>
         </div>
 
         <div className="sm:flex sm:items-end sm:justify-end">

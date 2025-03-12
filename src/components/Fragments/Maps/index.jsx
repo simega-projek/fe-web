@@ -6,7 +6,7 @@ export const Maps = ({ dataObject, path }) => {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       <MapContainer center={lokasi} zoom={7} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'

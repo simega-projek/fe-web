@@ -8,6 +8,7 @@ import { PaginationPage } from "../../components/Fragments/Paginator/PaginationP
 import { getAllObject } from "../../services/object.service";
 import { toView } from "../../utils/toView";
 import { FilterObject } from "../dashboard/managePublication/FilterPublication";
+import { useSelector } from "react-redux";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -25,6 +26,8 @@ export default function PersebaranPage() {
   const [valley, setValley] = useState("");
   const [site, setSite] = useState("");
   const [category, setCategory] = useState("");
+
+  const isNavbar = useSelector((state) => state.sidebar.navbar);
 
   useEffect(() => {
     Aos.init({
@@ -76,33 +79,8 @@ export default function PersebaranPage() {
 
   return (
     <>
-      <div>
-        {/* <div className="w-full">
-          <MapContainer center={lokasi} zoom={7} scrollWheelZoom={false}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {dataObjects?.map((o) => (
-              <Marker position={[o.lintang, o.bujur]} key={o.ID}>
-                <Popup>
-                  <PopupMap
-                    id={o?.ID}
-                    title={o?.nama_objek}
-                    img={o?.gambar}
-                    category={o?.category?.category}
-                    lintang={o?.lintang}
-                    bujur={o?.bujur}
-                    to={`/objek/${o?.ID}/${o?.nama_objek}`}
-                  />
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div> */}
-        <div>
-          <Maps dataObject={dataObjects} path={`/objek`} />
-        </div>
+      <div className="mt-20">
+        <Maps dataObject={dataObjects} path={`/objek`} />
       </div>
 
       <div className="mt-5 flex w-full justify-center px-10">

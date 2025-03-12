@@ -6,7 +6,7 @@ export const HeroSection = (props) => {
     children,
   } = props;
   return (
-    <div className={`relative w-full ${className} mt-[80px]`} id={id}>
+    <div className={`relative w-full ${className}`} id={id}>
       <div className="relative h-full w-full">
         <img
           src={img}
