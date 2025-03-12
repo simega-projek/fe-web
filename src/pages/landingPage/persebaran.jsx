@@ -53,7 +53,7 @@ export default function PersebaranPage() {
       );
       setDataObejcts(sortedData);
       setDataPage(objects.pagination);
-      console.log(dataObejcts);
+      // console.log(dataObejcts);
     } catch (err) {
       console.log(err);
     } finally {

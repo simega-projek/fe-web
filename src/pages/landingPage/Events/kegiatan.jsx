@@ -64,7 +64,7 @@ export default function KegiatanPage() {
     }
   };
 
-  console.log(dataPage);
+  // console.log(dataPage);
 
   const onPageChange = (e) => {
     toView("top");

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { useSelector } from "react-redux";
 import Loading from "../../../components/Elements/Loading/Loading";
@@ -44,7 +44,7 @@ export default function KegiatanDetail() {
     }
   };
 
-  console.log(event);
+  // console.log(event);
   useEffect(() => {
     fetchData();
     toView("top");
@@ -58,15 +58,14 @@ export default function KegiatanDetail() {
             <Loading />
           ) : (
             Object.keys(event).length > 0 && (
-              <>
-                <Detail
-                  linkEvent={event?.registration_link}
-                  date={event?.start_date}
-                  title={event?.title}
-                  img={event?.image}
-                  desc={event?.description}
-                />
-              </>
+              <Detail
+                linkEvent={event?.registration_link}
+                date={event?.start_date}
+                title={event?.title}
+                img={event?.image}
+                desc={event?.description}
+                publish={event?.status}
+              />
             )
           )}
           <hr />
@@ -76,19 +75,14 @@ export default function KegiatanDetail() {
           <p className="mt-0.5 text-lg font-medium text-gray-900">
             Kegiatan Lainnya
           </p>
-          {otherEvents?.data?.map(
-            (o) => (
-              console.log(o),
-              (
-                <OtherPosts
-                  key={o?.ID}
-                  title={o?.title}
-                  desc={o?.description}
-                  to={`/kegiatan/${o?.ID}/${o?.title}`}
-                />
-              )
-            ),
-          )}
+          {otherEvents?.data?.map((o) => (
+            <OtherPosts
+              key={o?.ID}
+              title={o?.title}
+              desc={o?.description}
+              to={`/kegiatan/${o?.ID}/${o?.title}`}
+            />
+          ))}
         </div>
       </div>
     </>

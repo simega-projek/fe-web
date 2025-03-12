@@ -4,27 +4,37 @@ import Loading from "../../components/Elements/Loading/Loading";
 import { Detail } from "../../components/Fragments/Detail/Detail";
 import videosData from "../../data/videos.json";
 import { getTechCrunch } from "../../services/article.service";
-import { getOneObject } from "../../services/object.service";
+import { getAllObject, getOneObject } from "../../services/object.service";
 import { toView } from "../../utils/toView";
+import { OtherPosts } from "../../components/Fragments/Detail/OtherPosts";
+import { useSelector } from "react-redux";
 
 export default function SitusDetail() {
   const { id } = useParams();
   const [situs, setSitus] = useState(null);
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [openImage, setOpenImage] = useState(false);
-  const [indexImage, setIndexImage] = useState(0);
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [otherObjects, setOtherObjects] = useState([]);
+
+  const LIMIT_OTHER_EVENT = 5;
+  const pagesEvent = useSelector((state) => state.pages.page);
+  const { totalPages } = pagesEvent;
+
+  function generateRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   const fetchObject = async () => {
     setIsLoading(true);
     try {
       const objects = await getOneObject(id);
-      setSitus(objects.data);
-      const imageData = await getTechCrunch();
-      setImages(imageData);
+      // console.log(objects.data);
 
-      setVideos(videosData);
+      const randomPage = generateRandomNumber(1, totalPages + 1);
+
+      let other = await getAllObject(LIMIT_OTHER_EVENT, "", randomPage);
+      setSitus(objects.data);
+      setOtherObjects(other);
     } catch (err) {
       console.error(err);
     } finally {
@@ -37,98 +47,46 @@ export default function SitusDetail() {
     toView("top");
   }, [id]);
 
-  // const handleOpenImage = (index) => {
-  //   setIndexImage(index);
-  //   setOpenImage(true);
-  // };
-
-  // const handleCloseImage = () => {
-  //   setOpenImage(false);
-  // };
-
-  // const handleNextImage = () => {
-  //   setIndexImage((prevIndex) => (prevIndex + 1) % images.length);
-  // };
-
-  // const handlePrevImage = () => {
-  //   setIndexImage(
-  //     (prevIndex) => (prevIndex - 1 + images.length) % images.length,
-  //   );
-  // };
+  // console.log(situs);
 
   return (
     <>
-      <div className="container mx-auto mt-[70px] flex flex-wrap items-center justify-center p-5 lg:items-start">
-        <div className="lg:w-10/12">
+      <div className="mb-10 mt-20 flex flex-col md:flex-row md:px-5">
+        <div className="mb-10 px-10 md:w-8/12">
           {isLoading ? (
             <Loading />
           ) : (
-            <Detail
-              date={situs?.CreatedAt}
-              title={situs?.nama_objek}
-              img={situs?.gambar}
-              desc={situs?.deskripsi}
-            />
+            Object.keys(situs).length > 0 && (
+              <Detail
+                date={situs?.CreatedAt}
+                title={situs?.nama_objek}
+                img={situs?.gambar}
+                desc={situs?.deskripsi}
+                lintang={situs?.lintang}
+                bujur={situs?.bujur}
+                category={situs?.category?.category}
+                site={situs?.site?.nama_situs}
+                valley={situs?.site?.lembah?.lembah}
+                publish={situs?.publish}
+              />
+            )
           )}
         </div>
-      </div>
 
-      {/* <TitleSection className="p-5">Gambar</TitleSection>
-      <div className="scrollbar overflow-x-scroll">
-        <div className="flex gap-5">
-          {images.map((i, index) => (
-            <img
-              src={i.urlToImage}
-              alt={i.title}
-              key={index}
-              className="max-w-xs cursor-pointer object-cover"
-              onClick={() => handleOpenImage(index)}
+        <div className="flex w-full flex-col gap-3 px-5 md:w-4/12">
+          <p className="mt-0.5 text-lg font-medium text-gray-900">
+            Objek Lainnya
+          </p>
+          {otherObjects?.data?.map((o) => (
+            <OtherPosts
+              key={o?.ID}
+              title={o?.nama_objek}
+              desc={o?.deskripsi}
+              to={`/objek/${o?.ID}/${o?.nama_objek}`}
             />
           ))}
-          {images.length === 0 && (
-            <div className="w-full text-center text-red-500">
-              Tidak Ada gambar
-            </div>
-          )}
         </div>
       </div>
-
-      {openImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 pt-20">
-          <button
-            className={`absolute right-5 top-20 flex items-center justify-center rounded-full bg-white/70 px-4 py-2 text-2xl text-white`}
-            onClick={() => handleCloseImage()}
-          >
-            &times;
-          </button>
-          <button
-            className="absolute left-5 flex items-center justify-center rounded-full bg-white/70 px-3 py-2 text-2xl hover:text-white"
-            onClick={() => handlePrevImage()}
-          >
-            &larr;
-          </button>
-          <img
-            src={images[indexImage].urlToImage}
-            className={`max-h-full max-w-full object-cover py-5`}
-          />
-          <button
-            className="absolute right-5 flex items-center justify-center rounded-full bg-white/70 px-3 py-2 text-2xl hover:text-white"
-            onClick={() => handleNextImage()}
-          >
-            &rarr;
-          </button>
-        </div>
-      )}
-
-      <TitleSection className="p-5">Video</TitleSection>
-      <div className="flex flex-wrap justify-center gap-5 px-5 pb-5">
-        {videos.slice(0, 3).map((v) => (
-          <ReactPlayer url={v.url} key={v.id} controls={true} />
-        ))}
-        {videos.length === 0 && (
-          <div className="w-full text-center text-red-500">Tidak Ada video</div>
-        )}
-      </div> */}
     </>
   );
 }
