@@ -10,18 +10,21 @@ export default function Footer() {
         <div className="flex flex-wrap justify-center py-10">
           <div className="w-full pb-10 text-center md:w-1/2 lg:w-1/4">
             <img
-              src="/public/icons/bakultur.png"
+              src="/public/images/logo-bpk.svg"
               width={60}
               alt=""
-              className="mx-auto invert filter"
+              className="mx-auto"
             />
 
             <h2 className="text-lg text-white">
+              <p className="font-semibold">
+                Balai Pelestarian Kebudayaan Wilayah XVIII
+              </p>
               Sistem Informasi <p>Megalitikum Sulawesi Tengah</p>
             </h2>
           </div>
 
-          <div className="w-full pb-10 text-center text-white md:w-1/2 lg:w-1/4 lg:py-0">
+          <div className="w-full px-2 pb-10 text-center text-white md:w-1/2 lg:w-1/4 lg:py-0">
             <h1 className="mb-2 text-2xl font-semibold">Kontak</h1>
             <h3 className="text-lg">Palu, Sulawesi Tengah</h3>
             <div className="flex items-center justify-center text-lg">

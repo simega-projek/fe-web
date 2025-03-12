@@ -4,6 +4,7 @@ import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import TextBlink from "../../../components/Elements/TextBlink/TextBlink";
@@ -24,7 +25,9 @@ export default function ArtikelPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
 
+  const { pathname } = useLocation();
   // redux
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -67,6 +70,10 @@ export default function ArtikelPage() {
   useEffect(() => {
     fetchArticles();
   }, [debouncedSearch, currentPage]);
+
+  useEffect(() => {
+    toView("top");
+  }, [pathname]);
 
   return (
     <>

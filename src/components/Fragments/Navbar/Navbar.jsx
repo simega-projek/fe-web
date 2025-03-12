@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { setIsScroll } from "../../../redux/slices/sidebarSlice";
+import { setIsPathname, setIsScroll } from "../../../redux/slices/sidebarSlice";
 export function NavbarDashboard() {
   const [isHamburgerActive, setIsHamburgerActive] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +10,7 @@ export function NavbarDashboard() {
 
   // console.log({ pathname });
 
+  // redux
   const dispatch = useDispatch();
 
   const handleHamburgerClick = () => {

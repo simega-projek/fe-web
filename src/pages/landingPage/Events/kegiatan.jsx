@@ -9,6 +9,7 @@ import { getAllEvent } from "../../../services/event.service";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { toView } from "../../../utils/toView";
@@ -27,8 +28,9 @@ export default function KegiatanPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const CONTENT_PER_PAGE = 8;
 
-  // state management
+  const { pathname } = useLocation();
 
+  //redux
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,6 +76,10 @@ export default function KegiatanPage() {
   useEffect(() => {
     fetchEvents();
   }, [debouncedSearch, currentPage, status]);
+
+  useEffect(() => {
+    toView("top");
+  }, [pathname]);
 
   return (
     <>

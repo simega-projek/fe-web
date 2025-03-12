@@ -147,7 +147,6 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               <Label htmlFor="nip" value="NIK/NIP" className="text-base" />
             </div>
             <TextInput
-              autoFocus
               id="nip"
               required
               type="number"
@@ -168,7 +167,6 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               />
             </div>
             <TextInput
-              autoFocus
               id="username"
               required
               type="text"
@@ -185,7 +183,6 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               <Label htmlFor="email" value="Email" className="text-base" />
             </div>
             <TextInput
-              autoFocus
               id="email"
               required
               type="email"
@@ -220,7 +217,6 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               />
             </div>
             <TextInput
-              autoFocus
               id="password"
               required
               type="text"
@@ -241,7 +237,6 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
               />
             </div>
             <TextInput
-              autoFocus
               id="confirmPassword"
               required
               type="text"

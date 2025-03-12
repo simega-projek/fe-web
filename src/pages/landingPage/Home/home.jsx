@@ -5,6 +5,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
 import { CardKegiatanHome } from "../../../components/Fragments/Cards/HomeCardKegiatan";
 import { CardSitusHome } from "../../../components/Fragments/Cards/HomeCardSitus";
@@ -12,6 +13,7 @@ import { HeroSection } from "../../../components/Fragments/Sections/Hero";
 import { getAllArticles } from "../../../services/article.service";
 import { getAllEvent } from "../../../services/event.service";
 import { getAllObject } from "../../../services/object.service";
+import { toView } from "../../../utils/toView";
 
 export default function HomePage() {
   const [dataObjects, setDataObjects] = useState([]);
@@ -19,6 +21,8 @@ export default function HomePage() {
   const [dataArticles, setDataArticles] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const { pathname } = useLocation();
 
   useEffect(() => {
     AOS.init({
@@ -49,13 +53,10 @@ export default function HomePage() {
 
   // console.log(dataObjects);
 
-  const shuffleArray = (array) => {
-    return array.sort(() => Math.random() - 0.5);
-  };
-
   useEffect(() => {
     fetchDataApi();
-  }, []);
+    toView("top");
+  }, [pathname]);
 
   return (
     <>

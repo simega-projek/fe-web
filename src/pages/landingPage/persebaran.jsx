@@ -1,5 +1,6 @@
 import Aos from "aos";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import Loading from "../../components/Elements/Loading/Loading";
 import CardSitus from "../../components/Fragments/Cards/CardSitus";
@@ -8,7 +9,6 @@ import { PaginationPage } from "../../components/Fragments/Paginator/PaginationP
 import { getAllObject } from "../../services/object.service";
 import { toView } from "../../utils/toView";
 import { FilterObject } from "../dashboard/managePublication/FilterPublication";
-import { useSelector } from "react-redux";
 
 export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -27,7 +27,7 @@ export default function PersebaranPage() {
   const [site, setSite] = useState("");
   const [category, setCategory] = useState("");
 
-  const isNavbar = useSelector((state) => state.sidebar.navbar);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     Aos.init({
@@ -76,6 +76,10 @@ export default function PersebaranPage() {
   useEffect(() => {
     fetchObjects();
   }, [debouncedSearch, currentPage, valley, site, category]);
+
+  useEffect(() => {
+    toView("top");
+  }, [pathname]);
 
   return (
     <>

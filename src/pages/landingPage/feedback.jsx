@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
-import TitleSection from "../../components/Elements/TitleSection";
-import { ContainerInput } from "../../components/Elements/Inputs/ContainerInput";
 import { Checkbox, Label, Textarea, TextInput } from "flowbite-react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
+import { ContainerInput } from "../../components/Elements/Inputs/ContainerInput";
+import TitleSection from "../../components/Elements/TitleSection";
 import { AlertMessage } from "../../components/Fragments/Alert/AlertMessage";
 import { createFeedback } from "../../services/feedback.service";
 import { toView } from "../../utils/toView";
@@ -15,6 +16,8 @@ export default function FeedbackPage() {
   const [isChecked, setIsChecked] = useState(false);
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
+
+  const { pathname } = useLocation();
 
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
@@ -57,6 +60,10 @@ export default function FeedbackPage() {
     setMessage("");
     setIsChecked(false);
   };
+
+  useEffect(() => {
+    toView("top");
+  }, [pathname]);
 
   return (
     <>
@@ -103,7 +110,6 @@ export default function FeedbackPage() {
               />
               <TextInput
                 placeholder="email@gmail.com / 0812345678912"
-                autoFocus
                 id="email"
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
@@ -122,7 +128,6 @@ export default function FeedbackPage() {
               />
               <Textarea
                 placeholder="Ketikkan saran dan masukkan anda "
-                autoFocus
                 id="message"
                 name="message"
                 type="text"
