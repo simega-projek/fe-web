@@ -32,7 +32,15 @@ export default function SitusDetail() {
 
       const randomPage = generateRandomNumber(1, totalPages + 1);
 
-      let other = await getAllObject(LIMIT_OTHER_EVENT, "", randomPage);
+      let other = await getAllObject(
+        LIMIT_OTHER_EVENT,
+        "",
+        randomPage,
+        "",
+        "",
+        "",
+        "public",
+      );
       setSitus(objects.data);
       setOtherObjects(other);
     } catch (err) {
@@ -67,7 +75,8 @@ export default function SitusDetail() {
                 category={situs?.category?.category}
                 site={situs?.site?.nama_situs}
                 valley={situs?.site?.lembah?.lembah}
-                publish={situs?.publish}
+                status={situs?.publish}
+                detailList={true}
               />
             )
           )}

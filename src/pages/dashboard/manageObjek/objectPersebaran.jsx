@@ -1,11 +1,9 @@
-import Aos from "aos";
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import CardSitus from "../../../components/Fragments/Cards/CardSitus";
-import { PopupMap } from "../../../components/Fragments/Cards/PopupMap";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { Maps } from "../../../components/Fragments/Maps";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
@@ -89,35 +87,12 @@ export default function ObjectPersebaran() {
     category,
   ]);
 
+  // console.log(dataObjects);
+
   return (
     <>
-      <div className="">
-        <div className="mx-auto">
-          <div className="flex w-full flex-wrap justify-center">
-            <div className="w-full">
-              <MapContainer center={lokasi} zoom={7} scrollWheelZoom={false}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {dataObjects?.map((o) => (
-                  <Marker position={[o.lintang, o.bujur]} key={o.ID}>
-                    <Popup>
-                      <PopupMap
-                        id={o.ID}
-                        titleObject={o.nama_objek}
-                        titleSitus={o.site?.nama_situs}
-                        img={o.gambar}
-                        desc=""
-                      />
-                    </Popup>
-                    <Tooltip sticky>{o.nama_objek}</Tooltip>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </div>
-          </div>
-        </div>
+      <div>
+        <Maps dataObject={dataObjects} path={`/admin/detail-objek`} />
       </div>
 
       <div className="mt-5 flex w-full justify-between">
@@ -137,6 +112,7 @@ export default function ObjectPersebaran() {
         />
 
         <FilterPage
+          className={"ml-1 w-1/2 md:w-fit"}
           onChange={(e) => setContentPage(e.target.value)}
           value={contentPage}
         />
@@ -148,14 +124,14 @@ export default function ObjectPersebaran() {
             <Loading />
           </div>
         ) : (
-          <div className="grid grid-cols-2 justify-items-center gap-5 py-5 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 justify-items-center gap-2 py-5 md:grid-cols-3 lg:grid-cols-4">
             {dataObjects?.length > 0
               ? dataObjects?.map((o) => (
                   <CardSitus
                     key={o?.ID}
                     title={o?.nama_objek}
                     desc={o?.propinsi}
-                    to={`/objek/${o?.ID}/${o?.nama_objek}`}
+                    to={`/admin/detail-objek/${o?.ID}/${o?.nama_objek}`}
                     img={o?.gambar}
                     category={o?.category.category}
                     publish={o?.publish}

@@ -144,7 +144,7 @@ export default function SitusAdmin() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="ml-1 flex w-1/3 flex-col-reverse gap-1 md:w-fit md:flex-row">
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}

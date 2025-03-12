@@ -30,6 +30,7 @@ import SitusPage from "./pages/landingPage/situs.jsx";
 import SitusDetail from "./pages/landingPage/situsDetail.jsx";
 import Login from "./pages/login.jsx";
 import store from "./redux/store.js";
+import ObjekDetail from "./pages/dashboard/manageObjek/ObjekDetail.jsx";
 
 const route = createBrowserRouter([
   {
@@ -71,7 +72,7 @@ const route = createBrowserRouter([
         element: <SitusDetail />,
       },
       {
-        path: "/kegiatan/:id",
+        path: "/kegiatan/:id/:slug",
         element: <KegiatanDetail />,
       },
       {
@@ -143,6 +144,10 @@ const route = createBrowserRouter([
       {
         path: "feedback-masyarakat/",
         element: <FeedbackAdmin />,
+      },
+      {
+        path: "detail-objek/:id/:slug",
+        element: <ObjekDetail />,
       },
     ],
   },

@@ -119,7 +119,7 @@ export default function HomePage() {
       >
         <div className="container mx-auto">
           <TitleSection className="mb-5 text-center">Situs</TitleSection>
-          <div data-aos="fade-up" className="grid w-full grid-cols-1 gap-5">
+          <div data-aos="fade-up" className="grid w-full grid-cols-1 gap-2">
             {dataObjects?.map((obj) => (
               <CardSitusHome
                 date={obj?.UpdatedAt}
@@ -186,7 +186,6 @@ export default function HomePage() {
             </div>
 
             <div
-              // className="mx-auto flex w-10/12 flex-wrap justify-center gap-5 lg:w-full"
               className="grid grid-cols-2 justify-items-center gap-2 px-5 md:grid-cols-3 md:px-10 lg:w-full lg:grid-cols-4"
               data-aos="zoom-in"
             >

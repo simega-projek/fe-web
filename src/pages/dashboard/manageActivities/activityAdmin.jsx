@@ -164,7 +164,8 @@ export default function ActivityAdmin() {
 
           {/* //filter tampilan data */}
 
-          <div className="ml-2 flex flex-col-reverse gap-2 md:flex-row">
+          {/* <div className="ml-2 flex flex-col-reverse gap-2 md:flex-row"> */}
+          <div className="ml-1 flex w-1/3 flex-col-reverse gap-1 md:w-fit md:flex-row">
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}

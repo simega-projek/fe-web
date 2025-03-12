@@ -200,7 +200,7 @@ export default function PublicationAdmin() {
 
       <div className="mt-5 w-full px-3">
         {/* search & button create */}
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-1">
           <FilterObject
             search={search}
             onSearch={(e) => setSearch(e.target.value)}
@@ -213,6 +213,7 @@ export default function PublicationAdmin() {
             onReset={handleResetFilter}
           />
           <FilterPage
+            className={"w-1/3 md:w-fit"}
             onChange={(e) => setContentPage(e.target.value)}
             value={contentPage}
           />

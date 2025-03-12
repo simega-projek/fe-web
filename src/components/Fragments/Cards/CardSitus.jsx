@@ -35,10 +35,10 @@ export default function CardSitus(props) {
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent to-primary"></div>
         <div className="absolute bottom-0 left-0 z-20 m-2 pl-1 text-white md:m-5">
-          <p className="mb-2 text-base font-bold md:text-base lg:text-lg">
+          <div className="mb-2 text-base font-bold md:text-base lg:text-lg">
             {title}
-            <p className="text-base text-white/70">{category}</p>
-          </p>
+            <div className="text-base text-white/70">{category}</div>
+          </div>
         </div>
       </div>
     </Link>

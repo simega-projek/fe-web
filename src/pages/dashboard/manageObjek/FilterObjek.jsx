@@ -5,6 +5,7 @@ import { ButtonControls } from "../../../components/Elements/Buttons/ButtonContr
 import { getAllCategory } from "../../../services/category.service";
 import { getAllSite } from "../../../services/site.service";
 import { getAllValley } from "../../../services/valley.service";
+import { useSelector } from "react-redux";
 
 export const FilterObject = ({
   search,
@@ -18,13 +19,14 @@ export const FilterObject = ({
   category,
   onCategory,
   onReset,
-  filterSite,
 }) => {
   const [valleyData, setValleyData] = useState([]);
   const [siteData, setSiteData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [siteFilter, setSiteFilter] = useState([]);
 
+  // redux
+  // const lembahID = useSelector((state) => state.pages.valleyName);
   const [showFilters, setshowFilters] = useState(false);
   const fetchDataFilter = async () => {
     try {
@@ -55,12 +57,13 @@ export const FilterObject = ({
     fetchDataFilter();
   }, []);
 
-  // const selectedLembahId = filterSite;
-  // if (filterSite) {
-  //   const filtered = siteData.filter((s) => s.lembah_id == selectedLembahId);
-  //   console.log(filtered);
-  // } else return;
-  // console.log(siteDataa);
+  // useEffect(() => {
+  //   if (valley) {
+  //     const filtered = siteData.filter((s) => s?.lembah?.lembah === valley);
+  //     setSiteData(filtered);
+  //     console.log(filtered);
+  //   } else fetchDataFilter();
+  // }, [valley]);
 
   return (
     <div className="flex w-full flex-col gap-2 md:w-3/4 lg:flex-row">

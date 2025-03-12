@@ -1,12 +1,9 @@
 import Aos from "aos";
-import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useDebounce } from "use-debounce";
 import Loading from "../../components/Elements/Loading/Loading";
 import CardSitus from "../../components/Fragments/Cards/CardSitus";
-import { PopupMap } from "../../components/Fragments/Cards/PopupMap";
+import { Maps } from "../../components/Fragments/Maps";
 import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../services/object.service";
 import { toView } from "../../utils/toView";
@@ -16,7 +13,7 @@ export default function PersebaranPage() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
   const [isLoading, setIsLoading] = useState(true);
 
-  const [dataObejcts, setDataObejcts] = useState([]);
+  const [dataObjects, setDataObjects] = useState([]);
   const [dataPage, setDataPage] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,9 +48,9 @@ export default function PersebaranPage() {
       const sortedData = objects.data.sort(
         (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
       );
-      setDataObejcts(sortedData);
+      setDataObjects(sortedData);
       setDataPage(objects.pagination);
-      // console.log(dataObejcts);
+      // console.log(dataObjects);
     } catch (err) {
       console.log(err);
     } finally {
@@ -80,30 +77,31 @@ export default function PersebaranPage() {
   return (
     <>
       <div>
-        <div className="mx-auto">
-          <div className="flex w-full flex-wrap justify-center">
-            <div className="w-full">
-              <MapContainer center={lokasi} zoom={7} scrollWheelZoom={false}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {dataObejcts?.map((o) => (
-                  <Marker position={[o.lintang, o.bujur]} key={o.ID}>
-                    <Popup>
-                      <PopupMap
-                        id={o.ID}
-                        titleObject={o.nama_objek}
-                        titleSitus={o.site?.nama_situs}
-                        img={o.gambar}
-                        desc=""
-                      />
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </div>
-          </div>
+        {/* <div className="w-full">
+          <MapContainer center={lokasi} zoom={7} scrollWheelZoom={false}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">Indonesia</a> peta'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {dataObjects?.map((o) => (
+              <Marker position={[o.lintang, o.bujur]} key={o.ID}>
+                <Popup>
+                  <PopupMap
+                    id={o?.ID}
+                    title={o?.nama_objek}
+                    img={o?.gambar}
+                    category={o?.category?.category}
+                    lintang={o?.lintang}
+                    bujur={o?.bujur}
+                    to={`/objek/${o?.ID}/${o?.nama_objek}`}
+                  />
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div> */}
+        <div>
+          <Maps dataObject={dataObjects} path={`/objek`} />
         </div>
       </div>
 
@@ -126,11 +124,11 @@ export default function PersebaranPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-5 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-2 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
             data-aos="fade-up"
           >
-            {dataObejcts?.length > 0
-              ? dataObejcts?.map((o) => (
+            {dataObjects?.length > 0
+              ? dataObjects?.map((o) => (
                   <CardSitus
                     key={o?.ID}
                     title={o?.nama_objek}

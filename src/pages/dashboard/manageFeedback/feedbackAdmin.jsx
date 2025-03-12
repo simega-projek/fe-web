@@ -110,7 +110,7 @@ export const FeedbackAdmin = () => {
       <hr />
 
       {/* search & button filter */}
-      <div className="my-5 flex w-full justify-between">
+      <div className="my-5 flex w-full justify-between gap-1">
         <FilterFeedback
           date={date}
           month={month}
@@ -125,6 +125,7 @@ export const FeedbackAdmin = () => {
         />
 
         <FilterPage
+          className={"w-1/3 md:w-1/5 lg:w-fit"}
           onChange={(e) => setContentPage(e.target.value)}
           value={contentPage}
         />

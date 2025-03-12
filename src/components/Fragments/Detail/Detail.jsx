@@ -3,6 +3,7 @@ import parse from "html-react-parser";
 import formattedDate from "../../../utils/formattedDate";
 import TitleSection from "../../Elements/TitleSection";
 import { SiGooglemaps } from "react-icons/si";
+import { DetailList } from "./DetailList";
 
 export const Detail = (props) => {
   const {
@@ -10,7 +11,7 @@ export const Detail = (props) => {
     img = "/images/hero-img.png",
     date,
     desc,
-    publish,
+    status,
     file,
     linkEvent,
     category,
@@ -18,13 +19,16 @@ export const Detail = (props) => {
     valley,
     lintang,
     bujur,
+    detailList = false,
+    classImage,
   } = props;
 
   const dateFormatted = formattedDate(date);
 
   return (
     <div className="flex flex-col">
-      <div className="mt-5">
+      {/* image */}
+      <div className={`mt-5 ${classImage}`}>
         <img
           src={img}
           alt={title}
@@ -32,26 +36,36 @@ export const Detail = (props) => {
         />
       </div>
 
+      {/* date and maps */}
       <div className="flex justify-between">
         <span className="italic">{dateFormatted} </span>
         {lintang && bujur && (
           <a
             href={`https://www.google.com/maps/@${lintang},${bujur},15z`}
             target="_blank"
-            className="rounded-full bg-[#008000] p-2"
+            className="rounded-full bg-[#008000] p-2 text-white"
           >
             <SiGooglemaps />
           </a>
         )}
       </div>
 
-      <div className="flex flex-col">
+      {/* detail list */}
+      {detailList && (
+        <DetailList
+          title={title}
+          category={category}
+          valley={valley}
+          site={site}
+          lintang={lintang}
+          bujur={bujur}
+          status={status}
+        />
+      )}
+
+      {/* title */}
+      <div className="mt-5 flex flex-col">
         <TitleSection>{title}</TitleSection>
-        <span
-          className={`w-fit rounded-full px-2.5 py-0.5 text-sm font-medium ${publish === "public" || "Akan Datang" ? "bg-green-100 text-green-800" : publish === "Proses" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
-        >
-          {publish}
-        </span>
       </div>
       {linkEvent && (
         <p className="mb-2 mt-5 italic">
@@ -72,19 +86,21 @@ export const Detail = (props) => {
         </a>
       )}
 
+      {/* description */}
       <div
-        className="break-words text-lg md:text-xl"
+        className="mt-5 break-words text-lg md:text-xl"
         // dangerouslySetInnerHTML={{ __html: desc }}
       >
         {/* {HTMLReactParser(desc)} */}
         {parse(String(desc))}
       </div>
 
+      {/* category */}
       {category && site && valley ? (
         <div className="mt-5 flex gap-2">
-          <p>Kategori: {category} </p>
-          <p>Lembah: {valley}</p>
-          <p>Situs: {site}</p>
+          <p>#{category} </p>
+          <p>#{valley}</p>
+          <p>#{site}</p>
         </div>
       ) : null}
     </div>

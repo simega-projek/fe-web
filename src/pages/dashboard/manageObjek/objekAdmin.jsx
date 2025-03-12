@@ -181,7 +181,7 @@ export default function ObjekAdmin() {
             onReset={handleResetFilter}
             objectData={objectData}
           />
-          <div className="ml-2 flex flex-col-reverse gap-2 lg:flex-row">
+          <div className="ml-1 flex w-1/3 flex-col-reverse gap-1 md:w-fit lg:flex-row">
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}
@@ -299,7 +299,7 @@ const TableData = ({
               <ButtonControls
                 name={"Detail"}
                 icon={FaFileInvoice}
-                to={`/objek/${objects.ID}/${objects.nama_objek}`}
+                to={`/admin/detail-objek/${objects.ID}/${objects.nama_objek}`}
               />
               <ButtonControls
                 name={"Edit"}

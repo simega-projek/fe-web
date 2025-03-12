@@ -40,7 +40,7 @@ export function NavbarDashboard() {
               />
             </Link>
           </div>
-          <div className="flex items-center px-4">
+          <div className="flex items-center px-4 lg:px-0">
             <button
               type="button"
               className={`group block rounded-lg px-2 py-2 hover:bg-dark hover:text-white lg:hidden lg:py-0 ${isHamburgerActive ? "hamburger-active" : ""}`}
@@ -72,6 +72,11 @@ export function NavbarDashboard() {
                     Persebaran
                   </Link>
                 </li>
+                {/* <li className="group my-2">
+                  <Link to="/" className="menu-list">
+                    Umpan Balik
+                  </Link>
+                </li> */}
                 <li className="group my-2">
                   <button
                     className="menu-list flex items-center"
