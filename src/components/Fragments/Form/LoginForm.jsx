@@ -58,64 +58,61 @@ export const LoginForm = () => {
         </Alert>
       )}
 
-      <form className="w-full max-w-md pt-5" onSubmit={submitLogin}>
-        <div className="flex flex-col gap-4">
-          <div>
-            <div className="mb-2 flex items-center gap-[5px]">
-              <FaRegUserCircle />
-              <Label
-                htmlFor="username"
-                value="Username"
-                className="inline-block text-base"
-              />
-            </div>
+      <form className="mt-8 grid grid-cols-6 gap-6" onSubmit={submitLogin}>
+        <div className="col-span-6">
+          <label
+            htmlFor="username"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Username
+          </label>
+          <TextInput
+            id="username"
+            type="text"
+            placeholder="Masukkan username"
+            className="mt-1 w-full rounded-md border-gray-200 text-sm text-gray-700"
+            required={true}
+            autoFocus={true}
+            autoComplete="off"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+          />
+        </div>
+
+        <div className="col-span-6">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Password
+          </label>
+          <div className="relative flex items-center">
             <TextInput
-              id="username"
-              type="text"
-              placeholder="username"
-              className="text-base"
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="********"
+              className="mt-1 w-full rounded-md border-gray-200 text-sm text-gray-700"
               required={true}
-              autoFocus={true}
-              autoComplete="off"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
             />
+            <button
+              type="button"
+              className="absolute right-1 p-3"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
-          <div>
-            <div className="mb-2 flex items-center gap-[5px]">
-              <GrSecure />
-              <Label
-                htmlFor="password"
-                value="Password"
-                className="text-base"
-              />
-            </div>
-            <div className="relative flex items-center overflow-hidden">
-              <TextInput
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="********"
-                className="w-full overflow-hidden text-base"
-                required={true}
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-              <button
-                type="button"
-                className="absolute right-1 p-3 backdrop-blur-sm"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
-          </div>
+        </div>
+
+        <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
           <ButtonFunc
             type="submit"
-            className={`bg-primary transition-all duration-300 hover:text-white`}
+            className="focus:ring-3 focus:outline-hidden inline-block w-full rounded-md border border-primary bg-primary px-16 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-primary md:w-fit"
           >
-            Submit
+            Masuk
           </ButtonFunc>
-          <Link to={"/"}></Link>
         </div>
       </form>
     </>

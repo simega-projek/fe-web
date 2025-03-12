@@ -1,17 +1,17 @@
-import ButtonLink from "../../components/Elements/Buttons/ButtonLink";
-import TitleSection from "../../components/Elements/TitleSection";
+import ButtonLink from "../../../components/Elements/Buttons/ButtonLink";
+import TitleSection from "../../../components/Elements/TitleSection";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { useEffect, useState } from "react";
-import CardArtikel from "../../components/Fragments/Cards/CardArtikel";
-import { CardKegiatanHome } from "../../components/Fragments/Cards/HomeCardKegiatan";
-import { CardSitusHome } from "../../components/Fragments/Cards/HomeCardSitus";
-import { HeroSection } from "../../components/Fragments/Sections/Hero";
-import { getAllArticles } from "../../services/article.service";
-import { getAllEvent } from "../../services/event.service";
-import { getAllObject } from "../../services/object.service";
+import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
+import { CardKegiatanHome } from "../../../components/Fragments/Cards/HomeCardKegiatan";
+import { CardSitusHome } from "../../../components/Fragments/Cards/HomeCardSitus";
+import { HeroSection } from "../../../components/Fragments/Sections/Hero";
+import { getAllArticles } from "../../../services/article.service";
+import { getAllEvent } from "../../../services/event.service";
+import { getAllObject } from "../../../services/object.service";
 
 export default function HomePage() {
   const [dataObjects, setDataObjects] = useState([]);
@@ -29,7 +29,7 @@ export default function HomePage() {
   const fetchDataApi = async () => {
     setIsLoading(true);
     try {
-      const objects = await getAllObject(3, "", 1, "", "", "", "public");
+      const objects = await getAllObject(4, "", 1, "", "", "", "public");
       setDataObjects(objects.data);
       // console.log(objects.data);
 
@@ -119,7 +119,10 @@ export default function HomePage() {
       >
         <div className="container mx-auto">
           <TitleSection className="mb-5 text-center">Situs</TitleSection>
-          <div data-aos="fade-up" className="grid w-full grid-cols-1 gap-2">
+          <div
+            data-aos="fade-up"
+            className="mx-auto grid w-full grid-cols-1 gap-2 md:w-8/12 md:gap-10 lg:w-full lg:grid-cols-2"
+          >
             {dataObjects?.map((obj) => (
               <CardSitusHome
                 date={obj?.UpdatedAt}

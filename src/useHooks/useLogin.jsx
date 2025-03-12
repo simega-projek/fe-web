@@ -14,7 +14,7 @@ export const useLogin = () => {
     if (!dataProfile && localStorage.getItem("token")) {
       dispatch(sliceAuthGetProfile());
     }
-  });
+  }, []);
 
   useEffect(() => {
     const checkTokenValidity = () => {

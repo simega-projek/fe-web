@@ -24,7 +24,7 @@ import ArtikelDetail from "./pages/landingPage/Article/artikelDetail.jsx";
 import KegiatanPage from "./pages/landingPage/Events/kegiatan.jsx";
 import KegiatanDetail from "./pages/landingPage/Events/kegiatanDetail.jsx";
 import FeedbackPage from "./pages/landingPage/feedback.jsx";
-import HomePage from "./pages/landingPage/home.jsx";
+import HomePage from "./pages/landingPage/Home/home.jsx";
 import PersebaranPage from "./pages/landingPage/persebaran.jsx";
 import SitusPage from "./pages/landingPage/situs.jsx";
 import SitusDetail from "./pages/landingPage/situsDetail.jsx";
