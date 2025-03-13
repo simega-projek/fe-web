@@ -2,6 +2,7 @@ import { formatDate } from "../../../utils/formatDate";
 import { ButtonControls } from "../../Elements/Buttons/ButtonControls";
 import { MdDeleteForever } from "react-icons/md";
 import { FaFileInvoice } from "react-icons/fa6";
+import parse from "html-react-parser";
 
 export const CardFeedback = (props) => {
   const { name, address, message, date, onDelete, onView } = props;
@@ -19,7 +20,7 @@ export const CardFeedback = (props) => {
       <div className="flex flex-grow flex-col">
         <div className="flex-grow p-4">
           <p className="break-words font-light leading-normal text-slate-600">
-            {message ||
+            {parse(String(message)) ||
               "The place is close to Barceloneta Beach and bus stop just 2 min by walk and near to Naviglio where you can enjoy the main night life in          Barcelona."}
           </p>
         </div>

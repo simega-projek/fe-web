@@ -55,8 +55,14 @@ export const Dashboard = () => {
   }, []);
   return (
     <>
-      <TitleSection>Dashboard</TitleSection>
-      <TitleSection>Bakultur - Sistem Informasi Megalit</TitleSection>
+      <div>
+        <TitleSection className={"mb-3"}>Dashboard</TitleSection>
+        <TitleSection>
+          Balai Pelestarian Kebudayaan Wilayah XVIII <br /> Sistem Informasi
+          Megalit
+        </TitleSection>
+      </div>
+
       <div className="-mx-2 my-5 flex flex-wrap">
         {roleAuth === roleProfile ||
           (roleProfile === "super-admin" && (
