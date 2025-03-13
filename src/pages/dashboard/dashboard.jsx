@@ -23,78 +23,35 @@ export const Dashboard = () => {
   let roleAuth = role?.info?.role;
   let roleProfile = role?.data?.role;
 
-  const fetchAdmin = async () => {
+  const fetchApiData = async () => {
     try {
-      const res = await getAllAdmin();
-      setAdmins(res?.pagination?.totalItems);
+      const admin = await getAllAdmin();
+      setAdmins(admin?.pagination?.totalItems);
       // console.log(admins);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchSites = async () => {
-    try {
-      const res = await getAllSite();
-      setSites(res?.pagination?.totalItems);
-      // console.log(res?.pagination?.totalItems);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchValleys = async () => {
-    try {
-      const res = await getAllValley();
-      setValleys(res?.pagination?.totalItems);
-      // console.log(valleys);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchObjects = async () => {
-    try {
-      const res = await getAllObject();
-      setObjects(res?.pagination?.totalItems);
-      // console.log(objects);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchCategory = async () => {
-    try {
-      const res = await getAllCategory();
-      setCategories(res?.pagination?.totalItems);
-      // console.log(categories);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchEvents = async () => {
-    try {
-      const res = await getAllObject();
-      setEvents(res?.pagination?.totalItems);
-      // console.log(events);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  const fetchArticles = async () => {
-    try {
-      const res = await getAllArticles();
-      setArticles(res?.pagination?.totalItems);
-      // console.log(articles);
+      const site = await getAllSite();
+      setSites(site?.pagination?.totalItems);
+
+      const valley = await getAllValley();
+      setValleys(valley?.pagination?.totalItems);
+
+      const objects = await getAllObject();
+      setObjects(objects?.pagination?.totalItems);
+
+      const article = await getAllArticles();
+      setArticles(article?.pagination?.totalItems);
+
+      const category = await getAllCategory();
+      setCategories(category?.pagination?.totalItems);
+
+      const events = await getAllObject();
+      setEvents(events?.pagination?.totalItems);
     } catch (err) {
       console.log(err);
     }
   };
 
   useEffect(() => {
-    fetchAdmin();
-    fetchSites();
-    fetchValleys();
-    fetchObjects();
-    fetchCategory();
-    fetchEvents();
-    fetchArticles();
+    fetchApiData();
   }, []);
   return (
     <>
@@ -146,6 +103,12 @@ export const Dashboard = () => {
           icon={FaCity}
           to={`/admin/kelola-artikel`}
         />
+        {/* <CardDashboard
+          title={"Umpan Balik Masyarakat"}
+          lots={articles}
+          icon={FaCity}
+          to={`/admin/kelola-artikel`}
+        /> */}
       </div>
     </>
   );
