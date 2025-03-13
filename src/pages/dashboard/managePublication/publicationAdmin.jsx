@@ -180,7 +180,7 @@ export default function PublicationAdmin() {
     fetchObject();
   }, [debouncedSearch, currentPage, contentPage, valley, site, category]);
 
-  // console.log({ selectedId });
+  console.log({ objectData });
 
   return (
     <>
@@ -274,12 +274,19 @@ export default function PublicationAdmin() {
       )}
 
       <DetailModal
+        detailList={true}
         openModal={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
         title={selectedObjectData?.nama_objek}
         img={selectedObjectData?.gambar}
         category={selectedObjectData?.category?.category}
         desc={selectedObjectData?.deskripsi}
+        status={selectedObjectData?.publish}
+        date={selectedObjectData?.UpdatedAt}
+        site={selectedObjectData?.site?.nama_situs}
+        valley={selectedObjectData?.site?.lembah?.lembah}
+        lintang={selectedObjectData?.lintang}
+        bujur={selectedObjectData?.bujur}
       >
         <p className="text- font-bold">Publis sebagai</p>
         <ButtonFunc

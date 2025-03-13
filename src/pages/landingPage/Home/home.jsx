@@ -61,14 +61,18 @@ export default function HomePage() {
   return (
     <>
       <HeroSection>
-        <div className="absolute left-0 px-6 md:justify-self-start">
-          <p className="max-w-xl text-xl font-semibold text-white md:text-start md:text-2xl">
-            Selamat datang di Ba-Kultur, platform digital yang memperkenalkan
-            warisan megalitikum Sulawesi Tengah. Jelajahi sejarah peradaban
-            kuno, temukan jejak budaya megalit yang tersebar di berbagai
-            wilayah, dan kenali kekayaan peninggalan arkeologi yang masih
-            lestari hingga saat ini.
-          </p>
+        <div className="absolute left-0 my-auto flex px-6 md:justify-self-start">
+          <div className="max-w-xl text-xl font-semibold text-white md:text-start md:text-2xl">
+            Salam Budaya!
+            <p className="mt-3">
+              Selamat datang pada layanan Informasi Balai Pelestarian Kebudayaan
+              Wilayah XVIII wilayah kerja Sulawesi Tengah dan Sulawesi Barat.
+              Laman ini merupakan sarana informasi secara daring sebagai wujud
+              dalam memenuhi keterbukaan dan hak informasi publik di Balai
+              Pelestarian Kebudayaan Wilayah 18, sesuai dengan Undang-Undang
+              Nomor 14 Tahun 2008.
+            </p>
+          </div>
         </div>
       </HeroSection>
 
@@ -116,13 +120,24 @@ export default function HomePage() {
 
       <section
         id="situs"
-        className="bg-tan bg-[url('/images/bg1.svg')] px-5 pt-10"
+        className="bg-tan bg-[url('/images/bg1.svg')] px-5 py-12"
       >
         <div className="container mx-auto">
           <TitleSection className="mb-5 text-center">Situs</TitleSection>
+          <div className="mb-5 px-5 text-justify text-base font-semibold md:text-center md:text-lg">
+            Situs objek peninggalan megalitikum di Sulawesi Tengah merupakan
+            salah satu warisan budaya yang kaya, mencerminkan sejarah panjang
+            peradaban manusia di wilayah ini. Seperti yang ditemukan di daerah
+            Napu, Besoa, Lore Lindu, dan lainnya menampilkan berbagai bentuk
+            artefak megalitikum, termasuk menhir, dolmen, dan arca yang diukir
+            dengan detail. Keberadaan situs ini memberikan wawasan yang berharga
+            tentang tradisi, kepercayaan, dan kehidupan masyarakat prasejarah di
+            Sulawesi Tengah, serta pentingnya pelestarian warisan budaya untuk
+            generasi mendatang.
+          </div>
           <div
             data-aos="fade-up"
-            className="mx-auto grid w-full grid-cols-1 gap-2 md:w-8/12 md:gap-10 lg:w-full lg:grid-cols-2"
+            className="mx-auto grid w-full grid-cols-1 gap-2 md:grid-cols-2 md:gap-10"
           >
             {dataObjects?.map((obj) => (
               <CardSitusHome
@@ -135,7 +150,7 @@ export default function HomePage() {
               ></CardSitusHome>
             ))}
           </div>
-          <div className="mx-auto mt-8 w-10/12 md:w-1/2">
+          <div className="mx-auto mt-8 w-10/12 md:w-1/2 lg:mt-12">
             <ButtonLink
               to={`/persebaran`}
               className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}
@@ -148,27 +163,43 @@ export default function HomePage() {
 
       <section
         id="kegiatan"
-        className="bg-tan bg-[url('/images/bg1.svg')] px-5 py-10"
+        className="bg-tan bg-[url('/images/bg1.svg')] px-5 py-12"
       >
         <div className="container mx-auto">
-          <TitleSection className="mb-5 text-center">Kegiatan</TitleSection>
-          <div
-            className="grid w-full grid-cols-2 gap-2 pb-5 md:grid-cols-4"
-            data-aos="fade-down"
-          >
-            {Array.isArray(dataEvents) &&
-              dataEvents?.map((keg) => (
-                <CardKegiatanHome
-                  to={`/kegiatan/${keg?.ID}/${keg?.title}`}
-                  key={keg?.ID}
-                  date={keg?.start_date}
-                  title={keg?.title}
-                  img={keg?.image}
-                />
-              ))}
+          <TitleSection className="mb-10 text-center">Kegiatan</TitleSection>
+          <div className="flex flex-wrap gap-5 md:px-10 lg:flex-row-reverse lg:flex-nowrap">
+            <div
+              className="grid w-full grid-cols-2 gap-2 lg:w-1/2 lg:grid-cols-2"
+              data-aos="fade-down"
+            >
+              {Array.isArray(dataEvents) &&
+                dataEvents
+                  ?.slice(0, window.innerWidth < 1024 ? 4 : 2)
+                  .map((keg) => (
+                    <CardKegiatanHome
+                      to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                      key={keg?.ID}
+                      date={keg?.start_date}
+                      title={keg?.title}
+                      img={keg?.image}
+                    />
+                  ))}
+            </div>
+            <div className="mb-5 text-justify text-base font-semibold md:text-lg lg:w-1/2">
+              Balai Pelestarian Kebudayaan (BPK) XVIII berperan penting dalam
+              melestarikan dan mengembangkan warisan budaya Indonesia. Salah
+              satu kegiatan utama yang dilakukan BPK adalah pengkajian dan
+              penelitian terhadap situs-situs bersejarah, termasuk peninggalan
+              arkeologi, seni, dan tradisi lokal. Selain itu, BPK 18 juga
+              menyelenggarakan program edukasi dan pelatihan untuk meningkatkan
+              kesadaran masyarakat tentang pentingnya pelestarian budaya.
+              Melalui kegiatan-kegiatan ini, BPK 18 berkomitmen untuk menjaga
+              keberagaman budaya dan sejarah Indonesia agar tetap hidup dan
+              relevan di tengah perkembangan zaman.
+            </div>
           </div>
 
-          <div className="mx-auto mt-5 w-10/12 md:w-1/2">
+          <div className="mx-auto w-10/12 md:w-1/2 lg:mt-12">
             <ButtonLink
               to={`/kegiatan`}
               className={`mx-auto border-[3px] border-primary transition-all duration-300 hover:bg-primary hover:text-white`}

@@ -18,6 +18,7 @@ import { toView } from "../../../utils/toView";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { FilterFeedback } from "./FilterFeedback";
+import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
 
 export const FeedbackAdmin = () => {
   const [dataFeedback, setDataFeedback] = useState([]);
@@ -30,6 +31,9 @@ export const FeedbackAdmin = () => {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
 
+  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [contentPage, setContentPage] = useState(10);
@@ -41,6 +45,11 @@ export const FeedbackAdmin = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
   const [debouncedYear] = useDebounce(year, 700);
+
+  const handleOpenDetailModal = (feedback) => {
+    setSelectedFeedback(feedback);
+    setIsOpenDetailModal(true);
+  };
 
   const fetchFeedback = async () => {
     setIsLoading(true);
@@ -122,6 +131,7 @@ export const FeedbackAdmin = () => {
           onSearch={(e) => setSearch(e.target.value)}
           onReset={handleResetFilter}
           isLoading={isLoading}
+          // onView={}
         />
 
         <FilterPage
@@ -145,6 +155,7 @@ export const FeedbackAdmin = () => {
         data={dataFeedback}
         isLoading={isLoading}
         search={search}
+        onView={handleOpenDetailModal}
         handleOpenDeleteModal={handleOpenDeleteModal}
       />
 
@@ -165,11 +176,26 @@ export const FeedbackAdmin = () => {
           onClose={() => setIsOpenModalDelete(false)}
         />
       )}
+
+      <DetailModal
+        openModal={isOpenDetailModal}
+        address={selectedFeedback?.email_telp}
+        onClose={() => setIsOpenDetailModal(false)}
+        title={selectedFeedback?.name}
+        date={selectedFeedback?.CreatedAt}
+        desc={selectedFeedback?.message}
+      />
     </div>
   );
 };
 
-const FeedbackData = ({ data, isLoading, search, handleOpenDeleteModal }) => {
+const FeedbackData = ({
+  data,
+  isLoading,
+  search,
+  handleOpenDeleteModal,
+  onView,
+}) => {
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {isLoading ? (
@@ -185,6 +211,7 @@ const FeedbackData = ({ data, isLoading, search, handleOpenDeleteModal }) => {
             date={fd.CreatedAt}
             message={fd.message}
             onDelete={() => handleOpenDeleteModal(fd.ID)}
+            onView={() => onView(fd)}
           />
         ))
       ) : (
