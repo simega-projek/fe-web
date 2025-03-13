@@ -2,7 +2,7 @@ import parse from "html-react-parser";
 import { Link } from "react-router-dom";
 export const OtherPosts = ({ title, desc, to }) => {
   return (
-    <article className="shadow-xs rounded-lg border border-gray-100 bg-gray-50 p-4 shadow-md transition hover:shadow-lg">
+    <article className="shadow-xs truncate rounded-lg border border-gray-100 bg-gray-50 p-4 shadow-md transition hover:shadow-lg">
       <Link to={to} className="mt-0.5 text-lg font-medium text-gray-900">
         {title}
       </Link>

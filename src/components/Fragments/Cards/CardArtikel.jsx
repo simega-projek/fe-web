@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import formattedDate from "../../../utils/formattedDate";
-import { Badge } from "flowbite-react";
 
 export default function CardArtikel(props) {
   const {
@@ -15,7 +14,7 @@ export default function CardArtikel(props) {
   return (
     <Link
       to={to}
-      className="group relative flex w-full flex-col overflow-hidden rounded-lg bg-white p-3 shadow-xl"
+      className="group relative flex w-full flex-col overflow-hidden rounded-lg bg-white p-3 shadow-lg hover:shadow-2xl"
     >
       <img
         src={img}

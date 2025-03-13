@@ -5,12 +5,10 @@ import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { createEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
-import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 
 export default function CreateActivity({ isOpenCreate, onClose, onSuccess }) {
   const editorInput = useRef(null);

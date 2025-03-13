@@ -26,7 +26,7 @@ export const Detail = (props) => {
   const dateFormatted = formattedDate(date);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col break-words">
       {/* image */}
       <div className={`mt-5 ${classImage}`}>
         <img
@@ -68,13 +68,13 @@ export const Detail = (props) => {
         <TitleSection>{title}</TitleSection>
       </div>
       {linkEvent && (
-        <p className="mb-2 mt-5 italic">
+        <div className="mb-2 mt-5 break-words italic">
           Cek Link Kegiatan &rarr;{" "}
           <a href={linkEvent} className="text-blue-500" target="_blank">
             {" "}
             {linkEvent}{" "}
           </a>
-        </p>
+        </div>
       )}
       {file && (
         <a

@@ -38,7 +38,7 @@ export const PopupMap = (props) => {
 
         <ButtonLink
           to={to}
-          className="bg-tan text-white transition-all duration-500 hover:bg-primary"
+          classValue="bg-tan text-white transition-all duration-500 hover:bg-primary"
         >
           Lihat{" "}
         </ButtonLink>

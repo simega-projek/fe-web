@@ -23,7 +23,7 @@ import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { deleteEvent, getAllEvent } from "../../../services/event.service";
 import { formatDate } from "../../../utils/formatDate";
 import { toView } from "../../../utils/toView";
-import CreateActivity from "./CreateActivity";
+import CreateActivity from "./CreateEvent";
 import UpdateActivity from "./UpdateActivity";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
@@ -129,7 +129,7 @@ export default function ActivityAdmin() {
     fetchEvent();
   }, [debouncedSearch, currentPage, contentPage, status]);
 
-  console.log({ searchData, status });
+  // console.log({ searchData, status });
 
   return (
     <>
@@ -192,7 +192,7 @@ export default function ActivityAdmin() {
 
         {/* table */}
         <div className="scrollbar mt-5 overflow-x-auto">
-          <Table hoverable className="scrollbar overflow-x-auto lg:table-fixed">
+          <Table hoverable className="scrollbar overflow-x-auto md:table-fixed">
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Kegiatan</TableHeadCell>
@@ -262,7 +262,10 @@ const TableData = ({
             <TableCell className="whitespace-normal">
               {index + startIndex}
             </TableCell>
-            <TableCell className="whitespace-normal break-words font-medium text-gray-900 dark:text-white">
+            <TableCell
+              className="table-fixed truncate whitespace-normal break-words font-medium text-gray-900 dark:text-white"
+              style={{ tableLayout: "fixed" }}
+            >
               {event?.title}
             </TableCell>
             <TableCell

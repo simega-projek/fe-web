@@ -359,7 +359,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             value="Gambar"
             className="mb-2 block text-base"
           />
-          {/* <ManyInputImage onImageChange={setImage} /> */}
+
           <FileInput
             onChange={handleImageChange}
             accept="image/*"

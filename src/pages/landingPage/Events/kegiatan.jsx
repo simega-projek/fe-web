@@ -136,7 +136,7 @@ export default function KegiatanPage() {
       </div>
 
       {/* Pagination */}
-      <div className="mb-5 flex flex-col items-center justify-center">
+      <div className="my-5 flex flex-col items-center justify-center">
         {isLoading ? null : (
           <PaginationPage
             currentPage={currentPage}

@@ -38,7 +38,7 @@ export function NavbarDashboard() {
   }, []);
   return (
     <nav
-      className={`fixed left-0 right-0 top-0 z-[9999] bg-white transition-shadow duration-300 ${
+      className={`fixed left-0 right-0 top-0 z-[9999] bg-primary transition-shadow duration-300 ${
         isScrolled ? "shadow-lg" : ""
       } dark:bg-gray-800`}
     >
@@ -50,7 +50,7 @@ export function NavbarDashboard() {
               src="/public/images/logo-bpk.svg"
               alt="Logo"
             />
-            <span className="ml-2 text-sm font-semibold text-gray-700 dark:text-gray-200 md:text-lg">
+            <span className="ml-2 text-sm font-semibold text-white md:text-lg">
               Balai Pelestarian Kebudayaan Wilayah XVIII
             </span>
           </Link>
@@ -59,7 +59,7 @@ export function NavbarDashboard() {
           <div className="flex lg:hidden">
             <button
               type="button"
-              className="text-gray-500 hover:text-gray-600 focus:outline-none dark:text-gray-200 dark:hover:text-gray-400"
+              className="text-white hover:text-tan focus:outline-none dark:text-gray-200 dark:hover:text-gray-400"
               onClick={handleHamburgerClick}
               aria-label="toggle menu"
             >
@@ -125,7 +125,7 @@ export function NavbarDashboard() {
 const ListNav = ({ children, to, pathname = "" }) => {
   return (
     <Link
-      className={`my-2 transform border-b-2 text-gray-700 transition-all duration-300 hover:border-primary hover:text-primary md:w-fit lg:mx-4 lg:my-0 ${pathname === to ? "border-b-primary text-primary" : "border-b-white"}`}
+      className={`my-2 transform border-b-2 text-primary transition-all duration-300 hover:text-tan md:w-fit lg:mx-4 lg:my-0 lg:text-white hover:lg:border-white ${pathname === to ? "border-b-primary text-primary lg:border-b-white" : "border-b-white lg:border-b-primary"}`}
       to={to}
     >
       {children}

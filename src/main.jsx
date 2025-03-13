@@ -8,7 +8,7 @@ import Media from "./components/Layouts/Media.jsx";
 import "./index.css";
 import ErrorPage from "./pages/404.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx";
-import ActivityAdmin from "./pages/dashboard/manageActivities/activityAdmin.jsx";
+import ActivityAdmin from "./pages/dashboard/manageActivities/eventAdmin.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import { FeedbackAdmin } from "./pages/dashboard/manageFeedback/feedbackAdmin.jsx";

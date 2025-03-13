@@ -6,10 +6,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        light: "#D7CEC7",
         blackboard: "#565656",
-        primary: "#76323F",
-        tan: "#C09F80",
+        light: "#D8DBD8",
+        primary: "#283517",
+        tan: "#869078",
+        // light: "#D7CEC7",
+        // primary: "#76323F",
+        // tan: "#C09F80",
         secondary: "#64748b",
         dark: "#0f172a",
         gran: "#D7CEC7",

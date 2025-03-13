@@ -8,12 +8,12 @@ import { useLocation } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import TextBlink from "../../../components/Elements/TextBlink/TextBlink";
-import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { HeroSection } from "../../../components/Fragments/Sections/Hero";
 import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { getAllArticles } from "../../../services/article.service";
 import { toView } from "../../../utils/toView";
+import { CardArticle } from "./CardArticle";
 
 export default function ArtikelPage() {
   const [dataArticles, setDataArticles] = useState([]);
@@ -101,19 +101,18 @@ export default function ArtikelPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-2 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            className="mt-5 grid gap-2 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
             data-aos="fade-up"
           >
             {Array.isArray(dataArticles) && dataArticles?.length > 0
               ? dataArticles?.map((article) => (
-                  <CardArtikel
-                    // className="w-1/2"
+                  <CardArticle
                     key={article?.ID}
                     title={article?.title}
                     to={`/artikel/${article?.ID}/${article?.title}`}
                     date={article?.CreatedAt}
-                    source={article?.users?.fullname}
                     img={article?.image}
+                    desc={article?.description}
                   />
                 ))
               : !isLoading && (
@@ -127,7 +126,7 @@ export default function ArtikelPage() {
       </div>
 
       {/* Pagination */}
-      <div className="mb-5 flex flex-col items-center justify-center">
+      <div className="my-5 flex flex-col items-center justify-center">
         {isLoading ? null : (
           <PaginationPage
             currentPage={currentPage}
