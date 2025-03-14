@@ -6,17 +6,22 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { getOneSite, updateSite } from "../../../services/site.service";
 import { getAllValley } from "../../../services/valley.service";
-import { getKelurahan } from "../../../services/wilIndonesia.service";
+import {
+  getKecamatan,
+  getKelurahan,
+} from "../../../services/wilIndonesia.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
 
 export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [siteName, setSiteName] = useState("");
-  const [villages, setVillages] = useState([]);
   const [valleys, setValleys] = useState([]);
+  const [villages, setVillages] = useState([]);
+  const [districts, setDistricts] = useState([]); // Kecamatan
 
   const [selectedValley, setSelectedValley] = useState("");
   const [selectedVillage, setSelectedVillage] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState(""); //kecamatan
 
   const [originalValley, setOriginalValley] = useState(null);
   const [originalVillage, setoriginalVillage] = useState(null);
@@ -28,8 +33,9 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
 
   const handleReset = () => {
     setSiteName("");
-    setSelectedValley(null);
-    setSelectedVillage(null);
+    setSelectedValley("");
+    setSelectedVillage("");
+    setSelectedDistrict("");
   };
 
   const handeUpdateSite = async (e) => {
@@ -43,14 +49,21 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     }
 
     const dataVillage = `${selectedVillage.name},${selectedVillage.id},${selectedVillage.district_id}`;
+    const dataDistrict =
+      selectedDistrict["name"] +
+      "," +
+      selectedDistrict["id"] +
+      "," +
+      selectedDistrict["regency_id"];
     // console.log({ selectedValley.id });
     // console.log(selectedValley.ID);
     // return;
 
     const formData = new FormData();
     formData.append("nama_situs", siteName);
-    formData.append("desa_kelurahan", dataVillage);
     formData.append("lembah_id", selectedValley?.ID);
+    formData.append("kecamatan", dataDistrict);
+    formData.append("desa_kelurahan", dataVillage);
 
     try {
       setIsLoading(true);
@@ -92,17 +105,29 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
       // setSelectedValley(data?.lembah_id);
 
       // valleys
-      const valley = valleys.find((v) => v.ID === data?.lembah_id);
+      const valley = valleys.find((v) => v?.ID === data?.lembah_id);
       setSelectedValley(valley);
 
       // villages
       const kelurahan = data?.desa_kelurahan.split(",");
       const idKelurahan = kelurahan[2];
       const dataVillages = await getKelurahan(idKelurahan);
-      const village = dataVillages.find((v) => v.id === kelurahan[1]);
+      const village = dataVillages.find((v) => v?.id === kelurahan[1]);
 
+      // kecamatan
+      const kecamatan = data?.kecamatan.split(",");
+      const idKecamatan = kecamatan[2];
+      const dataKecamatan = await getKecamatan(idKecamatan);
+      const district = dataKecamatan.find((v) => v?.id === kecamatan[1]);
+      // console.log({ dataKecamatan });
+      // console.log({ idKecamatan });
+      // console.log({ dataKecamatan });
+      // console.log({ district });
+
+      setDistricts(dataKecamatan);
       setVillages(dataVillages);
       setSelectedVillage(village);
+      setSelectedDistrict(district);
     } catch (err) {
       console.log(err);
     } finally {
@@ -123,15 +148,18 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
     }
   };
 
-  const fetchVillages = async (valley) => {
+  const fetchDistrict = async (valley) => {
     if (!valley) return;
     setIsLoading(true);
     try {
-      let kecamatanId = getDataByIndex(valley.kecamatan, 1);
+      let kecamatanId = getDataByIndex(valley?.kabupaten_kota, 1); //
+      // console.log("Kecamatan ID: ", Number(kecamatanId));
 
-      const res = await getKelurahan(kecamatanId);
+      const res = await getKecamatan(kecamatanId);
+      // console.log(res);
 
-      setVillages(res); // Make sure the response is correct and an array
+      setDistricts(res);
+      // console.log(res);
     } catch (err) {
       console.log(err);
     } finally {
@@ -141,17 +169,32 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
 
   const handleValleyChange = (e) => {
     const selectedValleyName = e.target.value;
-    const valley = valleys.find((v) => v.lembah === selectedValleyName);
+    const valley = valleys.find((v) => v?.lembah === selectedValleyName);
     setSelectedValley(valley);
-    fetchVillages(valley); // Fetch desa setelah lembah dipilih
+    setDistricts([]);
+    setVillages([]);
+    fetchDistrict(valley);
+    // fetchVillages(valley); // Fetch desa setelah lembah dipilih
   };
 
   const handleVillageChange = (e) => {
     const selectedVillageName = e.target.value;
-    const village = villages.find((v) => v.name === selectedVillageName);
+    const village = villages.find((v) => v?.name === selectedVillageName);
     setSelectedVillage(village);
   };
 
+  const handleDistrictChange = async (e) => {
+    const selectedDistrict = e.target.value;
+    const district = districts.find((d) => d.name === selectedDistrict);
+
+    // console.log({ district });
+    setSelectedDistrict(district);
+    if (district) {
+      const dataDistricts = await getKelurahan(district?.id);
+      // console.log({ dataDistricts });
+      setVillages(dataDistricts);
+    }
+  };
   // console.log(siteName);
 
   // console.log({ villages });
@@ -199,6 +242,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
 
       {/* form pembuatan situs */}
       <form onSubmit={handeUpdateSite} className="flex flex-wrap">
+        {/* nama situs */}
         <ContainerInput>
           <Label
             htmlFor="situs"
@@ -216,6 +260,7 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
           />
         </ContainerInput>
 
+        {/* lembah */}
         <ContainerInput>
           <Label
             htmlFor="lembah"
@@ -238,6 +283,31 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
           </select>
         </ContainerInput>
 
+        {/* kecamatan */}
+        <ContainerInput>
+          <Label
+            htmlFor="kecamatan"
+            value="Nama Kecamatan"
+            className="mb-2 block text-base"
+          />
+          <select
+            id="kecamatan"
+            placeholder="Pilih Kecamatan"
+            onChange={handleDistrictChange}
+            className="w-full rounded-md"
+            disabled={isLoading}
+            value={selectedDistrict?.name ?? ""}
+          >
+            <option>Pilih Kecamatan</option>
+            {districts?.map((district) => (
+              <option key={district?.id} value={district?.name}>
+                {district?.name}
+              </option>
+            ))}
+          </select>
+        </ContainerInput>
+
+        {/* kelurahan */}
         <ContainerInput>
           <Label
             htmlFor="kelurahan"

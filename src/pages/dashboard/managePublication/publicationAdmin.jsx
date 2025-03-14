@@ -180,7 +180,7 @@ export default function PublicationAdmin() {
     fetchObject();
   }, [debouncedSearch, currentPage, contentPage, valley, site, category]);
 
-  console.log({ objectData });
+  // console.log({ objectData });
 
   return (
     <>

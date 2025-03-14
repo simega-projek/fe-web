@@ -48,10 +48,8 @@ export default function PersebaranPage() {
         category,
         "public",
       );
-      const sortedData = objects.data.sort(
-        (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
-      );
-      setDataObjects(sortedData);
+
+      setDataObjects(objects.data);
       setDataPage(objects.pagination);
       // console.log(dataObjects);
     } catch (err) {
@@ -106,7 +104,7 @@ export default function PersebaranPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-2 px-10 py-5 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-2 px-5 py-5 md:grid-cols-3 lg:grid-cols-4"
             data-aos="fade-up"
           >
             {dataObjects?.length > 0

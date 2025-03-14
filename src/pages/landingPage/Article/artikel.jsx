@@ -48,11 +48,7 @@ export default function ArtikelPage() {
 
       // console.log(articles);
 
-      const sortedData = articles.data.sort(
-        (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
-      );
-
-      setDataArticles(sortedData);
+      setDataArticles(articles?.data);
       setDataPage(articles?.pagination);
       setCurrentPage(articles?.pagination?.currentPage);
       dispatch(setIsPages(articles?.pagination));

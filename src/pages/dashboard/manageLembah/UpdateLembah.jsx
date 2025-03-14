@@ -40,21 +40,26 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     e.preventDefault();
 
     // Cek apakah semua field sudah diisi
-    if (!lembah || !province || !selectedRegency || !selectedDistrict) {
+    if (
+      !lembah ||
+      !province ||
+      !selectedRegency
+      // || !selectedDistrict
+    ) {
       setMessageError("Semua kolom harus diisi");
       setMessageSuccess(null);
       toView("top");
       return;
     }
 
-    const dataRegency = `${selectedRegency.name},${selectedRegency.id},${selectedRegency.province_id}`;
-    const dataDistricts = `${selectedDistrict.name},${selectedDistrict.id},${selectedDistrict.regency_id}`;
+    const dataRegency = `${selectedRegency?.name},${selectedRegency?.id},${selectedRegency?.province_id}`;
+    // const dataDistricts = `${selectedDistrict.name},${selectedDistrict.id},${selectedDistrict.regency_id}`;
 
     const formData = new FormData();
     formData.append("lembah", lembah);
     formData.append("provinsi", province);
     formData.append("kabupaten_kota", dataRegency);
-    formData.append("kecamatan", dataDistricts);
+    // formData.append("kecamatan", dataDistricts);
 
     try {
       setIsLoading(true);
@@ -94,31 +99,35 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
       setProvince(data?.provinsi);
 
       // Split kabupaten_kota and kecamatan to extract name and id
-      const kabupatenData = data?.kabupaten_kota.split(",");
-      const kecamatanData = data?.kecamatan.split(",");
+      const kabupatenData = data?.kabupaten_kota?.split(",");
+      const kecamatanData = data?.kecamatan?.split(",");
 
       if (data?.provinsi === "Sulawesi Tengah") {
         const dataRegencies = await getSulawesiTengah();
-        const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+        const regency = dataRegencies.find((r) => r?.id === kabupatenData[1]);
         setRegencies(dataRegencies);
         setSelectedRegency(regency); // Automatically select the regency
-        const districts = await getKecamatan(regency.id);
-        setDistricts(districts);
-        const selectedDistrict = districts.find(
-          (d) => d.id === kecamatanData[1],
-        );
-        setSelectedDistrict(selectedDistrict); // Automatically select the district
+
+        // kecamatan
+        const districts = await getKecamatan(regency?.id);
+        // setDistricts(districts);
+        // const selectedDistrict = districts?.find(
+        //   (d) => d?.id === kecamatanData[1],
+        // );
+        // setSelectedDistrict(selectedDistrict); // Automatically select the district
       } else if (data?.provinsi === "Sulawesi Barat") {
         const dataRegencies = await getSulawesiBarat();
-        const regency = dataRegencies.find((r) => r.id === kabupatenData[1]);
+        const regency = dataRegencies.find((r) => r?.id === kabupatenData[1]);
         setRegencies(dataRegencies);
         setSelectedRegency(regency); // Automatically select the regency
-        const districts = await getKecamatan(regency.id);
-        setDistricts(districts);
-        const selectedDistrict = districts.find(
-          (d) => d.id === kecamatanData[1],
-        );
-        setSelectedDistrict(selectedDistrict); // Automatically select the district
+
+        // kecamatan
+        // const districts = await getKecamatan(regency?.id);
+        // setDistricts(districts);
+        // const selectedDistrict = districts?.find(
+        //   (d) => d?.id === kecamatanData[1],
+        // );
+        // setSelectedDistrict(selectedDistrict); // Automatically select the district
       }
     } catch (err) {
       console.log(err);
@@ -134,7 +143,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
   const handleRegencySelect = async (e) => {
     const selectRegency = e.target.value;
     // console.log(selectRegency);
-    const regency = regencies.find((r) => r.name === selectRegency);
+    const regency = regencies?.find((r) => r.name === selectRegency);
 
     setSelectedRegency(regency);
     if (regency) {
@@ -271,7 +280,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
             </select>
           </ContainerInput>
 
-          <ContainerInput>
+          {/* <ContainerInput>
             <Label
               htmlFor="kecamatan"
               value="Nama Kecamatan"
@@ -292,7 +301,7 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
                 </option>
               ))}
             </select>
-          </ContainerInput>
+          </ContainerInput> */}
 
           <ButtonFunc
             className={`m-3 bg-primary text-white disabled:cursor-no-drop`}

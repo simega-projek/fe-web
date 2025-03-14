@@ -171,10 +171,12 @@ export default function SitusAdmin() {
         <div className="scrollbar mt-5 overflow-x-auto">
           <Table hoverable>
             <TableHead>
-              <TableHeadCell className="w-1/12">No</TableHeadCell>
+              <TableHeadCell className="w-1/11">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Nama Situs</TableHeadCell>
               <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Desa/Kelurahan</TableHeadCell>
+
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
@@ -241,6 +243,11 @@ const TableData = ({
             </TableCell>
             <TableCell className="whitespace-normal">
               {site?.lembah.lembah ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {getDataByIndex(site?.kecamatan, 0) ??
+                site?.desa_kelurahan ??
+                "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
               {getDataByIndex(site?.desa_kelurahan, 0) ??

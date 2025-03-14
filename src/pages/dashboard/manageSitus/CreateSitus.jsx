@@ -6,17 +6,22 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { createSite } from "../../../services/site.service";
 import { getAllValley } from "../../../services/valley.service";
-import { getKelurahan } from "../../../services/wilIndonesia.service";
+import {
+  getKecamatan,
+  getKelurahan,
+} from "../../../services/wilIndonesia.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
 
 export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   const [situsName, setSitusName] = useState("");
-  const [villageData, setVillageData] = useState([]);
   const [valleyData, setValleyData] = useState([]);
+  const [villageData, setVillageData] = useState([]);
+  const [districts, setDistricts] = useState([]); // Kecamatan
 
   const [selectedValley, setSelectedValley] = useState(null);
   const [selectedVillage, setSelectedVillage] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null); //kecamatan
 
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [messageError, setMessageError] = useState(null);
@@ -26,7 +31,9 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     setSitusName("");
     setSelectedValley(null);
     setSelectedVillage(null);
+    setSelectedDistrict(null);
     setMessageError(null);
+    setDistricts([]);
   };
 
   const handleCreateSite = async (e) => {
@@ -51,10 +58,18 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
       selectedVillage["district_id"];
     // console.log("data masuk: " + dataVillage);
 
+    const dataDistrict =
+      selectedDistrict["name"] +
+      "," +
+      selectedDistrict["id"] +
+      "," +
+      selectedDistrict["regency_id"];
+
     const formData = new FormData();
     formData.append("nama_situs", situsName);
-    formData.append("desa_kelurahan", dataVillage);
     formData.append("lembah_id", selectedValley["ID"]);
+    formData.append("kecamatan", dataDistrict);
+    formData.append("desa_kelurahan", dataVillage);
 
     try {
       setIsLoading(true);
@@ -79,6 +94,8 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     }
   };
 
+  // console.log({ selectedValley });
+
   // Fetch semua data lembah
   const fetchValley = async () => {
     setIsLoading(true);
@@ -98,7 +115,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     if (!valley) return;
     setIsLoading(true);
     try {
-      let kecamatanId = getDataByIndex(valley.kecamatan, 1); //
+      let kecamatanId = getDataByIndex(valley?.kecamatan, 2); //
       // console.log("Kecamatan ID: ", Number(kecamatanId));
 
       const res = await getKelurahan(kecamatanId);
@@ -111,15 +128,46 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     }
   };
 
-  useEffect(() => {
-    fetchValley();
-  }, []);
+  const fetchDistrict = async (valley) => {
+    if (!valley) return;
+    setIsLoading(true);
+    try {
+      let kecamatanId = getDataByIndex(valley?.kabupaten_kota, 1); //
+      console.log("Kecamatan ID: ", Number(kecamatanId));
+
+      const res = await getKecamatan(kecamatanId);
+      // console.log(res);
+
+      setDistricts(res);
+      // console.log(res);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleValleyChange = (e) => {
     const selectedValleyName = e.target.value;
     const valley = valleyData.find((v) => v.lembah === selectedValleyName);
+    // console.log({ valley });
     setSelectedValley(valley);
-    fetchVillages(valley);
+    fetchDistrict(valley);
+    setVillageData([]);
+    // console.log({ valley });
+  };
+
+  const handleDistrictChange = async (e) => {
+    const selectedDistrict = e.target.value;
+    const district = districts.find((d) => d.name === selectedDistrict);
+
+    // console.log({ district });
+    setSelectedDistrict(district);
+    if (district) {
+      const dataDistricts = await getKelurahan(district?.id);
+      // console.log({ dataDistricts });
+      setVillageData(dataDistricts);
+    }
   };
 
   const handleVillageChange = (e) => {
@@ -129,9 +177,13 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     setSelectedVillage(village);
   };
 
-  // console.log({ villageData });
   // console.log({ selectedValley });
+  // console.log({ villageData });
   // console.log({ selectedVillage });
+
+  useEffect(() => {
+    fetchValley();
+  }, []);
 
   const activeRef = useRef(false);
 
@@ -160,6 +212,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
 
       {/* form pembuatan situs */}
       <form onSubmit={handleCreateSite} className="flex flex-wrap">
+        {/* nama situs */}
         <ContainerInput>
           <Label
             htmlFor="situs"
@@ -179,6 +232,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
           />
         </ContainerInput>
 
+        {/* lembah */}
         <ContainerInput>
           <Label
             htmlFor="lembah"
@@ -202,6 +256,31 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
           </select>
         </ContainerInput>
 
+        {/* kecamatan */}
+        <ContainerInput>
+          <Label
+            htmlFor="kecamatan"
+            value="Nama Kecamatan"
+            className="mb-2 block text-base"
+          />
+          <select
+            id="kecamatan"
+            placeholder="Pilih Kecamatan"
+            onChange={handleDistrictChange}
+            className="w-full rounded-md"
+            disabled={isLoading}
+            value={districts?.length > 0 ? districts?.name : ""}
+          >
+            <option>Pilih Kecamatan</option>
+            {districts?.map((district) => (
+              <option key={district?.id} value={district?.name}>
+                {district?.name}
+              </option>
+            ))}
+          </select>
+        </ContainerInput>
+
+        {/* kelurahan */}
         <ContainerInput>
           <Label
             htmlFor="kelurahan"

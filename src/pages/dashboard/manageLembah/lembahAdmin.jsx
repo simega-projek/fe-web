@@ -177,7 +177,7 @@ export default function LembahAdmin() {
               <TableHeadCell className="w-2/5">Lembah</TableHeadCell>
               <TableHeadCell className="w-1/5">Provinsi</TableHeadCell>
               <TableHeadCell className="w-1/5">Kabupaten</TableHeadCell>
-              <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell>
+              {/* <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell> */}
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
@@ -243,9 +243,9 @@ const TableData = ({
             <TableCell className="whitespace-normal">
               {getDataByIndex(valley?.kabupaten_kota, 0) ?? "-"}
             </TableCell>
-            <TableCell className="whitespace-normal">
+            {/* <TableCell className="whitespace-normal">
               {getDataByIndex(valley?.kecamatan, 0) ?? "-"}
-            </TableCell>
+            </TableCell> */}
 
             <TableCell className="mx-auto items-center justify-center lg:flex">
               <ButtonControls

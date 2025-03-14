@@ -19,11 +19,11 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
   const [lembah, setLembah] = useState("");
   const [province, setProvince] = useState("");
   const [regencies, setRegencies] = useState([]);
-  const [districts, setDistricts] = useState([]);
+  const [districts, setDistricts] = useState([]); // Kecamatan
   const [villages, setVillages] = useState([]);
 
   const [selectedRegency, setSelectedRegency] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState(""); //kecamatan
 
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [messageError, setMessageError] = useState(null);
@@ -35,9 +35,9 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     if (
       !lembah ||
       !province ||
-      !regencies.length > 0 ||
-      !districts.length > 0 ||
-      !villages.length > 0
+      !regencies?.length > 0 ||
+      !districts?.length > 0
+      // ||!villages?.length > 0
     ) {
       setMessageError("Semua kolom harus diisi");
       setMessageSuccess(null);
@@ -65,7 +65,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     formData.append("lembah", lembah);
     formData.append("provinsi", province);
     formData.append("kabupaten_kota", dataRegency);
-    formData.append("kecamatan", dataDistricts);
+    // formData.append("kecamatan", dataDistricts); //kecmatan
 
     try {
       setIsLoading(true);
@@ -110,6 +110,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     }
   };
 
+  // pilih kecamatan
   const handleDistrictSelect = async (e) => {
     const selectedDistrict = e.target.value;
     const district = districts.find((d) => d.name === selectedDistrict);
@@ -234,18 +235,18 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               onChange={handleRegencySelect}
               className="w-full rounded-md"
               disabled={isLoading}
-              value={regencies?.length > 0 ? regencies.name : ""}
+              value={regencies?.length > 0 ? regencies?.name : ""}
             >
               <option>Pilih Kabupaten/Kota</option>
               {regencies?.map((regency) => (
-                <option key={regency.id} value={regency.name}>
-                  {regency.name}
+                <option key={regency?.id} value={regency?.name}>
+                  {regency?.name}
                 </option>
               ))}
             </select>
           </ContainerInput>
 
-          <ContainerInput>
+          {/* <ContainerInput>
             <Label
               htmlFor="kecamatan"
               value="Nama Kecamatan"
@@ -257,16 +258,16 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               onChange={handleDistrictSelect}
               className="w-full rounded-md"
               disabled={isLoading}
-              value={districts?.length > 0 ? districts.name : ""}
+              value={districts?.length > 0 ? districts?.name : ""}
             >
               <option>Pilih Kecamatan</option>
               {districts?.map((district) => (
-                <option key={district.id} value={district.name}>
-                  {district.name}
+                <option key={district?.id} value={district?.name}>
+                  {district?.name}
                 </option>
               ))}
             </select>
-          </ContainerInput>
+          </ContainerInput> */}
         </form>
 
         <ButtonFunc
