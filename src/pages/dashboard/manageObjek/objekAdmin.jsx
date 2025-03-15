@@ -26,8 +26,9 @@ import { PaginationPage } from "../../../components/Fragments/Paginator/Paginati
 import { deleteObject, getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
 import CreateObjek from "./CreateObjek";
-import { FilterObject } from "./FilterObjek";
+
 import UpdateObjek from "./UpdateObjek";
+import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
 
 export default function ObjekAdmin() {
   const [objectData, setObjectData] = useState([]);
@@ -82,10 +83,7 @@ export default function ObjekAdmin() {
         publish,
       );
 
-      const sortedData = objects.data.sort(
-        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
-      );
-      setObjectData(sortedData);
+      setObjectData(objects.data);
       setDataPage(objects.pagination);
     } catch (err) {
       console.log(err);
@@ -178,6 +176,7 @@ export default function ObjekAdmin() {
             onCategory={(e) => setCategory(e.target.value)}
             publish={publish}
             onPublish={(e) => setPublish(e.target.value)}
+            viewPublish={true}
             onReset={handleResetFilter}
             objectData={objectData}
           />
@@ -212,7 +211,7 @@ export default function ObjekAdmin() {
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Objek</TableHeadCell>
               <TableHeadCell className="w-1/5">Kategori</TableHeadCell>
-              <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-1/5">Situs</TableHeadCell>
               <TableHeadCell className="w-1/5">Status</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
@@ -271,25 +270,26 @@ const TableData = ({
         </TableRow>
       ) : data?.length > 0 ? (
         data?.map((objects, index) => (
-          <TableRow key={objects.ID}>
+          <TableRow key={objects?.ID}>
             <TableCell className="whitespace-normal">
               {index + startIndex}
             </TableCell>
             <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-              {objects.nama_objek ?? "-"}
+              {objects?.nama_objek ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.category.category ?? "-"}
+              {objects?.category?.category ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.site.lembah.lembah ?? "-"}
+              {objects?.site?.nama_situs ?? "-"} |{" "}
+              {objects?.site?.lembah?.lembah ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.publish ? (
+              {objects?.publish ? (
                 <span
-                  className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${objects.publish === "public" ? "bg-green-100 text-green-800" : objects.publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
+                  className={`rounded-full px-2.5 py-0.5 text-sm font-medium ${objects?.publish === "public" ? "bg-green-100 text-green-800" : objects?.publish === "private" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800"}`}
                 >
-                  {objects.publish ?? null}
+                  {objects?.publish ?? null}
                 </span>
               ) : (
                 "-"
@@ -299,17 +299,17 @@ const TableData = ({
               <ButtonControls
                 name={"Detail"}
                 icon={FaFileInvoice}
-                to={`/admin/detail-objek/${objects.ID}/${objects.nama_objek}`}
+                to={`/admin/detail-objek/${objects?.ID}/${objects?.nama_objek}`}
               />
               <ButtonControls
                 name={"Edit"}
                 icon={FaEdit}
-                onClick={() => handleOpenUpdateForm(objects.ID)}
+                onClick={() => handleOpenUpdateForm(objects?.ID)}
               />
               <ButtonControls
                 name={"Hapus"}
                 icon={MdDeleteForever}
-                onClick={() => handleOpenDeleteModal(objects.ID)}
+                onClick={() => handleOpenDeleteModal(objects?.ID)}
               />
             </TableCell>
           </TableRow>

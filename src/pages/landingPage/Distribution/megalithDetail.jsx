@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Loading from "../../components/Elements/Loading/Loading";
-import { Detail } from "../../components/Fragments/Detail/Detail";
-import videosData from "../../data/videos.json";
-import { getTechCrunch } from "../../services/article.service";
-import { getAllObject, getOneObject } from "../../services/object.service";
-import { toView } from "../../utils/toView";
-import { OtherPosts } from "../../components/Fragments/Detail/OtherPosts";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getAllObject, getOneObject } from "../../../services/object.service";
+import Loading from "../../../components/Elements/Loading/Loading";
+import { Detail } from "../../../components/Fragments/Detail/Detail";
+import { OtherPosts } from "../../../components/Fragments/Detail/OtherPosts";
 
-export default function SitusDetail() {
+export default function MegalithDetail() {
   const { id } = useParams();
   const [situs, setSitus] = useState(null);
 

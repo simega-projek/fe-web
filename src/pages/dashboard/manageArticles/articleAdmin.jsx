@@ -83,12 +83,8 @@ export default function ArticleAdmin() {
         currentPage,
       );
 
-      const sortedData = article.data.sort(
-        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
-      );
-
-      setArticleData(sortedData);
-      setDataPage(article.pagination);
+      setArticleData(article?.data);
+      setDataPage(article?.pagination);
     } catch (err) {
       console.log(err);
     } finally {

@@ -132,7 +132,7 @@ export default function LembahAdmin() {
 
       <hr className={`${isOpenCreateForm ? "mt-10" : "mt-0"}`} />
       <TitleSection className="my-5 flex px-3 underline">
-        <GiValley /> Data Lembah
+        <GiValley /> Data Lembah / Wilayah
       </TitleSection>
       <hr />
       <div className="mt-5 w-full px-3">
@@ -140,7 +140,7 @@ export default function LembahAdmin() {
           <div className="w-full md:w-1/2">
             <TextInput
               icon={FaSearch}
-              placeholder="Cari Lembah..."
+              placeholder="Cari Lembah / Wilayah..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -174,7 +174,7 @@ export default function LembahAdmin() {
           <Table hoverable>
             <TableHead>
               <TableHeadCell className="w-1/12">No</TableHeadCell>
-              <TableHeadCell className="w-2/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-2/5">Lembah / Wilayah</TableHeadCell>
               <TableHeadCell className="w-1/5">Provinsi</TableHeadCell>
               <TableHeadCell className="w-1/5">Kabupaten</TableHeadCell>
               {/* <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell> */}

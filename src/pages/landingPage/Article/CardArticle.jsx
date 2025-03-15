@@ -12,7 +12,7 @@ export const CardArticle = ({ to, title, desc, date, img }) => {
           className="h-32 w-full object-cover md:h-40"
         />
       </Link>
-      <div className="bg-white p-4 sm:p-6">
+      <div className="h-full bg-white p-4 sm:p-6">
         <time className="block text-xs text-gray-500">
           {" "}
           {formattedDate(date)}{" "}

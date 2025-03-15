@@ -5,19 +5,12 @@ import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
-import { getOneEvent, updateEvent } from "../../../services/event.service";
-import { toView } from "../../../utils/toView";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
+import { createEvent } from "../../../services/event.service";
+import { toView } from "../../../utils/toView";
 
-export default function UpdateActivity({
-  id,
-  isOpenUpdate,
-  onClose,
-  onSuccess,
-}) {
+export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
   const editorInput = useRef(null);
   const imageInput = useRef(null);
 
@@ -26,10 +19,9 @@ export default function UpdateActivity({
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [regisLink, setRegisLink] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("Akan Datang");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [originalImage, setOriginalImage] = useState(null);
 
   const [debounceDescription] = useDebounce(description, 800);
 
@@ -43,6 +35,10 @@ export default function UpdateActivity({
     if (selectFile) setImagePreview(URL.createObjectURL(selectFile));
   };
 
+  const handleInputJodit = (desc) => {
+    setDescription(desc);
+  };
+
   const handleClosePreview = () => {
     setImagePreview(null);
     setImage(null);
@@ -51,13 +47,17 @@ export default function UpdateActivity({
     }
   };
 
-  const handleInputJodit = (desc) => {
-    setDescription(desc);
-  };
-
-  const handleBtnCancel = () => {
-    onClose();
-    if (isLoading) window.location.reload();
+  const handleReset = () => {
+    setTitle("");
+    setDescription("");
+    setRegisLink("");
+    setStatus("");
+    setImage(null);
+    setStartDate(null);
+    setEndDate(null);
+    setImagePreview(null);
+    if (editorInput.current) editorInput.current.value = null;
+    if (imageInput.current) imageInput.current.value = null;
   };
 
   const validateForm = () => {
@@ -69,7 +69,11 @@ export default function UpdateActivity({
       setMessageError("Link pendaftaran diisi");
       toView("top");
       return false;
-    } else if (description.trim() === "" || !description) {
+    } else if (!image) {
+      setMessageError("Gambar kegiatan diisi");
+      toView("top");
+      return false;
+    } else if (description.trim() === " " || !description) {
       setMessageError("Deskripsi kegiatan diisi");
       toView("top");
       return false;
@@ -78,7 +82,7 @@ export default function UpdateActivity({
     return true;
   };
 
-  const handleUpdateActivity = async (e) => {
+  const handleCreateActivity = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -94,7 +98,7 @@ export default function UpdateActivity({
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("image", image || originalImage);
+    formData.append("image", image);
     formData.append("registration_link", regisLink);
     formData.append("start_date", formattedStartDate);
     formData.append("end_date", formattedEndDate);
@@ -102,8 +106,8 @@ export default function UpdateActivity({
     console.log("form data: ", formData);
     try {
       setIsLoading(true);
-      const res = await updateEvent(id, formData);
-      // console.log("response update event: ", res);
+      const res = await createEvent(formData);
+      console.log("response create event: ", res);
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);
@@ -112,13 +116,8 @@ export default function UpdateActivity({
         setMessageError(null);
         setMessageSuccess(res.message);
         toView("top");
-        if (onSuccess) {
-          onSuccess();
-          setTimeout(() => {
-            onClose();
-            setMessageSuccess(null);
-          }, 2000);
-        }
+        handleReset();
+        onSuccess();
       }
     } catch (err) {
       console.log(err);
@@ -127,41 +126,16 @@ export default function UpdateActivity({
     }
   };
 
-  const fetchOneEvent = async () => {
-    setIsLoading(true);
-    try {
-      const res = await getOneEvent(id);
-      const data = res?.data;
-      setTitle(data.title);
-      setRegisLink(data.registration_link);
-      setStartDate(
-        data.start_date
-          ? new Date(data.start_date).toISOString().split("T")[0]
-          : "",
-      );
-      setEndDate(
-        data.end_date
-          ? new Date(data.end_date).toISOString().split("T")[0]
-          : "",
-      );
-      setImage(data.image);
-      setImagePreview(data.image);
-      setStatus(data.status);
-      setDescription(data.description);
-    } catch (err) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (id) fetchOneEvent();
-  }, [id]);
+    if (isOpenCreate === false) {
+      handleReset();
+    }
+  }, [isOpenCreate]);
 
   return (
-    <div className={isOpenUpdate ? "block" : "hidden"}>
+    <div className={isOpenCreate ? "block" : "hidden"}>
       <div className="mb-2 flex justify-between">
-        <TitleSection className="underline">Edit Kegiatan</TitleSection>
+        <TitleSection className="underline">Tambah Kegiatan</TitleSection>
         <hr className="my-5" />
         <Button color="red" onClick={onClose}>
           X
@@ -177,7 +151,7 @@ export default function UpdateActivity({
       />
 
       {/* create form */}
-      <form onSubmit={handleUpdateActivity} className="flex flex-wrap">
+      <form onSubmit={handleCreateActivity} className="flex flex-wrap">
         <ContainerInput>
           <Label
             htmlFor="title"
@@ -314,8 +288,12 @@ export default function UpdateActivity({
         >
           {isLoading ? "Loading..." : "Simpan"}
         </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleBtnCancel}>
-          Batal
+        <ButtonFunc
+          className="m-3 bg-tan disabled:cursor-no-drop"
+          onClick={handleReset}
+          disabled={isLoading}
+        >
+          Reset
         </ButtonFunc>
       </form>
     </div>

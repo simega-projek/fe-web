@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { toView } from "../../../utils/toView";
-import { FilterEvent } from "../../dashboard/manageActivities/FilterEvent";
+import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
@@ -115,9 +115,9 @@ export default function KegiatanPage() {
             data-aos="fade-up"
           >
             {Array.isArray(dataEvents) && dataEvents?.length > 0
-              ? dataEvents.map((item) => (
+              ? dataEvents?.map((item) => (
                   <CardArtikel
-                    to={`/kegiatan/${item.ID}/${item.title}`}
+                    to={`/kegiatan/${item?.ID}/${item?.title}`}
                     key={item?.ID}
                     title={item?.title}
                     date={item?.start_date}

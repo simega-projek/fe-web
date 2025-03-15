@@ -32,7 +32,7 @@ import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import UpdateObjek from "../manageObjek/UpdateObjek";
-import { FilterObject } from "./FilterPublication";
+import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
 
 export default function PublicationAdmin() {
   const [objectData, setObjectData] = useState([]);
@@ -89,10 +89,7 @@ export default function PublicationAdmin() {
         "pending",
       );
 
-      const sortedData = objects.data.sort(
-        (a, b) => new Date(b.UpdateAt) - new Date(a.UpdateAt),
-      );
-      setObjectData(sortedData);
+      setObjectData(objects.data);
       setDataPage(objects.pagination);
     } catch (err) {
       console.log(err);
@@ -202,6 +199,7 @@ export default function PublicationAdmin() {
         {/* search & button create */}
         <div className="flex justify-between gap-1">
           <FilterObject
+            publish={null}
             search={search}
             onSearch={(e) => setSearch(e.target.value)}
             valley={valley}
@@ -236,7 +234,7 @@ export default function PublicationAdmin() {
               <TableHeadCell className="w-1/12">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Objek</TableHeadCell>
               <TableHeadCell className="w-1/5">Kategori</TableHeadCell>
-              <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-1/5">Lembah / Wilayah</TableHeadCell>
               <TableHeadCell className="w-1/5">Situs</TableHeadCell>
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
@@ -329,21 +327,21 @@ const TableData = ({
         </TableRow>
       ) : data?.length > 0 ? (
         data?.map((objects, index) => (
-          <TableRow key={objects.ID}>
+          <TableRow key={objects?.ID}>
             <TableCell className="whitespace-normal">
               {index + startIndex + 1}
             </TableCell>
             <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-              {objects.nama_objek ?? "-"}
+              {objects?.nama_objek ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.category.category ?? "-"}
+              {objects?.category?.category ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.site.lembah.lembah ?? "-"}
+              {objects?.site?.lembah?.lembah ?? "-"}
             </TableCell>
             <TableCell className="whitespace-normal">
-              {objects.site.nama_situs ?? "-"}
+              {objects?.site?.nama_situs ?? "-"}
             </TableCell>
             <TableCell className="mx-auto items-center justify-center lg:flex">
               {/* open detail */}
@@ -355,12 +353,12 @@ const TableData = ({
               <ButtonControls
                 name={"Edit"}
                 icon={FaEdit}
-                onClick={() => handleOpenUpdateForm(objects.ID)}
+                onClick={() => handleOpenUpdateForm(objects?.ID)}
               />
               <ButtonControls
                 name={"Hapus"}
                 icon={MdDeleteForever}
-                onClick={() => handleOpenDeleteModal(objects.ID)}
+                onClick={() => handleOpenDeleteModal(objects?.ID)}
               />
             </TableCell>
           </TableRow>

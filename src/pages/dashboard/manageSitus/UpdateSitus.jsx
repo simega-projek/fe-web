@@ -264,20 +264,20 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
         <ContainerInput>
           <Label
             htmlFor="lembah"
-            value="Nama Lembah"
+            value="Nama Lembah / Wilayah"
             className="mb-2 block text-base"
           />
           <select
             id="lembah"
-            placeholder="Pilih Lembah"
+            placeholder="Pilih Lembah / Wilayah"
             className="w-full rounded-md"
             onChange={handleValleyChange}
             value={selectedValley?.lembah ?? selectedValley ?? ""}
           >
-            <option>Pilih Lembah</option>
+            <option>Pilih Lembah / Wilayah</option>
             {valleys?.map((valley) => (
-              <option key={valley.ID} value={valley.lembah}>
-                {valley.lembah}
+              <option key={valley?.ID} value={valley?.lembah}>
+                {valley?.lembah}
               </option>
             ))}
           </select>
@@ -324,8 +324,8 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
           >
             <option value="">Pilih Kelurahan</option>
             {villages?.map((village) => (
-              <option key={village.id} value={village.name}>
-                {village.name}
+              <option key={village?.id} value={village?.name}>
+                {village?.name}
               </option>
             ))}
           </select>

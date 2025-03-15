@@ -8,29 +8,28 @@ import Media from "./components/Layouts/Media.jsx";
 import "./index.css";
 import ErrorPage from "./pages/404.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx";
-import ActivityAdmin from "./pages/dashboard/manageActivities/eventAdmin.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
+import EventAdmin from "./pages/dashboard/manageEvents/eventAdmin.jsx";
 import { FeedbackAdmin } from "./pages/dashboard/manageFeedback/feedbackAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import ObjectPersebaran from "./pages/dashboard/manageObjek/objectPersebaran.jsx";
 import ObjekAdmin from "./pages/dashboard/manageObjek/objekAdmin.jsx";
+import ObjekDetail from "./pages/dashboard/manageObjek/ObjekDetail.jsx";
 import { ProfileAdmin } from "./pages/dashboard/manageProfile/profileAdmin.jsx";
 import PublicationAdmin from "./pages/dashboard/managePublication/publicationAdmin.jsx";
 import SitusAdmin from "./pages/dashboard/manageSitus/situsAdmin.jsx";
 import UserAdmin from "./pages/dashboard/manageUsers/userAdmin.jsx";
 import ArtikelPage from "./pages/landingPage/Article/artikel.jsx";
 import ArtikelDetail from "./pages/landingPage/Article/artikelDetail.jsx";
+import MegalithPage from "./pages/landingPage/Distribution/megalith.jsx";
+import MegalithDetail from "./pages/landingPage/Distribution/megalithDetail.jsx";
 import KegiatanPage from "./pages/landingPage/Events/kegiatan.jsx";
 import KegiatanDetail from "./pages/landingPage/Events/kegiatanDetail.jsx";
 import FeedbackPage from "./pages/landingPage/feedback.jsx";
 import HomePage from "./pages/landingPage/Home/home.jsx";
-import PersebaranPage from "./pages/landingPage/persebaran.jsx";
-import SitusPage from "./pages/landingPage/situs.jsx";
-import SitusDetail from "./pages/landingPage/situsDetail.jsx";
-import Login from "./pages/login.jsx";
+import Login from "./pages/auth/login.jsx";
 import store from "./redux/store.js";
-import ObjekDetail from "./pages/dashboard/manageObjek/ObjekDetail.jsx";
 
 const route = createBrowserRouter([
   {
@@ -61,15 +60,12 @@ const route = createBrowserRouter([
       },
       {
         path: "/persebaran",
-        element: <PersebaranPage />,
+        element: <MegalithPage />,
       },
-      {
-        path: "/objek",
-        element: <SitusPage />,
-      },
+
       {
         path: "/objek/:id/:slug",
-        element: <SitusDetail />,
+        element: <MegalithDetail />,
       },
       {
         path: "/kegiatan/:id/:slug",
@@ -123,7 +119,7 @@ const route = createBrowserRouter([
       },
       {
         path: "kelola-kegiatan",
-        element: <ActivityAdmin />,
+        element: <EventAdmin />,
       },
       {
         path: "kelola-user",

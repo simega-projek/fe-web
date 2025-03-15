@@ -25,7 +25,6 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const [lintang, setLintang] = useState("");
   const [bujur, setBujur] = useState("");
   const [valley, setValley] = useState("");
-  const [videos, setVideos] = useState([]); //multiple video
   const [selectedSite, setSelectedSite] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [description, setDescription] = useState("");
@@ -43,8 +42,6 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const [messageError, setMessageError] = useState(null);
   const [messageSuccess, setMessageSuccess] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [resetManyInput, setResetManyInput] = useState(false);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -64,11 +61,13 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     setSelectedCategory(+selectedCategory);
+    console.log({ selectedCategory });
   };
 
   const handleSiteChange = (e) => {
     const selectedSite = e.target.value;
     setSelectedSite(+selectedSite);
+    console.log({ selectedSite });
 
     const site = siteData.find((s) => s.ID === +selectedSite);
     setValley(site?.lembah?.lembah);
@@ -91,8 +90,8 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     setDescription(newDescription);
   };
 
-  const handleUpdateObject = async () => {
-    // e.preventDefault();
+  const handleUpdateObject = async (e) => {
+    e.preventDefault();
 
     if (
       nameObject.trim() === "" ||
@@ -119,10 +118,13 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     formData.append("deskripsi", description);
     formData.append("site_id", selectedSite);
     formData.append("category_id", selectedCategory);
-    formData.append("video", videos);
     formData.append("gambar", image ? image : originalImage);
     formData.append("publish", publish);
 
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    // return;
     setIsLoading(true);
     try {
       const res = await updateObject(id, formData);
@@ -164,7 +166,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
       setImagePreview(object?.gambar);
       setSelectedSite(object?.site_id);
       setSelectedCategory(object?.category_id);
-      setVideos(object?.video.split(","));
+
       setOriginalImage(object?.gambar);
       setPublish(object?.publish);
     } catch (err) {
@@ -245,8 +247,8 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           >
             <option>Pilih Kategori</option>
             {categoryData?.map((cat) => (
-              <option key={cat.ID} value={cat.ID}>
-                {cat.category}
+              <option key={cat?.ID} value={cat?.ID}>
+                {cat?.category}
               </option>
             ))}
           </select>
@@ -292,7 +294,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
         <ContainerInput>
           <Label
             htmlFor="lembah"
-            value="Lembah"
+            value="Lembah / Wilayah"
             className="mb-2 block text-base"
           />
           <TextInput
@@ -377,20 +379,6 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
             <ImagePreview src={imagePreview} onClose={handleClosePreview} />
           )}
         </ContainerInput>
-
-        {/* <ContainerInput>
-          <Label
-            htmlFor="video"
-            value="Link Video"
-            className="mb-2 block text-base"
-          />
-          <ManyInputText
-            onTextsChange={setVideos}
-            disabled={isLoading}
-            onReset={resetManyInput}
-            initialTexts={videos}
-          />
-        </ContainerInput> */}
 
         <div className="w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">

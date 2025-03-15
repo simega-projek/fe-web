@@ -203,7 +203,9 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
     <>
       <div className={isOpenUpdate ? "block" : "hidden"}>
         <div className="mb-2 flex justify-between">
-          <TitleSection className="underline">Ubah Data Lembah</TitleSection>
+          <TitleSection className="underline">
+            Ubah Data Lembah / Wilayah
+          </TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
             X
@@ -273,35 +275,12 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
             >
               <option>Pilih Kabupaten/Kota</option>
               {regencies?.map((regency) => (
-                <option key={regency.id} value={regency.name}>
-                  {regency.name}
+                <option key={regency?.id} value={regency?.name}>
+                  {regency?.name}
                 </option>
               ))}
             </select>
           </ContainerInput>
-
-          {/* <ContainerInput>
-            <Label
-              htmlFor="kecamatan"
-              value="Nama Kecamatan"
-              className="mb-2 block text-base"
-            />
-            <select
-              id="kecamatan"
-              placeholder="Pilih Kecamatan"
-              onChange={handleDistrictSelect}
-              className="w-full rounded-md"
-              disabled={isLoading}
-              value={selectedDistrict?.name || ""}
-            >
-              <option>Pilih Kecamatan</option>
-              {districts?.map((district) => (
-                <option key={district.id} value={district.name}>
-                  {district.name}
-                </option>
-              ))}
-            </select>
-          </ContainerInput> */}
 
           <ButtonFunc
             className={`m-3 bg-primary text-white disabled:cursor-no-drop`}

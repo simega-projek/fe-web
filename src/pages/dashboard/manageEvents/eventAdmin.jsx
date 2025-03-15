@@ -24,12 +24,12 @@ import { deleteEvent, getAllEvent } from "../../../services/event.service";
 import { formatDate } from "../../../utils/formatDate";
 import { toView } from "../../../utils/toView";
 import CreateActivity from "./CreateEvent";
-import UpdateActivity from "./UpdateActivity";
+import UpdateActivity from "./UpdateEvent";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
-import { FilterEvent } from "./FilterEvent";
+import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 
-export default function ActivityAdmin() {
+export default function EventAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);

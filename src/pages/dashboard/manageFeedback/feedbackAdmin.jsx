@@ -62,11 +62,9 @@ export const FeedbackAdmin = () => {
         month,
         year,
       );
-      const sortedData = feedback.data.sort(
-        (a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt),
-      );
-      setDataFeedback(sortedData);
-      setDataPage(feedback.pagination);
+
+      setDataFeedback(feedback?.data);
+      setDataPage(feedback?.pagination);
     } catch (err) {
       console.log(err);
     } finally {
@@ -203,14 +201,14 @@ const FeedbackData = ({
           <Loading />
         </div>
       ) : data?.length > 0 ? (
-        data.map((fd) => (
+        data?.map((fd) => (
           <CardFeedback
-            key={fd.ID}
-            name={fd.name}
-            address={fd.email_telp}
-            date={fd.CreatedAt}
-            message={fd.message}
-            onDelete={() => handleOpenDeleteModal(fd.ID)}
+            key={fd?.ID}
+            name={fd?.name}
+            address={fd?.email_telp}
+            date={fd?.CreatedAt}
+            message={fd?.message}
+            onDelete={() => handleOpenDeleteModal(fd?.ID)}
             onView={() => onView(fd)}
           />
         ))

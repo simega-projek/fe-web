@@ -1,37 +1,30 @@
-// import { HiInformationCircle } from "react-icons/hi";
-// import { Alert } from "flowbite-react";
-// import { useRouteError } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-// export default function ErrorPage({ error }) {
-//   const errorRoute = useRouteError();
-//   console.log({ errorRoute });
-
-//   return (
-//     <Alert
-//       className="flex min-h-screen flex-col items-center justify-center text-xl"
-//       color="failure"
-//       icon={HiInformationCircle}
-//     >
-//       {/* <span className="font-medium">{error.status}!</span>
-//       <p>Errot {error.statusText || error.message}</p> */}
-//     </Alert>
-//   );
-// }
-
-import { HiInformationCircle } from "react-icons/hi";
-import { Alert } from "flowbite-react";
-
-export default function ErrorPage({ error }) {
-  console.log({ error }); // Memastikan error diterima dengan benar
-
+export default function ErrorPage() {
   return (
-    <Alert
-      className="flex min-h-screen flex-col items-center justify-center text-xl"
-      color="failure"
-      icon={HiInformationCircle}
-    >
-      <span className="font-medium">{error?.status} 404!</span>
-      <p>Error: {error?.statusText || error?.message} Data Tidak Ditemukan!</p>
-    </Alert>
+    <div className="flex h-screen flex-col items-center justify-center bg-cover pt-10 md:flex-row lg:gap-10">
+      <div className="flex w-full justify-center bg-cover lg:justify-end">
+        <img
+          src="/public/icons/megalith.png"
+          className="h-52 md:h-full lg:h-96"
+        />
+      </div>
+      <div className="w-full text-center lg:text-start">
+        <h1 className="text-9xl font-black text-gray-400">404</h1>
+
+        <p className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Ho-hoh!
+        </p>
+
+        <p className="mt-4 text-gray-500">Halaman tidak ditemukan.</p>
+
+        <Link
+          to={"/"}
+          className="focus:ring-3 focus:outline-hidden mt-6 inline-block rounded-sm bg-primary px-5 py-3 text-sm font-medium text-white transition-all duration-200 hover:scale-110 hover:shadow-2xl"
+        >
+          Go Back Home
+        </Link>
+      </div>
+    </div>
   );
 }

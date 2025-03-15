@@ -41,7 +41,7 @@ export default function Header() {
     <>
       <div className="fixed z-30 flex h-16 w-full items-center justify-center bg-tan p-2 px-10 dark:bg-[#0F172A]">
         <div
-          className={`logo ${isSidebarOpen ? "-ml-20" : "ml-20"} flex h-full flex-none transform items-center justify-center duration-500 ease-in-out dark:text-white`}
+          className={`logo ${isSidebarOpen ? "-ml-20" : "ml-32 md:ml-20"} text-ms flex h-full flex-none transform items-center justify-center font-bold duration-500 ease-in-out dark:text-white md:text-lg`}
         >
           Sistem Informasi Megalitikum
         </div>
@@ -55,14 +55,14 @@ export default function Header() {
             <div className="flex flex-none justify-center">
               <div className="flex h-8 w-8">
                 <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShta_GXR2xdnsxSzj_GTcJHcNykjVKrCBrZ9qouUl0usuJWG2Rpr_PbTDu3sA9auNUH64&usqp=CAU"
+                  src="/public/images/logo-bpk.svg"
                   alt="profile"
                   className="rounded-full object-cover shadow"
                 />
               </div>
             </div>
 
-            <div className="md:text-md hidden text-sm text-black dark:text-white md:block">
+            <div className="md:text-md hidden text-sm font-bold text-white dark:text-white md:block">
               {userData?.info?.username || userData?.data?.username}
             </div>
           </div>

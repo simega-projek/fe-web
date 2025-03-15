@@ -173,7 +173,7 @@ export default function SitusAdmin() {
             <TableHead>
               <TableHeadCell className="w-1/11">No</TableHeadCell>
               <TableHeadCell className="w-2/5">Nama Situs</TableHeadCell>
-              <TableHeadCell className="w-1/5">Lembah</TableHeadCell>
+              <TableHeadCell className="w-1/5">Lembah/Wilayah</TableHeadCell>
               <TableHeadCell className="w-1/5">Kecamatan</TableHeadCell>
               <TableHeadCell className="w-1/5">Desa/Kelurahan</TableHeadCell>
 

@@ -167,7 +167,9 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
     <>
       <div className={isOpenCreate ? "block" : "hidden"}>
         <div className="mb-2 flex justify-between">
-          <TitleSection className="underline">Tambah Lembah</TitleSection>
+          <TitleSection className="underline">
+            Tambah Lembah / Wilayah
+          </TitleSection>
           <hr className="my-5" />
           <Button color="red" onClick={onClose}>
             X
@@ -186,7 +188,7 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
           <ContainerInput>
             <Label
               htmlFor="lembah"
-              value="Nama Lembah"
+              value="Nama Lembah / Wilayah"
               className="mb-2 block text-base"
             />
             <TextInput
@@ -245,29 +247,6 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               ))}
             </select>
           </ContainerInput>
-
-          {/* <ContainerInput>
-            <Label
-              htmlFor="kecamatan"
-              value="Nama Kecamatan"
-              className="mb-2 block text-base"
-            />
-            <select
-              id="kecamatan"
-              placeholder="Pilih Kecamatan"
-              onChange={handleDistrictSelect}
-              className="w-full rounded-md"
-              disabled={isLoading}
-              value={districts?.length > 0 ? districts?.name : ""}
-            >
-              <option>Pilih Kecamatan</option>
-              {districts?.map((district) => (
-                <option key={district?.id} value={district?.name}>
-                  {district?.name}
-                </option>
-              ))}
-            </select>
-          </ContainerInput> */}
         </form>
 
         <ButtonFunc

@@ -1,25 +1,27 @@
 import { Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch, FaUndoAlt } from "react-icons/fa";
-import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
+import { ButtonControls } from "../../Elements/Buttons/ButtonControls";
 import { getAllCategory } from "../../../services/category.service";
 import { getAllSite } from "../../../services/site.service";
 import { getAllValley } from "../../../services/valley.service";
 import { useSelector } from "react-redux";
 
-export const FilterObject = ({
-  search,
-  onSearch,
-  site,
-  onSite,
-  publish,
-  onPublish,
-  valley,
-  onValley,
-  category,
-  onCategory,
-  onReset,
-}) => {
+export const FilterObject = (props) => {
+  const {
+    search,
+    onSearch,
+    site,
+    onSite,
+    viewPublish = false,
+    publish,
+    onPublish,
+    valley,
+    onValley,
+    category,
+    onCategory,
+    onReset,
+  } = props;
   const [valleyData, setValleyData] = useState([]);
   const [siteData, setSiteData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -30,43 +32,47 @@ export const FilterObject = ({
   const [showFilters, setshowFilters] = useState(false);
   const fetchDataFilter = async () => {
     try {
-      const valley = await getAllValley();
-      const site = await getAllSite();
-      const category = await getAllCategory();
+      const resValley = await getAllValley();
 
-      const sortValley = valley.data.sort((a, b) => {
+      const resCategory = await getAllCategory();
+      const resSite = await getAllSite();
+
+      const sortSite = resSite.data.sort((a, b) => {
+        return a.nama_situs.localeCompare(b.nama_situs);
+      });
+
+      const sortValley = resValley.data.sort((a, b) => {
         return a.lembah.localeCompare(b.lembah);
       });
 
-      const sortSite = site.data.sort((a, b) => {
-        return a.nama_situs.localeCompare(b.nama_situs);
-      });
-      const sortCategory = category.data.sort((a, b) => {
+      const sortCategory = resCategory.data.sort((a, b) => {
         return a.category.localeCompare(b.category);
       });
 
+      setCategoryData(sortCategory);
       setValleyData(sortValley);
       setSiteData(sortSite);
-      setCategoryData(sortCategory);
+
+      if (valley) {
+        // console.log({ valley });
+        const filterSite = resSite?.data?.filter(
+          (s) => s?.lembah?.lembah === valley,
+        );
+        setSiteData(filterSite);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
+  // console.log({ siteData }, { valley });
+
   useEffect(() => {
     fetchDataFilter();
-  }, []);
-
-  // useEffect(() => {
-  //   if (valley) {
-  //     const filtered = siteData.filter((s) => s?.lembah?.lembah === valley);
-  //     setSiteData(filtered);
-  //     console.log(filtered);
-  //   } else fetchDataFilter();
-  // }, [valley]);
+  }, [valley]);
 
   return (
-    <div className="flex w-full flex-col gap-2 md:w-3/4 lg:flex-row">
+    <div className="flex w-full flex-col gap-2 md:w-3/4 lg:flex-row lg:justify-center">
       <TextInput
         icon={FaSearch}
         placeholder="Cari Kegiatan..."
@@ -85,32 +91,34 @@ export const FilterObject = ({
 
       {/* Filters Container */}
       <div
-        className={`flex flex-col md:flex-row ${showFilters ? "block" : "hidden"} gap-1 md:flex`}
+        className={`flex flex-col md:flex-row ${showFilters ? "block" : "hidden"} gap-1 md:flex lg:justify-end`}
       >
         {/* Publish Filter */}
-        <Select
-          value={publish}
-          onChange={onPublish}
-          className="w-full md:w-1/4"
-        >
-          <option value={""} className="bg-light">
-            Publish
-          </option>
-          <option value={"pending"}>Pending</option>
-          <option value={"public"}>Publik</option>
-          <option value={"private"}>Privat</option>
-        </Select>
+        {viewPublish && (
+          <Select
+            value={publish}
+            onChange={onPublish}
+            className="w-full md:w-1/4"
+          >
+            <option value={""} className="bg-light">
+              Publish
+            </option>
+            <option value={"pending"}>Pending</option>
+            <option value={"public"}>Publik</option>
+            <option value={"private"}>Privat</option>
+          </Select>
+        )}
 
         {/* Category Filter */}
         <Select
           value={category}
           onChange={onCategory}
-          className="w-full md:w-1/4"
+          className="w-full md:w-1/3"
         >
           <option value={""} className="bg-light">
             Kategori
           </option>
-          {categoryData.map((c) => (
+          {categoryData?.map((c) => (
             <option value={c?.category} key={c?.ID}>
               {c?.category}
             </option>
@@ -118,11 +126,11 @@ export const FilterObject = ({
         </Select>
 
         {/* Lembah Filter */}
-        <Select value={valley} onChange={onValley} className="w-full md:w-1/4">
+        <Select value={valley} onChange={onValley} className="w-full md:w-1/3">
           <option value={""} className="bg-light">
-            Lembah
+            Lembah / Wilayah
           </option>
-          {valleyData.map((d) => (
+          {valleyData?.map((d) => (
             <option value={d?.lembah} key={d?.ID}>
               {d?.lembah}
             </option>
@@ -130,11 +138,11 @@ export const FilterObject = ({
         </Select>
 
         {/* Situs Filter */}
-        <Select value={site} onChange={onSite} className="w-full md:w-1/4">
+        <Select value={site} onChange={onSite} className="w-full md:w-1/3">
           <option value={""} className="bg-light">
             Situs
           </option>
-          {siteData.map((s) => (
+          {siteData?.map((s) => (
             <option value={s?.nama_situs} key={s?.ID}>
               {s?.nama_situs}
             </option>
@@ -169,6 +177,7 @@ export const FilterObject = ({
 
 {
   /* <FilterObject
+  viewPublish={true}
   search={search}
   onSearch={(e) => setSearch(e.target.value)}
   valley={valley}

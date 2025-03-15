@@ -21,7 +21,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const [bujur, setBujur] = useState("");
   const [valley, setValley] = useState("");
   const [publish, setPublish] = useState("");
-  const [videos, setVideos] = useState([]); //multiple video
+
   const [image, setImage] = useState(null);
   const [selectedSite, setSelectedSite] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -41,7 +41,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     setLintang("");
     setBujur("");
     setValley("");
-    setVideos([]);
+
     setSelectedSite(0);
     setSelectedCategory(0);
     setDescription("");
@@ -96,10 +96,6 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
 
     const site = siteData.find((s) => s.ID === +selectedSite);
     setValley(site?.lembah?.lembah);
-  };
-
-  const handleVideosChange = (values) => {
-    setVideos(values);
   };
 
   const handleCreateObject = async (e) => {
@@ -267,7 +263,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
         <ContainerInput>
           <Label
             htmlFor="lembah"
-            value="Lembah"
+            value="Lembah / Wilayah"
             className="mb-2 block text-base"
           />
           <TextInput
@@ -323,19 +319,6 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
             <ImagePreview src={imagePreview} onClose={handleClosePreview} />
           )}
         </ContainerInput>
-
-        {/* <ContainerInput>
-          <Label
-            htmlFor="video"
-            value="Link Video"
-            className="mb-2 block text-base"
-          />
-          <ManyInputText
-            onTextsChange={setVideos}
-            disabled={isLoading}
-            onReset={resetManyInput}
-          />
-        </ContainerInput> */}
 
         <div className="w-full px-3">
           <Label htmlFor="deskripsi" className="mb-2 block text-base">

@@ -76,12 +76,12 @@ export const Asidebars = () => {
             onClick={toggleOnListMenageObject}
             to={"persebaran-objek"}
           >
-            <GiColombianStatue /> {isSidebarOpen && <span>Kelola Megalit</span>}
+            <GiColombianStatue /> {isSidebarOpen && <span>Cagar Budaya</span>}
           </Link>
           {onListMenageObject && (
             <>
               <SidebarItem
-                label={"Lembah"}
+                label={"Lembah/Wilayah"}
                 to={"kelola-lembah"}
                 icon={GiValley}
                 isOpen={isSidebarOpen}

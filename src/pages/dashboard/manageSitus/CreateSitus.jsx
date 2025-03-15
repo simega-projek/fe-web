@@ -236,21 +236,21 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
         <ContainerInput>
           <Label
             htmlFor="lembah"
-            value="Nama Lembah"
+            value="Lembah / Wilayah"
             className="mb-2 block text-base"
           />
           <select
             id="lembah"
-            placeholder="Pilih Lembah"
+            placeholder="Pilih Lembah / Wilayah"
             className="w-full rounded-md"
             onChange={handleValleyChange} //
             value={selectedValley?.lembah ?? ""}
             disabled={isLoading}
           >
-            <option>Pilih Lembah</option>
+            <option>Pilih Lembah / Wilayah</option>
             {valleyData?.map((valley) => (
-              <option key={valley.ID} value={valley.lembah}>
-                {valley.lembah}
+              <option key={valley?.ID} value={valley?.lembah}>
+                {valley?.lembah}
               </option>
             ))}
           </select>
@@ -297,8 +297,8 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
           >
             <option>Pilih Kelurahan</option>
             {villageData?.map((village) => (
-              <option key={village.id} value={village.name}>
-                {village.name}
+              <option key={village?.id} value={village?.name}>
+                {village?.name}
               </option>
             ))}
           </select>

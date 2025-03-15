@@ -7,7 +7,7 @@ import { Maps } from "../../../components/Fragments/Maps";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
-import { FilterObject } from "./FilterObjek";
+import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
 
 export default function ObjectPersebaran() {
   const lokasi = [-0.9949962515054261, 121.40497407083464];
@@ -41,12 +41,10 @@ export default function ObjectPersebaran() {
         category,
         publish,
       );
-      const sortedData = objects.data.sort(
-        (a, b) => new Date(b.UpdatedAt) - new Date(a.UpdatedAt),
-      );
-      setDataObjects(sortedData);
 
-      setDataPage(objects.pagination);
+      setDataObjects(objects?.data);
+
+      setDataPage(objects?.pagination);
       // console.log(dataObjects);
     } catch (err) {
       console.log(err);
@@ -109,6 +107,7 @@ export default function ObjectPersebaran() {
           onPublish={(e) => setPublish(e.target.value)}
           onReset={handleResetFilter}
           filterSite={filterSite}
+          viewPublish={true}
         />
 
         <FilterPage

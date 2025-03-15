@@ -2,16 +2,15 @@ import Aos from "aos";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useDebounce } from "use-debounce";
-import Loading from "../../components/Elements/Loading/Loading";
-import CardSitus from "../../components/Fragments/Cards/CardSitus";
-import { Maps } from "../../components/Fragments/Maps";
-import { PaginationPage } from "../../components/Fragments/Paginator/PaginationPage";
-import { getAllObject } from "../../services/object.service";
-import { toView } from "../../utils/toView";
-import { FilterObject } from "../dashboard/managePublication/FilterPublication";
+import { Maps } from "../../../components/Fragments/Maps";
+import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
+import Loading from "../../../components/Elements/Loading/Loading";
+import CardSitus from "../../../components/Fragments/Cards/CardSitus";
+import { getAllObject } from "../../../services/object.service";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { toView } from "../../../utils/toView";
 
-export default function PersebaranPage() {
-  const lokasi = [-0.9949962515054261, 121.40497407083464];
+export default function MegalithPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const [dataObjects, setDataObjects] = useState([]);
@@ -49,8 +48,8 @@ export default function PersebaranPage() {
         "public",
       );
 
-      setDataObjects(objects.data);
-      setDataPage(objects.pagination);
+      setDataObjects(objects?.data);
+      setDataPage(objects?.pagination);
       // console.log(dataObjects);
     } catch (err) {
       console.log(err);
@@ -115,7 +114,7 @@ export default function PersebaranPage() {
                     desc={o?.propinsi}
                     to={`/objek/${o?.ID}/${o?.nama_objek}`}
                     img={o?.gambar}
-                    category={o?.category.category}
+                    category={o?.category?.category}
                     publish={o?.publish}
                   />
                 ))

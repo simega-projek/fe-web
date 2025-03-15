@@ -1,11 +1,10 @@
+import { Alert, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { Alert, Label, TextInput } from "flowbite-react";
-import { FaRegUserCircle, FaEye, FaEyeSlash } from "react-icons/fa";
-import { GrSecure } from "react-icons/gr";
-import { ButtonFunc } from "../../Elements/Buttons/ButtonFunc";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { HiInformationCircle } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { ButtonFunc } from "../../Elements/Buttons/ButtonFunc";
 
 import { sliceAuthLogin } from "../../../redux/actions/authAction";
 

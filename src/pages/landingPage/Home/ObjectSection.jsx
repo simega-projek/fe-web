@@ -57,9 +57,9 @@ export const ObjectSection = () => {
         data-aos="fade-up"
         className="mx-auto grid w-full grid-cols-1 gap-5 px-10 md:grid-cols-2 md:gap-5"
       >
-        {dataObjects?.slice(0, window.innerWidth < 640 ? 2 : 4).map((obj) => (
+        {dataObjects?.slice(0, window.innerWidth < 640 ? 2 : 4)?.map((obj) => (
           <CardObjectHome
-            key={obj.ID}
+            key={obj?.ID}
             title={obj?.nama_objek}
             img={obj?.gambar}
             category={obj?.category?.category}
