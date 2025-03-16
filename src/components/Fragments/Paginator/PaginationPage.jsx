@@ -30,7 +30,7 @@ export const PaginationPage = ({
         <div className="flex sm:justify-center">
           <Pagination
             layout="pagination"
-            currentPage={currentPage}
+            currentPage={currentPage || 1}
             totalPages={totalPages || 1}
             onPageChange={onPageChange}
             previousLabel="<"

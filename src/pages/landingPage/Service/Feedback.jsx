@@ -1,12 +1,11 @@
 import { Checkbox, Label, Textarea, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ButtonFunc } from "../../components/Elements/Buttons/ButtonFunc";
-import { ContainerInput } from "../../components/Elements/Inputs/ContainerInput";
-import TitleSection from "../../components/Elements/TitleSection";
-import { AlertMessage } from "../../components/Fragments/Alert/AlertMessage";
-import { createFeedback } from "../../services/feedback.service";
-import { toView } from "../../utils/toView";
+import { toView } from "../../../utils/toView";
+import TitleSection from "../../../components/Elements/TitleSection";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
+import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 
 export default function FeedbackPage() {
   const [name, setName] = useState("");
@@ -14,8 +13,10 @@ export default function FeedbackPage() {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [messageError, setMessageError] = useState(null);
-  const [messageSuccess, setMessageSuccess] = useState(null);
+  const [messageError, setMessageError] = useState("");
+  const [messageSuccess, setMessageSuccess] = useState(
+    "Terimakasih atas umpan balik anda",
+  );
 
   const { pathname } = useLocation();
 
@@ -42,7 +43,7 @@ export default function FeedbackPage() {
       } else {
         // console.log("success", res);
 
-        setMessageSuccess("Pesan anda telah terkirim");
+        setMessageSuccess("Terimakasih atas umpan balik anda");
         setMessageError(null);
         handleReset();
         toView("top");
@@ -67,19 +68,22 @@ export default function FeedbackPage() {
 
   return (
     <>
-      <div className="min-h-max bg-tan bg-[url('/images/bg1.svg')] py-20 pb-5 pt-20 text-2xl">
-        <TitleSection className="px-5 py-5 text-center">
-          Umpan Balik
-        </TitleSection>
+      <div className="min-h-screen bg-[url('/images/bg2.svg')] bg-no-repeat py-20 pt-28">
+        <div className={`flex w-full items-center gap-5 px-5 md:px-10 md:pb-5`}>
+          <span className={`h-px flex-1 bg-primary`}></span>
+          <TitleSection>Umpan Balik</TitleSection>
+        </div>
 
         {/* alert */}
-        <AlertMessage
-          className={"mx-auto my-3 px-5 md:w-1/2 lg:w-1/3"}
-          messageError={messageError}
-          messageSuccess={messageSuccess}
-          setMessageError={setMessageError}
-          setMessageSuccess={setMessageSuccess}
-        />
+        <div className="md:absolute md:left-5 md:top-24 md:flex md:w-11/12">
+          <AlertMessage
+            className={"my-3 animate-bounce px-5 md:w-1/2 lg:w-1/3"}
+            messageError={messageError}
+            messageSuccess={messageSuccess}
+            setMessageError={setMessageError}
+            setMessageSuccess={setMessageSuccess}
+          />
+        </div>
 
         <form className="md:h-[450px]" onSubmit={handleSubmitFeedback}>
           <div className="flex flex-col gap-3 px-3 md:items-center">
@@ -150,7 +154,7 @@ export default function FeedbackPage() {
                   onChange={(e) => setIsChecked(e.target.checked)}
                 />
                 <ButtonFunc
-                  className="w-full bg-primary text-base text-white disabled:cursor-no-drop"
+                  className="w-full bg-primary text-base text-white disabled:cursor-no-drop disabled:bg-tan"
                   disabled={!isChecked || isLoading}
                 >
                   Kirim
@@ -163,3 +167,6 @@ export default function FeedbackPage() {
     </>
   );
 }
+
+import { Toast } from "flowbite-react";
+import { HiFire } from "react-icons/hi";

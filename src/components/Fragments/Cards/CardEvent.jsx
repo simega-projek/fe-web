@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import formattedDate from "../../../utils/formattedDate";
 
-export default function CardArtikel(props) {
+export default function CardEvent(props) {
   const {
     to = "/artikel",
     img = "/images/hero-img.png",
@@ -14,20 +14,18 @@ export default function CardArtikel(props) {
   return (
     <Link
       to={to}
-      className="group relative flex w-full flex-col overflow-hidden rounded-lg bg-white p-3 shadow-lg hover:shadow-2xl"
+      className="group relative flex w-full flex-grow flex-col overflow-hidden rounded-lg bg-white p-3 shadow-lg hover:shadow-2xl"
     >
       <img
         src={img}
-        className="aspect-[4/3] rounded-md object-cover transition-all duration-500 hover:scale-110"
+        className="aspect-[4/3] rounded-md object-cover transition-all duration-500 hover:scale-125"
         alt=""
       />
-      <div
-        className={`relative flex flex-grow flex-col px-3 py-5 ${status ? "pb-12" : ""}`}
-      >
-        <h1 className="mb-5 truncate text-sm font-semibold hover:text-primary md:text-wrap md:text-base lg:text-xl">
+      <div className={`relative flex flex-grow flex-col px-1`}>
+        <h1 className="mb-1 line-clamp-3 flex-grow truncate text-wrap text-sm/relaxed hover:text-primary md:text-wrap md:text-base lg:text-xl">
           {title}
         </h1>
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-3 py-1">
+        <div className="py-1">
           <p className="border-t-2 text-sm text-light lg:text-base">
             {status ? (
               <span

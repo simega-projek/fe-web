@@ -23,7 +23,7 @@ export default function ArtikelPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
   const [currentPage, setCurrentPage] = useState(1);
-  const CONTENT_PER_PAGE = 8;
+  const CONTENT_PER_PAGE = 10;
 
   const { pathname } = useLocation();
   // redux
@@ -72,7 +72,7 @@ export default function ArtikelPage() {
   }, [pathname]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeroSection className="h-screen md:h-96">
         <div className="text-center text-white">
           <h2 className="mb-5 max-w-xl text-xl font-semibold md:text-2xl">
@@ -97,10 +97,10 @@ export default function ArtikelPage() {
           <Loading />
         ) : (
           <div
-            className="mt-5 grid gap-2 px-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            className="mt-5 grid grid-cols-2 gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
             data-aos="fade-up"
           >
-            {Array.isArray(dataArticles) && dataArticles?.length > 0
+            {dataArticles?.length > 0
               ? dataArticles?.map((article) => (
                   <CardArticle
                     key={article?.ID}
@@ -112,7 +112,7 @@ export default function ArtikelPage() {
                   />
                 ))
               : !isLoading && (
-                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
                     {" "}
                     data {search} tidak ditemukan
                   </div>
@@ -132,6 +132,6 @@ export default function ArtikelPage() {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

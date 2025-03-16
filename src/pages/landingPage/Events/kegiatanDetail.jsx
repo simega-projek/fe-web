@@ -54,7 +54,7 @@ export default function KegiatanDetail() {
   return (
     <>
       <div className="mb-10 mt-32 flex flex-col md:flex-row md:px-5">
-        <div className="mb-10 px-10 md:w-8/12">
+        <div className="mb-10 px-5 md:w-8/12">
           {isLoading ? (
             <Loading />
           ) : (

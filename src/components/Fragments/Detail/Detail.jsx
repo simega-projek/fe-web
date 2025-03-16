@@ -37,7 +37,7 @@ export const Detail = (props) => {
       </div>
 
       {/* date and maps */}
-      <div className="flex justify-between">
+      <div className="my-5 mt-1 flex justify-between">
         <span className="italic">{dateFormatted} </span>
         {lintang && bujur && (
           <a
@@ -59,7 +59,6 @@ export const Detail = (props) => {
           site={site}
           lintang={lintang}
           bujur={bujur}
-          status={status}
         />
       )}
 

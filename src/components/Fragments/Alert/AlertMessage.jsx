@@ -9,7 +9,7 @@ export const AlertMessage = ({
   className,
 }) => {
   return (
-    <div className={` ${className}`}>
+    <div className={`animate-pulse ${className}`}>
       {(messageError && (
         <FailAllert setMessageError={setMessageError}>
           {messageError}

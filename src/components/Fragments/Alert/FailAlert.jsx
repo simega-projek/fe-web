@@ -7,7 +7,7 @@ export const FailAllert = ({
   children = "Data gagal disimpan",
 }) => {
   return (
-    <div className="animate-pulse">
+    <div>
       <Alert
         color="failure"
         icon={HiInformationCircle}

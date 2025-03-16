@@ -9,10 +9,10 @@ export const CardArticle = ({ to, title, desc, date, img }) => {
         <img
           alt={title}
           src={img}
-          className="h-32 w-full object-cover md:h-40"
+          className="h-16 w-full object-cover md:h-36"
         />
       </Link>
-      <div className="h-full bg-white p-4 sm:p-6">
+      <div className="h-full bg-white px-3 py-2 sm:px-4 sm:py-3">
         <time className="block text-xs text-gray-500">
           {" "}
           {formattedDate(date)}{" "}

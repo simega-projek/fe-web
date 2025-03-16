@@ -127,7 +127,7 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
     formData.append("deskripsi", description);
     formData.append("site_id", selectedSite);
     formData.append("category_id", selectedCategory);
-    formData.append("video", videos);
+
     formData.append("gambar", image);
     formData.append("publish", "public");
 

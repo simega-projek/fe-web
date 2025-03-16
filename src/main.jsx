@@ -4,9 +4,9 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "./components/Layouts/AdminLayout.jsx";
 import MainLayout from "./components/Layouts/MainLayout.jsx";
-import Media from "./components/Layouts/Media.jsx";
 import "./index.css";
 import ErrorPage from "./pages/404.jsx";
+import Login from "./pages/auth/login.jsx";
 import { Dashboard } from "./pages/dashboard/dashboard.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
@@ -26,10 +26,15 @@ import MegalithPage from "./pages/landingPage/Distribution/megalith.jsx";
 import MegalithDetail from "./pages/landingPage/Distribution/megalithDetail.jsx";
 import KegiatanPage from "./pages/landingPage/Events/kegiatan.jsx";
 import KegiatanDetail from "./pages/landingPage/Events/kegiatanDetail.jsx";
-import FeedbackPage from "./pages/landingPage/feedback.jsx";
+
 import HomePage from "./pages/landingPage/Home/home.jsx";
-import Login from "./pages/auth/login.jsx";
 import store from "./redux/store.js";
+import FeedbackPage from "./pages/landingPage/Service/Feedback.jsx";
+import { FunctionsPage } from "./pages/landingPage/Profile/Functions.jsx";
+import { OrganizationPage } from "./pages/landingPage/Profile/Organization.jsx";
+import { VisionPage } from "./pages/landingPage/Profile/Vision.jsx";
+import { ComplaintPage } from "./pages/landingPage/Service/Complaint.jsx";
+import { PermissionPage } from "./pages/landingPage/Service/Permission.jsx";
 
 const route = createBrowserRouter([
   {
@@ -71,13 +76,30 @@ const route = createBrowserRouter([
         path: "/kegiatan/:id/:slug",
         element: <KegiatanDetail />,
       },
+
       {
-        path: "/media",
-        element: <Media />,
+        path: "/visi-misi",
+        element: <VisionPage />,
+      },
+      {
+        path: "/struktur-organisasi",
+        element: <OrganizationPage />,
+      },
+      {
+        path: "/tugas-fungsi",
+        element: <FunctionsPage />,
       },
       {
         path: "/feedback",
         element: <FeedbackPage />,
+      },
+      {
+        path: "/pengaduan-masyarakat",
+        element: <ComplaintPage />,
+      },
+      {
+        path: "/permohonan-izin",
+        element: <PermissionPage />,
       },
       {
         path: "*",

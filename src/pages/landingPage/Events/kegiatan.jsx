@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
 import TextBlink from "../../../components/Elements/TextBlink/TextBlink";
-import CardArtikel from "../../../components/Fragments/Cards/CardArtikel";
 import { HeroSection } from "../../../components/Fragments/Sections/Hero";
 import { getAllEvent } from "../../../services/event.service";
 
@@ -10,10 +9,11 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import CardEvent from "../../../components/Fragments/Cards/CardEvent";
+import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { toView } from "../../../utils/toView";
-import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
@@ -82,7 +82,7 @@ export default function KegiatanPage() {
   }, [pathname]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <HeroSection className="h-80 md:h-96">
         <div className="text-center text-white">
           <h2 className="mb-5 max-w-xl text-xl font-semibold md:text-2xl">
@@ -111,12 +111,12 @@ export default function KegiatanPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-2 px-10 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
             data-aos="fade-up"
           >
             {Array.isArray(dataEvents) && dataEvents?.length > 0
               ? dataEvents?.map((item) => (
-                  <CardArtikel
+                  <CardEvent
                     to={`/kegiatan/${item?.ID}/${item?.title}`}
                     key={item?.ID}
                     title={item?.title}
@@ -124,10 +124,10 @@ export default function KegiatanPage() {
                     img={item?.image}
                     source={item?.users?.fullname}
                     status={item?.status}
-                  ></CardArtikel>
+                  ></CardEvent>
                 ))
               : !isLoading && (
-                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
                     data {searchData} tidak ditemukan
                   </div>
                 )}
@@ -146,6 +146,6 @@ export default function KegiatanPage() {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

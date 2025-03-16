@@ -41,7 +41,7 @@ export const ArticleSection = () => {
     >
       <div
         className="mb-10 flex w-full items-center gap-5 px-5 md:px-10"
-        data-aos="slide-left"
+        data-aos="fade-right"
       >
         <TitleSection>Artikel & Berita</TitleSection>
         <span className="h-px flex-1 bg-primary"></span>
@@ -49,7 +49,7 @@ export const ArticleSection = () => {
 
       <div
         className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 md:px-5 lg:gap-5 lg:px-10"
-        data-aos="fade-left"
+        data-aos="slide-up"
       >
         {dataArticles?.map((article) => (
           <CardBlog

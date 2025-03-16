@@ -49,8 +49,7 @@ export const EventSection = ({ data }) => {
         <span className="h-px flex-1 bg-white"></span>
         <TitleSection className={"text-white"}>Program Kegiatan</TitleSection>
       </div>
-
-      <div className="mb-10">
+      <div className="mb-10" data-aos="slide-up">
         <Swiper
           effect={"coverflow"}
           grabCursor={true}
@@ -85,7 +84,6 @@ export const EventSection = ({ data }) => {
           ))}
         </Swiper>
       </div>
-
       <div className="mt-10 flex w-full md:px-10 lg:ps-44">
         <ButtonLink
           to={`/kegiatan`}

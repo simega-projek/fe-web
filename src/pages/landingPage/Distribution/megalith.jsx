@@ -17,7 +17,7 @@ export default function MegalithPage() {
   const [dataPage, setDataPage] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const CONTENT_PER_PAGE = 8;
+  const CONTENT_PER_PAGE = 10;
 
   // filter
   const [search, setSearch] = useState("");
@@ -79,12 +79,12 @@ export default function MegalithPage() {
   }, [pathname]);
 
   return (
-    <>
+    <div className="min-h-screen">
       <div className="mt-20">
         <Maps dataObject={dataObjects} path={`/objek`} />
       </div>
 
-      <div className="mt-5 flex w-full justify-center px-10">
+      <div className="mt-5 flex w-full justify-center px-5">
         <FilterObject
           search={search}
           onSearch={(e) => setSearch(e.target.value)}
@@ -103,7 +103,7 @@ export default function MegalithPage() {
           <Loading />
         ) : (
           <div
-            className="grid grid-cols-2 justify-items-center gap-2 px-5 py-5 md:grid-cols-3 lg:grid-cols-4"
+            className="grid grid-cols-2 justify-items-center gap-2 px-5 py-5 md:grid-cols-3 lg:grid-cols-5"
             data-aos="fade-up"
           >
             {dataObjects?.length > 0
@@ -119,7 +119,7 @@ export default function MegalithPage() {
                   />
                 ))
               : !isLoading && (
-                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-4">
+                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
                     data {search} tidak ditemukan
                   </div>
                 )}
@@ -138,6 +138,6 @@ export default function MegalithPage() {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [messageLogin, setMessageLogin] = useState(null);
+  const [messageLogin, setMessageLogin] = useState("");
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const { userData, isLoading, isError } = useSelector((state) => state.auth);
@@ -39,9 +39,7 @@ export const LoginForm = () => {
   }, [userData, navigation]);
 
   useEffect(() => {
-    if (isError) {
-      setMessageLogin(isError);
-    }
+    setMessageLogin(isError);
   }, [isError]);
 
   return (
@@ -50,7 +48,7 @@ export const LoginForm = () => {
         <Alert
           color="failure"
           icon={HiInformationCircle}
-          onDismiss={() => setMessageLogin(null)}
+          onDismiss={() => setMessageLogin("")}
           className="mt-5"
         >
           <span className="font-medium">{messageLogin}</span>
