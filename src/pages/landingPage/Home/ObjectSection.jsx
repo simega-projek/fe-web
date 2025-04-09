@@ -36,7 +36,7 @@ export const ObjectSection = () => {
   return (
     <section
       id="situs"
-      className="bg-tan bg-[url('/images/bg1.svg')] px-5 pb-20 pt-5"
+      className="bg-tan bg-[url('/images/bg1.svg')] py-20 md:px-5"
     >
       <span className="flex items-center gap-5 px-10" data-aos="fade-up">
         <span className="h-px flex-1 bg-white"></span>
@@ -71,7 +71,7 @@ export const ObjectSection = () => {
       <div className="mt-10 flex w-full justify-center px-10">
         <ButtonLink
           to={`/persebaran`}
-          className={`w-full rounded-none rounded-es-2xl rounded-se-2xl border-[3px] border-primary text-base font-bold text-primary transition-all duration-300 hover:bg-primary hover:text-white md:w-1/2 md:text-lg lg:w-fit`}
+          className={`w-full rounded-none border-[3px] border-primary text-base font-bold text-primary transition-all duration-300 hover:bg-primary hover:text-white md:w-1/2 md:text-lg lg:w-fit`}
         >
           Persebaran Megalitikum
         </ButtonLink>
@@ -86,7 +86,7 @@ const CardObjectHome = ({ title, category, img, to }) => {
       <img
         alt=""
         src={img}
-        className="group h-56 w-full rounded-bl-3xl rounded-tr-3xl object-cover hover:shadow-2xl sm:h-64 lg:h-72"
+        className="group h-56 w-full object-cover shadow-lg hover:shadow-2xl sm:h-64 lg:h-72"
       />
 
       <div className="flex items-center gap-4 text-white group-hover:bg-black group-hover:shadow-2xl sm:mt-4 sm:justify-center">

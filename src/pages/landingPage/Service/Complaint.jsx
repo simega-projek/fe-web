@@ -16,7 +16,7 @@ export const ComplaintPage = () => {
       </div>
 
       <form
-        className="flex w-full flex-col items-center gap-3 rounded-r-lg pb-10 lg:w-1/2 lg:shadow-xl lg:shadow-primary/50"
+        className="flex w-full flex-col items-center gap-3 rounded-r-lg pb-10 lg:w-2/3 lg:shadow-xl lg:shadow-primary/50"
         // onSubmit={handleSubmitFeedback}
       >
         <ContainerInput className={"md:w-3/4 lg:w-3/4"}>
