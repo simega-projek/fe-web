@@ -1,6 +1,6 @@
 export const ButtonFunc = (props) => {
   const {
-    className = "bg-primary text-white",
+    className,
     type = "submit",
     children = "button",
     onClick = () => {},
@@ -13,7 +13,7 @@ export const ButtonFunc = (props) => {
     <button
       value={value}
       type={type}
-      className={`cursor-pointer rounded px-4 py-2 font-bold hover:shadow-lg disabled:bg-light ${className}`}
+      className={`cursor-pointer rounded bg-primary px-4 py-2 font-bold text-white hover:shadow-lg disabled:cursor-not-allowed disabled:bg-gray-200 ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

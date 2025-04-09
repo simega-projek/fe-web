@@ -8,6 +8,7 @@ import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
 import { createAdmin } from "../../../services/superAdmin.service";
 import { toView } from "../../../utils/toView";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
   const [fullname, setFullname] = useState("");
@@ -248,19 +249,11 @@ export default function CreateAdmin({ isOpenCreate, onSuccess, onClose }) {
           </ContainerInput>
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Register"}
-        </ButtonFunc>
-        <ButtonFunc
-          className="bg-tan disabled:cursor-no-drop"
-          onClick={handleReset}
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
+        <BtnCreateForm
+          isLoading={isLoading}
+          handleSubmit={handleRegistration}
+          handleReset={handleReset}
+        />
       </form>
     </div>
   );

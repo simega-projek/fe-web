@@ -1,10 +1,6 @@
 import { fetchDataApi } from "./service";
 
-export const getAllValley = async (
-  content = 9999999999,
-  search = "",
-  page = 1,
-) => {
+export const getAllValley = async (content = 100, search = "", page = 1) => {
   try {
     return await fetchDataApi(
       "GET",

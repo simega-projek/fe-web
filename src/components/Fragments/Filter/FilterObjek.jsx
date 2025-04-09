@@ -150,7 +150,7 @@ export const FilterObject = (props) => {
         </Select>
 
         {/* Reset Button */}
-        <div className="z-50 flex w-full justify-end md:w-1/12 md:items-center">
+        <div className="z-[999] flex w-full justify-end md:w-1/12 md:items-center">
           <ButtonControls name={"Reset"} icon={FaUndoAlt} onClick={onReset} />
         </div>
       </div>

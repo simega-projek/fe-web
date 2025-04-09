@@ -10,6 +10,7 @@ import {
   getOneCategory,
   updateCategory,
 } from "../../../services/category.service";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 
 export default function UpdateCategories({
   isOpenUpdate,
@@ -132,20 +133,11 @@ export default function UpdateCategories({
           />
         </ContainerInput>
       </form>
-      <ButtonFunc
-        className="m-3 bg-primary text-white disabled:cursor-no-drop"
-        disabled={isLoading}
-        onClick={handleUpdateCategory}
-      >
-        {isLoading ? "Loading..." : "Simpan"}
-      </ButtonFunc>
-      <ButtonFunc
-        className="m-3 bg-tan"
-        type="button"
-        onClick={handleBtnCancel}
-      >
-        Batal
-      </ButtonFunc>
+      <BtnUpdateForm
+        handleUpdate={handleUpdateCategory}
+        handleCancle={handleBtnCancel}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

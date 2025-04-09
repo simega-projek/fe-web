@@ -1,5 +1,6 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
@@ -282,20 +283,11 @@ export default function UpdateLembah({ id, isOpenUpdate, onSuccess, onClose }) {
             </select>
           </ContainerInput>
 
-          <ButtonFunc
-            className={`m-3 bg-primary text-white disabled:cursor-no-drop`}
-            onClick={handleUpdateValley}
-            disabled={isLoading}
-          >
-            {isLoading ? "Loading..." : "Simpan"}
-          </ButtonFunc>
-          <ButtonFunc
-            className={`m-3 bg-tan`}
-            onClick={handleBtnCancel}
-            type="button"
-          >
-            Batal
-          </ButtonFunc>
+          <BtnUpdateForm
+            handleUpdate={handleUpdateValley}
+            handleCancle={handleBtnCancel}
+            isLoading={isLoading}
+          />
         </form>
       </div>
     </>

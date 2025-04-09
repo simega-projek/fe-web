@@ -9,6 +9,7 @@ import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { createEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
   const editorInput = useRef(null);
@@ -19,7 +20,7 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [regisLink, setRegisLink] = useState("");
-  const [status, setStatus] = useState("Akan Datang");
+  const [status, setStatus] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -77,6 +78,10 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
       setMessageError("Deskripsi kegiatan diisi");
       toView("top");
       return false;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
+      toView("top");
+      return false;
     }
     toView("top");
     return true;
@@ -102,7 +107,7 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
     formData.append("registration_link", regisLink);
     formData.append("start_date", formattedStartDate);
     formData.append("end_date", formattedEndDate);
-    formData.append("status", status);
+    formData.append("status", status || "Akan Datang");
     console.log("form data: ", formData);
     try {
       setIsLoading(true);
@@ -131,6 +136,8 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
       handleReset();
     }
   }, [isOpenCreate]);
+
+  console.log({ image });
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>
@@ -282,19 +289,11 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
           />
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Simpan"}
-        </ButtonFunc>
-        <ButtonFunc
-          className="m-3 bg-tan disabled:cursor-no-drop"
-          onClick={handleReset}
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
+        <BtnCreateForm
+          isLoading={isLoading}
+          handleSubmit={handleCreateActivity}
+          handleReset={handleReset}
+        />
       </form>
     </div>
   );

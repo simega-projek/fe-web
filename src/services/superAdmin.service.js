@@ -1,6 +1,6 @@
 import { fetchDataApi } from "./service";
 
-export const getAllAdmin = async (content = 100, search = "") => {
+export const getAllAdmin = async (content, search = "") => {
   try {
     return await fetchDataApi(
       "GET",

@@ -12,6 +12,7 @@ import {
 } from "../../../services/wilIndonesia.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
   const [situsName, setSitusName] = useState("");
@@ -303,24 +304,13 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
             ))}
           </select>
         </ContainerInput>
-
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          // onClick={handleCreateSite}
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Simpan"}
-        </ButtonFunc>
-
-        <ButtonFunc
-          className="m-3 bg-tan disabled:cursor-no-drop"
-          type="reset"
-          onClick={handleReset}
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
       </form>
+
+      <BtnCreateForm
+        handleReset={handleReset}
+        handleSubmit={handleCreateSite}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

@@ -2,8 +2,7 @@ import { Button, Label, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 
-import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { createCategory } from "../../../services/category.service";
@@ -19,7 +18,8 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
     setCategory("");
   };
 
-  const handleCreateCategory = async () => {
+  const handleCreateCategory = async (e) => {
+    e.preventDefault();
     if (category.trim() === "" || !category) {
       setMessageError("Kategori harus diisi");
       setMessageSuccess(null);
@@ -68,6 +68,7 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
 
       {/* alert */}
       <AlertMessage
+        className={"mt-3"}
         messageError={messageError}
         messageSuccess={messageSuccess}
         setMessageError={setMessageError}
@@ -98,20 +99,11 @@ export default function CreateCategory({ isOpenCreate, onClose, onSuccess }) {
         </ContainerInput>
       </div>
 
-      <ButtonFunc
-        className="m-3 bg-primary text-white disabled:cursor-no-drop"
-        onClick={handleCreateCategory}
-      >
-        {isLoading ? "Loading..." : "Simpan"}
-      </ButtonFunc>
-      <ButtonFunc
-        className="bg-tan disabled:cursor-no-drop"
-        type="reset"
-        onClick={handleReset}
-        disabled={isLoading}
-      >
-        Reset
-      </ButtonFunc>
+      <BtnCreateForm
+        handleSubmit={handleCreateCategory}
+        handleReset={handleReset}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

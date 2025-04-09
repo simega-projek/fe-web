@@ -9,6 +9,7 @@ import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { createArticle } from "../../../services/article.service";
 import { toView } from "../../../utils/toView";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef(null);
@@ -67,10 +68,6 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
       setMessageError("Judul artikel diisi");
       toView("top");
       return;
-      // } else if (!file) {
-      //   setMessageError("File artikel diisi");
-      //   toView("top");
-      //   return;
     } else if (!image) {
       setMessageError("Gambar artikel diisi");
       toView("top");
@@ -79,6 +76,14 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
       setMessageError("Deskripsi artikel diisi");
       toView("top");
       return;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
+      toView("top");
+      return false;
+    } else if (file?.size > 3145728) {
+      setMessageError("PDF maksimal 3 MB");
+      toView("top");
+      return false;
     }
     const formData = new FormData();
     formData.append("title", title);
@@ -203,20 +208,11 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
           />
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          disabled={isLoading}
-        >
-          Simpan
-        </ButtonFunc>
-
-        <ButtonFunc
-          className="m-3 bg-tan disabled:cursor-no-drop"
-          onClick={handleReset}
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
+        <BtnCreateForm
+          isLoading={isLoading}
+          handleSubmit={handleCreateArticle}
+          handleReset={handleReset}
+        />
       </form>
     </div>
   );

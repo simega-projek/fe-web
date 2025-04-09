@@ -12,6 +12,7 @@ import { getAllCategory } from "../../../services/category.service";
 import { getOneObject, updateObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 
 export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const editorInput = useRef(null);
@@ -109,6 +110,10 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
       setMessageSuccess(null);
       toView("top");
       return;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
+      toView("top");
+      return false;
     }
 
     const formData = new FormData();
@@ -392,20 +397,11 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
           />
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          onClick={handleUpdateObject}
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Simpan"}
-        </ButtonFunc>
-        <ButtonFunc
-          className="m-3 bg-tan"
-          onClick={handleBtnCancel}
-          type="button"
-        >
-          Batal
-        </ButtonFunc>
+        <BtnUpdateForm
+          handleUpdate={handleUpdateObject}
+          handleCancle={handleBtnCancel}
+          isLoading={isLoading}
+        />
       </form>
     </div>
   );

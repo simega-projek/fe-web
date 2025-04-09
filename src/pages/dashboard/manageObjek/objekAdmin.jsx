@@ -83,8 +83,8 @@ export default function ObjekAdmin() {
         publish,
       );
 
-      setObjectData(objects.data);
-      setDataPage(objects.pagination);
+      setObjectData(objects?.data);
+      setDataPage(objects?.pagination);
     } catch (err) {
       console.log(err);
     } finally {

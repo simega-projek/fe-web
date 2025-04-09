@@ -2,7 +2,7 @@ import axios from "axios";
 import { fetchDataApi } from "./service";
 
 export const getAllFeedback = async (
-  content = 100,
+  content,
   search = "",
   page = 1,
   date = "",

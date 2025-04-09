@@ -1,6 +1,6 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
-import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
+
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
@@ -12,6 +12,7 @@ import {
   getSulawesiTengah,
 } from "../../../services/wilIndonesia.service";
 import { toView } from "../../../utils/toView";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
   const regencyRef = useRef(null);
@@ -247,22 +248,13 @@ export default function CreateLembah({ isOpenCreate, onSuccess, onClose }) {
               ))}
             </select>
           </ContainerInput>
-        </form>
 
-        <ButtonFunc
-          className={`m-3 bg-primary text-white disabled:cursor-no-drop`}
-          disabled={isLoading}
-          onClick={handleCreateValley}
-        >
-          Simpan
-        </ButtonFunc>
-        <ButtonFunc
-          className={`bg-tan disabled:cursor-no-drop`}
-          onClick={handleReset}
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
+          <BtnCreateForm
+            handleSubmit={handleCreateValley}
+            handleReset={handleReset}
+            isLoading={isLoading}
+          />
+        </form>
       </div>
     </>
   );

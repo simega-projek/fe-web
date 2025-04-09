@@ -1,7 +1,7 @@
 import { fetchDataApi } from "./service";
 
 export const getAllObject = async (
-  content = 100,
+  content,
   search = "",
   page = 1,
   lembah = "",

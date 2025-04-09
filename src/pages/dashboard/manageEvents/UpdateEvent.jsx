@@ -11,6 +11,7 @@ import ImagePreview from "../../../components/Fragments/Cards/ImagePreview";
 import { getOneEvent, updateEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 
 export default function UpdateEvent({ id, isOpenUpdate, onClose, onSuccess }) {
   const editorInput = useRef(null);
@@ -66,6 +67,10 @@ export default function UpdateEvent({ id, isOpenUpdate, onClose, onSuccess }) {
       return false;
     } else if (description.trim() === "" || !description) {
       setMessageError("Deskripsi kegiatan diisi");
+      toView("top");
+      return false;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
       toView("top");
       return false;
     }
@@ -303,15 +308,11 @@ export default function UpdateEvent({ id, isOpenUpdate, onClose, onSuccess }) {
           />
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Simpan"}
-        </ButtonFunc>
-        <ButtonFunc className="m-3 bg-tan" onClick={handleBtnCancel}>
-          Batal
-        </ButtonFunc>
+        <BtnUpdateForm
+          handleUpdate={handleUpdateActivity}
+          handleCancle={handleBtnCancel}
+          isLoading={isLoading}
+        />
       </form>
     </div>
   );

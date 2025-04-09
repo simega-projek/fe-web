@@ -11,6 +11,7 @@ import {
   updateArticle,
 } from "../../../services/article.service";
 import { toView } from "../../../utils/toView";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 
 export default function UpdateArticle({
   isOpenUpdate,
@@ -59,6 +60,14 @@ export default function UpdateArticle({
     } else if (description.trim() === "" || !description) {
       setMessageError("Deskripsi artikel harus diisi");
       return;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
+      toView("top");
+      return false;
+    } else if (file?.size > 3145728) {
+      setMessageError("PDF maksimal 3 MB");
+      toView("top");
+      return false;
     }
 
     const formData = new FormData();
@@ -130,10 +139,11 @@ export default function UpdateArticle({
           X
         </Button>
       </div>
-      <hr className="my-5" />
+      <hr className="my-2" />
 
       {/* Alert */}
       <AlertMessage
+        className={"mb-2"}
         messageError={messageError}
         messageSuccess={messageSuccess}
         setMessageError={setMessageError}
@@ -203,15 +213,12 @@ export default function UpdateArticle({
         </div>
 
         {/* Action Buttons */}
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading" : "Simpan"}
-        </ButtonFunc>
-        <ButtonFunc className="bg-tan" onClick={handleBtnCancel}>
-          Batal
-        </ButtonFunc>
+
+        <BtnUpdateForm
+          handleUpdate={handleUpdateArticle}
+          handleCancle={handleBtnCancel}
+          isLoading={isLoading}
+        />
       </form>
     </div>
   );

@@ -12,6 +12,7 @@ import {
 } from "../../../services/wilIndonesia.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
+import { BtnUpdateForm } from "../../../components/Elements/Buttons/BtnUpdateForm";
 
 export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   const [siteName, setSiteName] = useState("");
@@ -201,6 +202,10 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
   // console.log({ selectedValley });
   // console.log({ selectedVillage });
   // console.log(dataUpdate);
+  const handleBtnCancel = () => {
+    onClose();
+    if (isLoading) window.location.reload();
+  };
 
   const activeRef = useRef(false);
 
@@ -331,16 +336,11 @@ export default function UpdateSitus({ isOpenUpdate, onSuccess, onClose, id }) {
           </select>
         </ContainerInput>
       </form>
-      <ButtonFunc
-        className="m-3 bg-primary text-white"
-        onClick={handeUpdateSite}
-        disabled={isLoading}
-      >
-        {isLoading ? "Loading..." : "Simpan"}
-      </ButtonFunc>
-      <ButtonFunc className="m-3 bg-tan" type="button" onClick={onClose}>
-        Batal
-      </ButtonFunc>
+      <BtnUpdateForm
+        handleUpdate={handeUpdateSite}
+        handleCancle={handleBtnCancel}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

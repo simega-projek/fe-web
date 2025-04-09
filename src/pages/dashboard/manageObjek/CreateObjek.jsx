@@ -11,6 +11,7 @@ import { getAllCategory } from "../../../services/category.service";
 import { createObject } from "../../../services/object.service"; // API untuk create object
 import { getAllSite } from "../../../services/site.service";
 import { toView } from "../../../utils/toView";
+import { BtnCreateForm } from "../../../components/Elements/Buttons/BtnCreateForm";
 
 export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
   const editorInput = useRef("");
@@ -118,6 +119,10 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
       setMessageSuccess(null);
       toView("top");
       return;
+    } else if (image?.size > 819200) {
+      setMessageError("Gambar maksimal 800 KB");
+      toView("top");
+      return false;
     }
 
     const formData = new FormData();
@@ -332,21 +337,11 @@ export default function CreateObjek({ isOpenCreate, onSuccess, onClose }) {
           />
         </div>
 
-        <ButtonFunc
-          className="m-3 bg-primary text-white disabled:cursor-no-drop"
-          onClick={handleCreateObject}
-          disabled={isLoading}
-        >
-          {isLoading ? "Loading..." : "Simpan"}
-        </ButtonFunc>
-        <ButtonFunc
-          className="m-3 bg-tan disabled:cursor-no-drop"
-          onClick={handleReset}
-          type="reset"
-          disabled={isLoading}
-        >
-          Reset
-        </ButtonFunc>
+        <BtnCreateForm
+          isLoading={isLoading}
+          handleSubmit={handleCreateObject}
+          handleReset={handleReset}
+        />
       </form>
     </div>
   );

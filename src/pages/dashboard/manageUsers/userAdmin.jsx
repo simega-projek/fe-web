@@ -29,6 +29,7 @@ import { setIsLoading } from "../../../redux/slices/authSlice";
 import Loading from "../../../components/Elements/Loading/Loading";
 import { useDebounce } from "use-debounce";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -43,6 +44,11 @@ export default function UserAdmin() {
 
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 700);
+
+  const [dataPage, setDataPage] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [contentPage, setContentPage] = useState(10);
+  const startIndex = (currentPage - 1) * contentPage + 1;
 
   const handleOpenCreateForm = () => {
     setIsOpenCreate(!isOpenCreate);
@@ -60,8 +66,12 @@ export default function UserAdmin() {
   const fetchAdmin = async () => {
     setIsLoading(true);
     try {
-      const res = await getAllAdmin(50, debouncedSearch);
-      setAdminData(res?.data);
+      const res = await getAllAdmin(contentPage, debouncedSearch, currentPage);
+      const filteredData = res?.data?.filter(
+        (item) => item?.role !== "superadmin",
+      );
+      setAdminData(filteredData);
+      setDataPage(res?.pagination);
     } catch (err) {
       console.log(err);
     } finally {
@@ -110,12 +120,17 @@ export default function UserAdmin() {
     }
   };
 
+  const onPageChange = (e) => {
+    toView("top");
+    setCurrentPage(e);
+  };
+
   const handleSuccess = () => {
     fetchAdmin();
   };
   useEffect(() => {
     fetchAdmin();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentPage, contentPage]);
 
   // console.log({ isOpenModalDelete });
   // console.log(adminData);
@@ -177,47 +192,27 @@ export default function UserAdmin() {
               <TableHeadCell className="w-1/5">Kontrol</TableHeadCell>
             </TableHead>
 
-            <TableBody className="divide-y">
-              {adminData?.length > 0 &&
-                adminData?.map((admin, index) => (
-                  <TableRow key={admin?.ID}>
-                    <TableCell className="whitespace-normal">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
-                      {admin?.users?.fullname ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {admin?.username ?? "-"}
-                    </TableCell>
-                    <TableCell className="whitespace-normal">
-                      {admin?.users?.email ?? "-"}
-                    </TableCell>
-
-                    <TableCell className="mx-auto items-center justify-center lg:flex">
-                      <ButtonControls
-                        name={"Reset Password"}
-                        icon={FaEdit}
-                        onClick={() => handleOpenResetModal(admin?.ID)}
-                      />
-                      <ButtonControls
-                        name={"Hapus Akun"}
-                        icon={MdDeleteForever}
-                        onClick={() => handleOpenDeleteModal(admin?.ID)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
+            <TableData
+              searchData={search}
+              data={adminData}
+              handleOpenDeleteModal={handleOpenDeleteModal}
+              handleOpenResetModal={handleOpenResetModal}
+              isLoading={isLoading}
+              startIndex={startIndex}
+            />
           </Table>
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="mt-10">
-          <Loading />
-        </div>
-      ) : null}
+      {/* pagination */}
+      {isLoading ? null : (
+        <PaginationPage
+          currentPage={currentPage}
+          totalPages={dataPage?.totalPages}
+          onPageChange={onPageChange}
+          totalItems={dataPage?.totalItems - 1}
+        />
+      )}
 
       {isOpenModalDelete && (
         <PopupConfirm
@@ -239,3 +234,62 @@ export default function UserAdmin() {
     </>
   );
 }
+
+const TableData = ({
+  data,
+  isLoading,
+  startIndex,
+  handleOpenResetModal,
+  handleOpenDeleteModal,
+  searchData,
+}) => {
+  return (
+    <TableBody className="divide-y">
+      {isLoading ? (
+        <TableRow>
+          <TableCell colSpan={5} className="text-center">
+            <Loading />
+          </TableCell>
+        </TableRow>
+      ) : data?.length > 0 ? (
+        data?.map((admin, index) => (
+          <TableRow key={admin?.ID}>
+            <TableCell className="whitespace-normal">
+              {index + startIndex}
+            </TableCell>
+            <TableCell className="whitespace-normal font-medium text-gray-900 dark:text-white">
+              {admin?.users?.fullname ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {admin?.username ?? "-"}
+            </TableCell>
+            <TableCell className="whitespace-normal">
+              {admin?.users?.email ?? "-"}
+            </TableCell>
+
+            <TableCell className="mx-auto items-center justify-center lg:flex">
+              <ButtonControls
+                name={"Reset Password"}
+                icon={FaEdit}
+                onClick={() => handleOpenResetModal(admin?.ID)}
+              />
+              <ButtonControls
+                name={"Hapus Akun"}
+                icon={MdDeleteForever}
+                onClick={() => handleOpenDeleteModal(admin?.ID)}
+              />
+            </TableCell>
+          </TableRow>
+        ))
+      ) : (
+        !isLoading && (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center text-red-500">
+              data {searchData} tidak ditemukan
+            </TableCell>
+          </TableRow>
+        )
+      )}
+    </TableBody>
+  );
+};

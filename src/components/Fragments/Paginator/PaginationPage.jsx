@@ -8,10 +8,6 @@ export const PaginationPage = ({
   className,
   totalItems = 1,
 }) => {
-  // component utama
-  // const onPageChange = (e) => {
-  //   setCurrentPage(e);
-  // };
   return (
     <div>
       <div
@@ -65,3 +61,16 @@ export const PaginationPage = ({
     </div>
   );
 };
+
+// func component utama
+// const onPageChange = (e) => {
+//   setCurrentPage(e);
+// };
+
+// componen utama
+//  <PaginationPage
+//    currentPage={currentPage}
+//    totalPages={dataPage?.totalPages}
+//    onPageChange={onPageChange}
+//    totalItems={dataPage?.totalItems}
+//  />;
