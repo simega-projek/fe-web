@@ -6,6 +6,7 @@ import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { ContainerInput } from "../../../components/Elements/Inputs/ContainerInput";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
+import { createFeedback } from "../../../services/feedback.service";
 
 export default function FeedbackPage() {
   const [name, setName] = useState("");
@@ -29,6 +30,8 @@ export default function FeedbackPage() {
     formData.append("name", name);
     formData.append("email_telp", email);
     formData.append("message", message);
+
+    console.log(formData);
 
     try {
       setIsLoading(true);
@@ -74,7 +77,7 @@ export default function FeedbackPage() {
         </div>
 
         {/* alert */}
-        <div className="animate-bounce md:absolute md:left-5 md:top-24 md:flex md:w-11/12">
+        <div className="md:absolute md:left-5 md:top-24 md:flex md:w-11/12">
           <AlertMessage
             className={"my-3 animate-none px-5 md:w-1/2 lg:w-1/3"}
             messageError={messageError}
@@ -89,6 +92,7 @@ export default function FeedbackPage() {
             className="flex w-full flex-col items-center gap-3 rounded-r-lg pb-10 lg:w-1/2 lg:shadow-xl lg:shadow-primary/50"
             onSubmit={handleSubmitFeedback}
           >
+            {/* name */}
             <ContainerInput className={"md:w-3/4 lg:w-3/4"}>
               <Label
                 htmlFor="name"
@@ -105,10 +109,12 @@ export default function FeedbackPage() {
                 sizing="text-xl"
                 required
                 onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
                 value={name}
+                disabled={isLoading}
               />
             </ContainerInput>
+
+            {/* email */}
             <ContainerInput className={"md:w-3/4 lg:w-3/4"}>
               <Label
                 htmlFor="email"
@@ -119,14 +125,16 @@ export default function FeedbackPage() {
                 placeholder="email@gmail.com / 0812345678912"
                 id="email"
                 name="email"
-                onChange={(e) => setEmail(e.target.value)}
                 type="text"
                 sizing="text-xl"
                 required
                 disabled={isLoading}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
             </ContainerInput>
+
+            {/* message */}
             <ContainerInput className={"md:w-3/4 lg:w-3/4"}>
               <Label
                 htmlFor="message"
@@ -143,8 +151,8 @@ export default function FeedbackPage() {
                 rows={4}
                 className="scrollbar"
                 onChange={(e) => setMessage(e.target.value)}
-                disabled={isLoading}
                 value={message}
+                disabled={isLoading}
               />
             </ContainerInput>
 
@@ -199,7 +207,3 @@ export default function FeedbackPage() {
     </>
   );
 }
-
-import { Toast } from "flowbite-react";
-import { HiFire } from "react-icons/hi";
-import { createFeedback } from "../../../services/feedback.service";
