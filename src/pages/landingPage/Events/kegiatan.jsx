@@ -14,6 +14,7 @@ import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
 import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { toView } from "../../../utils/toView";
+import SkletonCardEvent from "../../../components/Fragments/Skleton/SkletonCardEvent";
 
 export default function KegiatanPage() {
   const [dataEvents, setDataEvents] = useState([]);
@@ -107,32 +108,32 @@ export default function KegiatanPage() {
 
       {/* data event */}
       <div className="mt-5">
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <div
-            className="grid grid-cols-2 justify-items-center gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
-            data-aos="fade-up"
-          >
-            {Array.isArray(dataEvents) && dataEvents?.length > 0
-              ? dataEvents?.map((item) => (
-                  <CardEvent
-                    to={`/kegiatan/${item?.ID}/${item?.title}`}
-                    key={item?.ID}
-                    title={item?.title}
-                    date={item?.start_date}
-                    img={item?.image}
-                    source={item?.users?.fullname}
-                    status={item?.status}
-                  ></CardEvent>
-                ))
-              : !isLoading && (
-                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
-                    data {searchData} tidak ditemukan
-                  </div>
-                )}
-          </div>
-        )}
+        <div
+          className="grid grid-cols-2 justify-items-center gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
+          data-aos="fade-up"
+        >
+          {isLoading ? (
+            <SkletonCardEvent count={5} />
+          ) : Array.isArray(dataEvents) && dataEvents?.length > 0 ? (
+            dataEvents?.map((item) => (
+              <CardEvent
+                to={`/kegiatan/${item?.ID}/${item?.title}`}
+                key={item?.ID}
+                title={item?.title}
+                date={item?.start_date}
+                img={item?.image}
+                source={item?.users?.fullname}
+                status={item?.status}
+              ></CardEvent>
+            ))
+          ) : (
+            !isLoading && (
+              <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
+                data {searchData} tidak ditemukan
+              </div>
+            )
+          )}
+        </div>
       </div>
 
       {/* Pagination */}

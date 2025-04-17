@@ -57,15 +57,21 @@ export const ObjectSection = () => {
         data-aos="fade-up"
         className="mx-auto grid w-full grid-cols-1 gap-5 px-10 md:grid-cols-2 md:gap-5"
       >
-        {dataObjects?.slice(0, window.innerWidth < 640 ? 2 : 4)?.map((obj) => (
-          <CardObjectHome
-            key={obj?.ID}
-            title={obj?.nama_objek}
-            img={obj?.gambar}
-            category={obj?.category?.category}
-            to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
-          />
-        ))}
+        {isLoading ? (
+          <SkletonCardObjectHome />
+        ) : (
+          dataObjects
+            ?.slice(0, window.innerWidth < 640 ? 2 : 4)
+            ?.map((obj) => (
+              <CardObjectHome
+                key={obj?.ID}
+                title={obj?.nama_objek}
+                img={obj?.gambar}
+                category={obj?.category?.category}
+                to={`/objek/${obj?.ID}/${obj?.nama_objek}`}
+              />
+            ))
+        )}
       </div>
 
       <div className="mt-10 flex w-full justify-center px-10">
@@ -96,10 +102,27 @@ const CardObjectHome = ({ title, category, img, to }) => {
 
         <span className="hidden h-px w-8 bg-primary sm:block"></span>
 
-        <p className="mt-0.5 w-1/2 truncate text-center text-base capitalize sm:mt-0">
+        <p className="mt-0.5 w-1/2 truncate text-center text-base capitalize sm:mt-0 md:text-xl">
           {category}
         </p>
       </div>
     </Link>
+  );
+};
+
+const SkletonCardObjectHome = () => {
+  return (
+    <>
+      {Array.from({ length: 2 }).map((_, index) => (
+        <div key={index} className="animate-pulse">
+          <div className="group h-56 w-full bg-white/40 object-cover shadow-lg sm:h-64 lg:h-72" />
+
+          <div className="mt-4 flex items-center gap-4 text-white sm:justify-center">
+            <p className="h-5 w-1/3 truncate rounded-full bg-white/40 text-center text-base font-medium capitalize md:text-xl"></p>
+            <p className="h-5 w-1/3 truncate rounded-full bg-white/40 text-center text-base font-medium capitalize md:text-xl"></p>
+          </div>
+        </div>
+      ))}
+    </>
   );
 };

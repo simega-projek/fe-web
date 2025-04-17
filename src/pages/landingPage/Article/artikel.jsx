@@ -14,6 +14,7 @@ import { setIsPages } from "../../../redux/slices/pagesSlice";
 import { getAllArticles } from "../../../services/article.service";
 import { toView } from "../../../utils/toView";
 import { CardArticle } from "./CardArticle";
+import { SkletonCardArticle } from "../../../components/Fragments/Skleton/SkletonCardArticle";
 
 export default function ArtikelPage() {
   const [dataArticles, setDataArticles] = useState([]);
@@ -93,32 +94,32 @@ export default function ArtikelPage() {
       </div>
 
       <div className="mt-5">
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <div
-            className="mt-5 grid grid-cols-2 gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
-            data-aos="fade-up"
-          >
-            {dataArticles?.length > 0
-              ? dataArticles?.map((article) => (
-                  <CardArticle
-                    key={article?.ID}
-                    title={article?.title}
-                    to={`/artikel/${article?.ID}/${article?.title}`}
-                    date={article?.CreatedAt}
-                    img={article?.image}
-                    desc={article?.description}
-                  />
-                ))
-              : !isLoading && (
-                  <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
-                    {" "}
-                    data {search} tidak ditemukan
-                  </div>
-                )}
-          </div>
-        )}
+        <div
+          className="mt-5 grid grid-cols-2 gap-2 px-5 md:grid-cols-3 lg:grid-cols-5"
+          data-aos="fade-up"
+        >
+          {isLoading ? (
+            <SkletonCardArticle count={5} />
+          ) : dataArticles?.length > 0 ? (
+            dataArticles?.map((article) => (
+              <CardArticle
+                key={article?.ID}
+                title={article?.title}
+                to={`/artikel/${article?.ID}/${article?.title}`}
+                date={article?.CreatedAt}
+                img={article?.image}
+                desc={article?.description}
+              />
+            ))
+          ) : (
+            !isLoading && (
+              <div className="col-span-2 text-center text-red-500 md:col-span-3 lg:col-span-5">
+                {" "}
+                data {search} tidak ditemukan
+              </div>
+            )
+          )}
+        </div>
       </div>
 
       {/* Pagination */}

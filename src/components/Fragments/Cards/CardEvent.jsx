@@ -7,7 +7,7 @@ export default function CardEvent(props) {
     img = "/images/hero-img.png",
     title,
     status,
-    date,
+    date = new Date(),
   } = props;
 
   const formatedDate = formattedDate(date);
@@ -22,7 +22,10 @@ export default function CardEvent(props) {
         alt=""
       />
       <div className={`relative flex flex-grow flex-col px-1`}>
-        <h1 className="mb-1 line-clamp-3 flex-grow truncate text-wrap text-sm/relaxed hover:text-primary md:text-wrap md:text-base lg:text-xl">
+        <h1
+          className="mb-1 line-clamp-3 flex-grow truncate text-wrap text-sm/relaxed drop-shadow-xl hover:text-primary md:text-wrap md:text-base lg:text-xl"
+          style={{ textShadow: "1px 1px 3px rgba(0,0,0,0.6)" }}
+        >
           {title}
         </h1>
         <div className="py-1">

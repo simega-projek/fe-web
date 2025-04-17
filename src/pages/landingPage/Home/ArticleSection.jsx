@@ -51,16 +51,20 @@ export const ArticleSection = () => {
         className="grid w-full grid-cols-1 gap-2 md:grid-cols-2 md:gap-2 md:px-5 lg:gap-5 lg:px-10"
         data-aos="slide-up"
       >
-        {dataArticles?.map((article) => (
-          <CardBlog
-            key={article?.ID}
-            to={`/artikel/${article?.ID}/${article?.title}`}
-            img={article?.image}
-            title={article?.title}
-            date={article?.CreatedAt}
-            desc={article?.description}
-          />
-        ))}
+        {isLoading ? (
+          <SkletonCardArticle />
+        ) : (
+          dataArticles?.map((article) => (
+            <CardBlog
+              key={article?.ID}
+              to={`/artikel/${article?.ID}/${article?.title}`}
+              img={article?.image}
+              title={article?.title}
+              date={article?.CreatedAt}
+              desc={article?.description}
+            />
+          ))
+        )}
       </div>
 
       <div className="mt-10 flex w-full justify-end md:px-5">
@@ -75,15 +79,24 @@ export const ArticleSection = () => {
   );
 };
 
-const SkletonCard = () => {
+const SkletonCardArticle = () => {
   return (
-    <section className="w-1/4 animate-pulse bg-transparent">
-      <div className="w-full">
-        <div className="h-64 w-full rounded-lg bg-white/45 md:h-72"></div>
+    <>
+      {Array.from({ length: 2 }).map((_, index) => (
+        <div key={index} className="flex bg-gray-200 transition">
+          <div className="hidden sm:block sm:basis-56">
+            <div className="aspect-square h-full w-full animate-pulse bg-gray-100 object-cover" />
+          </div>
 
-        <h1 className="mt-4 h-2 w-56 rounded-lg bg-white/45"></h1>
-        <p className="mt-4 h-2 w-24 rounded-lg bg-white/45"></p>
-      </div>
-    </section>
+          <div className="flex flex-1 flex-col justify-between">
+            <div className="flex animate-pulse flex-col gap-5 border-s border-gray-900/10 p-4 sm:border-l-transparent sm:p-6">
+              <h3 className="h-5 w-full rounded-full bg-gray-100"> </h3>
+              <h3 className="h-5 w-4/5 rounded-full bg-gray-100"> </h3>
+              <h3 className="h-5 w-3/5 rounded-full bg-gray-100"> </h3>
+            </div>
+          </div>
+        </div>
+      ))}
+    </>
   );
 };

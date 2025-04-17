@@ -71,17 +71,23 @@ export const EventSection = ({ data }) => {
           modules={[EffectCoverflow, Scrollbar]}
           className="lg:w-3/4"
         >
-          {dataEvents?.map((keg) => (
-            <SwiperSlide className="h-96 bg-cover bg-center" key={keg?.ID}>
-              <CardEventHome
-                to={`/kegiatan/${keg?.ID}/${keg?.title}`}
-                title={keg?.title}
-                img={keg?.image}
-                desc={keg?.description}
-                status={keg?.status}
-              />
-            </SwiperSlide>
-          ))}
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <SwiperSlide className="h-96 bg-cover bg-center" key={index}>
+                  <SkletonCardEventHome />
+                </SwiperSlide>
+              ))
+            : dataEvents?.map((keg) => (
+                <SwiperSlide className="h-96 bg-cover bg-center" key={keg?.ID}>
+                  <CardEventHome
+                    to={`/kegiatan/${keg?.ID}/${keg?.title}`}
+                    title={keg?.title}
+                    img={keg?.image}
+                    desc={keg?.description}
+                    status={keg?.status}
+                  />
+                </SwiperSlide>
+              ))}
         </Swiper>
       </div>
       <div className="mt-10 flex w-full md:px-10 lg:ps-44">
@@ -121,5 +127,24 @@ const CardEventHome = ({ to, status, img, title }) => {
         </div>
       </div>
     </Link>
+  );
+};
+
+const SkletonCardEventHome = () => {
+  return (
+    <>
+      <div className="group relative block h-48 bg-white/70 transition-all duration-200 md:h-72">
+        <div className="absolute h-full w-full object-cover opacity-75 blur-sm transition-opacity group-hover:blur-none" />
+
+        <div className="relative flex flex-col gap-5 p-4 sm:p-6 lg:p-8">
+          <div className={`h-9 w-full animate-pulse rounded-full bg-white/90`}>
+            {" "}
+          </div>
+          <div className={`h-7 w-1/2 animate-pulse rounded-full bg-white/90`}>
+            {" "}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
