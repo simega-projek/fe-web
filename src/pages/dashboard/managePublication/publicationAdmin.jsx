@@ -18,7 +18,6 @@ import { ButtonControls } from "../../../components/Elements/Buttons/ButtonContr
 import { GrValidate } from "react-icons/gr";
 import { useDebounce } from "use-debounce";
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
 import {
@@ -29,10 +28,11 @@ import {
 import { toView } from "../../../utils/toView";
 // import CreateObjek from "./CreateObjek";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import UpdateObjek from "../manageObjek/UpdateObjek";
-import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
 
 export default function PublicationAdmin() {
   const [objectData, setObjectData] = useState([]);
@@ -320,11 +320,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={6} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={6} />
       ) : data?.length > 0 ? (
         data?.map((objects, index) => (
           <TableRow key={objects?.ID}>

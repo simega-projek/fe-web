@@ -18,7 +18,6 @@ import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
 import { useDebounce } from "use-debounce";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
@@ -27,8 +26,9 @@ import { deleteObject, getAllObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
 import CreateObjek from "./CreateObjek";
 
-import UpdateObjek from "./UpdateObjek";
 import { FilterObject } from "../../../components/Fragments/Filter/FilterObjek";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
+import UpdateObjek from "./UpdateObjek";
 
 export default function ObjekAdmin() {
   const [objectData, setObjectData] = useState([]);
@@ -263,11 +263,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={6} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={6} />
       ) : data?.length > 0 ? (
         data?.map((objects, index) => (
           <TableRow key={objects?.ID}>

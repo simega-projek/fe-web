@@ -14,12 +14,12 @@ import { GiValley } from "react-icons/gi";
 import { MdDeleteForever } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import Loading from "../../../components/Elements/Loading/Loading";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import { deleteValley, getAllValley } from "../../../services/valley.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
@@ -225,11 +225,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={6} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={6} />
       ) : data?.length > 0 ? (
         data?.map((valley, index) => (
           <TableRow key={valley?.ID}>

@@ -9,29 +9,28 @@ import {
   TextInput,
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import TitleSection from "../../../components/Elements/TitleSection";
 import { AiOutlineFolderView } from "react-icons/ai";
 import { FaFileInvoice } from "react-icons/fa6";
 import { MdArticle } from "react-icons/md";
+import TitleSection from "../../../components/Elements/TitleSection";
 
 import { FaEdit, FaSearch } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
+import { useDebounce } from "use-debounce";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
-import CreateArticle from "./CreateArticle";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
+import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import {
   deleteArticle,
   getAllArticles,
 } from "../../../services/article.service";
 import { formatDate } from "../../../utils/formatDate";
-import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
-import UpdateArticle from "./UpdateArticle";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { toView } from "../../../utils/toView";
-import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
-import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
-import { useDebounce } from "use-debounce";
-import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import CreateArticle from "./CreateArticle";
+import UpdateArticle from "./UpdateArticle";
 
 export default function ArticleAdmin() {
   const [selectedId, setSelectedId] = useState(null);
@@ -238,11 +237,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={6} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={6} />
       ) : data?.length > 0 ? (
         data?.map((article, index) => (
           <TableRow key={article.ID}>

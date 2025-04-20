@@ -1,33 +1,31 @@
 import {
   Button,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeadCell,
   TableRow,
-  TextInput,
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import TitleSection from "../../../components/Elements/TitleSection";
 
-import { FaBookmark, FaEdit, FaFileInvoice, FaSearch } from "react-icons/fa";
+import { FaBookmark, FaEdit, FaFileInvoice } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
 import { useDebounce } from "use-debounce";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
+import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import { deleteEvent, getAllEvent } from "../../../services/event.service";
 import { formatDate } from "../../../utils/formatDate";
 import { toView } from "../../../utils/toView";
 import CreateActivity from "./CreateEvent";
 import UpdateActivity from "./UpdateEvent";
-import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
-import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
-import { FilterEvent } from "../../../components/Fragments/Filter/FilterEvent";
 
 export default function EventAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -251,11 +249,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={7} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={7} />
       ) : data?.length > 0 ? (
         data?.map((event, index) => (
           <TableRow key={event.ID}>
@@ -277,7 +271,7 @@ const TableData = ({
               </a>
             </TableCell>
             <TableCell className="whitespace-normal">
-              <img src={event?.image} alt={event?.title} />
+              <img src={event?.image} alt={event?.title} className="h-10" />
             </TableCell>
             <TableCell className="whitespace-normal">
               {formatDate(event?.start_date) ?? "-"}

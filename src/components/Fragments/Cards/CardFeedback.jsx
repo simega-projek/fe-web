@@ -5,7 +5,7 @@ import { FaFileInvoice } from "react-icons/fa6";
 import parse from "html-react-parser";
 
 export const CardFeedback = (props) => {
-  const { name, address, message, date, onDelete, onView } = props;
+  const { name, address, message, date = new Date(), onDelete, onView } = props;
   return (
     <div className="relative flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm">
       <div className="mx-3 mb-0 flex justify-between border-b border-slate-200 px-1 pb-2 pt-3">

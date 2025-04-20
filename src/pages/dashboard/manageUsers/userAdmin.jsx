@@ -15,21 +15,18 @@ import { FaEdit, FaSearch, FaUsers } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { ButtonControls } from "../../../components/Elements/Buttons/ButtonControls";
 
-import { FailAllert } from "../../../components/Fragments/Alert/FailAlert";
-import { SuccessAlert } from "../../../components/Fragments/Alert/SuccessAlert";
+import { useDebounce } from "use-debounce";
+import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
+import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import {
   deleteAdmin,
   getAllAdmin,
   resetPassword,
 } from "../../../services/superAdmin.service";
-import CreateAdmin from "./CreateAdmin";
 import { toView } from "../../../utils/toView";
-import { setIsLoading } from "../../../redux/slices/authSlice";
-import Loading from "../../../components/Elements/Loading/Loading";
-import { useDebounce } from "use-debounce";
-import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
-import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import CreateAdmin from "./CreateAdmin";
 
 export default function UserAdmin() {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
@@ -246,11 +243,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={5} />
       ) : data?.length > 0 ? (
         data?.map((admin, index) => (
           <TableRow key={admin?.ID}>

@@ -19,6 +19,7 @@ import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { FilterFeedback } from "./FilterFeedback";
 import { DetailModal } from "../../../components/Fragments/Detail/DetailModal";
+import { SkletonCardFeedback } from "../../../components/Fragments/Skleton/SkletonCardFeedback";
 
 export const FeedbackAdmin = () => {
   const [dataFeedback, setDataFeedback] = useState([]);
@@ -197,9 +198,7 @@ const FeedbackData = ({
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {isLoading ? (
-        <div className="col-span-2 text-center">
-          <Loading />
-        </div>
+        <SkletonCardFeedback count={2} />
       ) : data?.length > 0 ? (
         data?.map((fd) => (
           <CardFeedback

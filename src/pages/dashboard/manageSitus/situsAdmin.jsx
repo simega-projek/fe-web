@@ -17,11 +17,11 @@ import { ButtonControls } from "../../../components/Elements/Buttons/ButtonContr
 
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
 import { PopupConfirm } from "../../../components/Fragments/Cards/PopupConfirm";
 import { FilterPage } from "../../../components/Fragments/Filter/FilterPage";
 import { PaginationPage } from "../../../components/Fragments/Paginator/PaginationPage";
+import { SkletonTableData } from "../../../components/Fragments/Skleton/SkletonTableData";
 import { deleteSite, getAllSite } from "../../../services/site.service";
 import { getDataByIndex } from "../../../utils/getDataByIndex";
 import { toView } from "../../../utils/toView";
@@ -227,11 +227,7 @@ const TableData = ({
   return (
     <TableBody className="divide-y">
       {isLoading ? (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center">
-            <Loading />
-          </TableCell>
-        </TableRow>
+        <SkletonTableData field={6} />
       ) : data?.length > 0 ? (
         data?.map((site, index) => (
           <TableRow key={site?.ID}>
