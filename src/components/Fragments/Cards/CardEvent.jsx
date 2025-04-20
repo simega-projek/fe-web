@@ -4,7 +4,7 @@ import formattedDate from "../../../utils/formattedDate";
 export default function CardEvent(props) {
   const {
     to = "/artikel",
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     title,
     status,
     date = new Date(),

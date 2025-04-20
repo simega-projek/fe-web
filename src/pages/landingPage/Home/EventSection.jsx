@@ -40,7 +40,7 @@ export const EventSection = ({ data }) => {
   return (
     <section
       id="kegiatan"
-      className="bg-tan bg-[url('/images/bg1.svg')] px-5 py-20"
+      className="bg-tan bg-[url('/images/bg1.png')] px-5 py-20"
     >
       <div
         className="mb-10 flex w-full items-center gap-5 px-5 md:px-10 lg:px-36"

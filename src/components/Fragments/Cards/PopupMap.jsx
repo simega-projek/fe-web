@@ -3,7 +3,7 @@ import ButtonLink from "../../Elements/Buttons/ButtonLink";
 export const PopupMap = (props) => {
   const {
     id,
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     title,
     category,
 

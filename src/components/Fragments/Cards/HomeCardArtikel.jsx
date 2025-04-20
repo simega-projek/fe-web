@@ -6,7 +6,7 @@ import maxWord from "../../../utils/maxWord";
 export const CardArtikelHome = (props) => {
   const {
     to,
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     title,
     desc,
     date,

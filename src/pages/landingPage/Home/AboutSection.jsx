@@ -14,7 +14,7 @@ export const AboutSection = () => {
   return (
     // <section
     //   id="about"
-    //   className="bg-tan bg-[url('/images/bg2.svg')] bg-no-repeat py-12"
+    //   className="bg-tan bg-[url('/images/bg2.png')] bg-no-repeat py-12"
     // >
     //   <div className="container mx-auto w-11/12">
     //     <div className="flex flex-wrap">
@@ -28,7 +28,7 @@ export const AboutSection = () => {
 
     //         <div className="group mx-auto mt-6 aspect-square overflow-hidden rounded-xl shadow-2xl md:w-3/4">
     //           <img
-    //             src="/images/hero-img.png"
+    //             src="/images/hero-img.jpg"
     //             className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
     //           ></img>
     //         </div>
@@ -68,7 +68,7 @@ export const AboutSection = () => {
     >
       <SwiperSlide>
         <img
-          src="/public/images/hero-img.png"
+          src="/public/images/hero-img.jpg"
           className="h-full w-full object-cover"
         />
       </SwiperSlide>

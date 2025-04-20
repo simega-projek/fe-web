@@ -37,7 +37,7 @@ export const ArticleSection = () => {
   return (
     <section
       id="artikel"
-      className="bg-light bg-[url('/images/bg2.svg')] bg-no-repeat px-5 py-20"
+      className="bg-light bg-[url('/images/bg2.png')] bg-no-repeat px-5 py-20"
     >
       <div
         className="mb-10 flex w-full items-center gap-5 px-5 md:px-10"

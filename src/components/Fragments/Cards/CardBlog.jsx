@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import formattedDate from "../../../utils/formattedDate";
 
 export const CardBlog = (props) => {
-  const { img = "/images/hero-img.png", desc = "", to, title, date } = props;
+  const { img = "/images/hero-img.jpg", desc = "", to, title, date } = props;
 
   const formatedDate = formattedDate(date);
 

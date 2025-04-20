@@ -36,7 +36,7 @@ export const ObjectSection = () => {
   return (
     <section
       id="situs"
-      className="bg-tan bg-[url('/images/bg1.svg')] py-20 md:px-5"
+      className="bg-tan bg-[url('/images/bg1.png')] bg-cover bg-fixed bg-no-repeat py-20 md:px-5"
     >
       <span className="flex items-center gap-5 px-10" data-aos="fade-up">
         <span className="h-px flex-1 bg-white"></span>
@@ -55,7 +55,7 @@ export const ObjectSection = () => {
 
       <div
         data-aos="fade-up"
-        className="mx-auto grid w-full grid-cols-1 gap-5 px-10 md:grid-cols-2 md:gap-5"
+        className="mx-auto grid w-full grid-cols-1 gap-5 px-10 md:grid-cols-2 md:gap-x-5 md:gap-y-10"
       >
         {isLoading ? (
           <SkletonCardObjectHome />

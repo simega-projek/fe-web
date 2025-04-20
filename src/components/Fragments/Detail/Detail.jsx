@@ -6,7 +6,7 @@ import { DetailList } from "./DetailList";
 export const Detail = (props) => {
   const {
     title,
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     date,
     desc,
     status,
@@ -105,8 +105,7 @@ export const Detail = (props) => {
 
         {/* description */}
         <div className="mt-5 break-words text-lg md:text-xl">
-          {parse(String(desc))}{" "}
-          asdasdasdasdadsasddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+          {parse(String(desc))}
         </div>
 
         {/* category */}

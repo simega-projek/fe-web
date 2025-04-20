@@ -5,7 +5,7 @@ import formattedDate from "../../../utils/formattedDate";
 export const CardKegiatanHome = (props) => {
   const {
     to = "/",
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     date,
     title,
     className = "",

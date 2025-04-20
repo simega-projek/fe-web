@@ -1,7 +1,7 @@
 export const HeroSection = (props) => {
   const {
     id = "hero",
-    img = "/public/images/kantor.svg",
+    img = "/public/images/kantor.jpg",
     className = "h-screen",
     children,
   } = props;
@@ -34,7 +34,7 @@ export const HeroSection = (props) => {
 // export const HeroSection = (props) => {
 //   const {
 //     id = "hero",
-//     img = "/images/hero-img.png",
+//     img = "/images/hero-img.jpg",
 //     className = "h-screen",
 //     children,
 //   } = props;

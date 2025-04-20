@@ -6,7 +6,7 @@ import { Badge } from "flowbite-react";
 export default function CardSitus(props) {
   const {
     to,
-    img = "/images/hero-img.png",
+    img = "/images/hero-img.jpg",
     title,
     desc,
     publish,

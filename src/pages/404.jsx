@@ -5,7 +5,7 @@ export default function ErrorPage() {
     <div className="flex h-screen flex-col items-center justify-center bg-cover pt-10 md:flex-row lg:gap-10">
       <div className="flex w-full justify-center bg-cover lg:justify-end">
         <img
-          src="/public/icons/megalith.png"
+          src="/public/icons/megalith.jpg"
           className="h-52 md:h-full lg:h-96"
         />
       </div>
