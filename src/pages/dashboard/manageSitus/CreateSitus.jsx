@@ -134,7 +134,7 @@ export default function CreateSitus({ isOpenCreate, onSuccess, onClose }) {
     setIsLoading(true);
     try {
       let kecamatanId = getDataByIndex(valley?.kabupaten_kota, 1); //
-      console.log("Kecamatan ID: ", Number(kecamatanId));
+      // console.log("Kecamatan ID: ", Number(kecamatanId));
 
       const res = await getKecamatan(kecamatanId);
       // console.log(res);

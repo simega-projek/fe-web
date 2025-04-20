@@ -99,7 +99,7 @@ export default function UpdateEvent({ id, isOpenUpdate, onClose, onSuccess }) {
     formData.append("start_date", formattedStartDate);
     formData.append("end_date", formattedEndDate);
     formData.append("status", status);
-    console.log("form data: ", formData);
+    // console.log("form data: ", formData);
     try {
       setIsLoading(true);
       const res = await updateEvent(id, formData);

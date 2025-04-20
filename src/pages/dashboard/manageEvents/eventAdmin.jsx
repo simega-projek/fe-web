@@ -287,7 +287,7 @@ const TableData = ({
               <ButtonControls
                 name={"Detail"}
                 icon={FaFileInvoice}
-                to={`/kegiatan/${event?.ID}/${event?.title}`}
+                to={`/admin/detail-kegiatan/${event?.ID}/${event?.title}`}
               />
               <ButtonControls
                 name={"Edit"}

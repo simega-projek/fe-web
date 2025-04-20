@@ -3,10 +3,9 @@ import parse from "html-react-parser";
 
 import { ButtonFunc } from "../../../components/Elements/Buttons/ButtonFunc";
 import TitleSection from "../../../components/Elements/TitleSection";
-import { DetailList } from "./DetailList";
 import formattedDate from "../../../utils/formattedDate";
+import { DetailList } from "./DetailList";
 // import HTMLReactParser from "html-react-parser/lib/index";
-import { SiGooglemaps } from "react-icons/si";
 
 export function DetailModal(props) {
   const {
@@ -47,32 +46,13 @@ export function DetailModal(props) {
           {"Detail Objek - " + title || "Detail Informasi"}
         </ModalHeader>
         <ModalBody className="scrollbar">
-          {/* <div className="space-y-6 p-6">
-              <TitleSection>{title}</TitleSection>
-              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                {category ? "Kategori: " + category : ""}
-              </p>
-              <div className="mt-2 max-w-2xl md:max-w-md">
-                <img
-                  src={img}
-                  alt={title}
-                  className="h-full w-full object-cover object-center"
-                />
-              </div>
-              <div className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                {parse(String(desc))}
-              </div>
-            </div> */}
-
-          <div className={`mt-5`}>
-            {img && (
-              <img
-                src={img}
-                alt={title}
-                className="w-full object-cover object-center"
-              />
-            )}
-          </div>
+          {img && (
+            <img
+              src={img}
+              alt={title}
+              className="w-full object-cover object-center"
+            />
+          )}
 
           {/* date and maps */}
           <div className="flex justify-between">
@@ -82,15 +62,6 @@ export function DetailModal(props) {
             >
               {dateFormatted} {address && ` | ${address}`}
             </span>
-            {lintang && bujur && (
-              <a
-                href={`https://www.google.com/maps/@${lintang},${bujur},15z`}
-                target="_blank"
-                className="rounded-full bg-[#008000] p-2 text-white"
-              >
-                <SiGooglemaps />
-              </a>
-            )}
           </div>
 
           {/* detail list */}

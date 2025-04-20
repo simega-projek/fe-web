@@ -50,8 +50,8 @@ export const ComplaintPage = () => {
     });
 
     // Kirim data ke server
-    alert("Terkirim");
-    console.log(inputData);
+    // alert("Terkirim");
+    // console.log(inputData);
   };
 
   return (

@@ -62,13 +62,13 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     setSelectedCategory(+selectedCategory);
-    console.log({ selectedCategory });
+    // console.log({ selectedCategory });
   };
 
   const handleSiteChange = (e) => {
     const selectedSite = e.target.value;
     setSelectedSite(+selectedSite);
-    console.log({ selectedSite });
+    // console.log({ selectedSite });
 
     const site = siteData.find((s) => s.ID === +selectedSite);
     setValley(site?.lembah?.lembah);
@@ -127,7 +127,7 @@ export default function UpdateObjek({ isOpenUpdate, onSuccess, id, onClose }) {
     formData.append("publish", publish);
 
     formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
+      // console.log(`${key}: ${value}`);
     });
     // return;
     setIsLoading(true);

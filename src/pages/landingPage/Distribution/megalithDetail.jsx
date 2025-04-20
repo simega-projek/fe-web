@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAllObject, getOneObject } from "../../../services/object.service";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { Detail } from "../../../components/Fragments/Detail/Detail";
 import { OtherPosts } from "../../../components/Fragments/Detail/OtherPosts";
+import { SkletonDetailPage } from "../../../components/Fragments/Skleton/SkletonDetailPage";
+import { getAllObject, getOneObject } from "../../../services/object.service";
 import { toView } from "../../../utils/toView";
 
 export default function MegalithDetail() {
@@ -60,7 +60,7 @@ export default function MegalithDetail() {
       <div className="mb-10 mt-32 flex flex-col md:flex-row md:px-5">
         <div className="mb-10 px-5 md:w-8/12">
           {isLoading ? (
-            <Loading />
+            <SkletonDetailPage />
           ) : (
             Object.keys(situs).length > 0 && (
               <Detail
@@ -73,7 +73,6 @@ export default function MegalithDetail() {
                 category={situs?.category?.category}
                 site={situs?.site?.nama_situs}
                 valley={situs?.site?.lembah?.lembah}
-                status={situs?.publish}
                 detailList={true}
               />
             )

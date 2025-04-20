@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { Detail } from "../../../components/Fragments/Detail/Detail";
 
 import { useSelector } from "react-redux";
 import { OtherPosts } from "../../../components/Fragments/Detail/OtherPosts";
+import { SkletonDetailPage } from "../../../components/Fragments/Skleton/SkletonDetailPage";
 import {
   getAllArticles,
   getOneArticle,
@@ -50,13 +50,13 @@ export default function ArtikelDetail() {
     toView("top");
   }, [id]);
 
-  console.log({ article });
+  // console.log({ article });
   return (
     <>
       <div className="mb-10 mt-32 flex flex-col md:flex-row md:px-5">
         <div className="mb-10 px-5 md:w-8/12">
           {isLoading ? (
-            <Loading />
+            <SkletonDetailPage />
           ) : (
             Object.keys(article).length > 0 && (
               <Detail

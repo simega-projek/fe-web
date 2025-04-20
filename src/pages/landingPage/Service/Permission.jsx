@@ -171,7 +171,7 @@ export const PermissionPage = () => {
       formData.append(key, formInput[key]);
     }
 
-    console.log({ formData });
+    // console.log({ formData });
     alert("terkirim");
 
     setformInput({

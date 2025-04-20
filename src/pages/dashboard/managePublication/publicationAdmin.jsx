@@ -71,7 +71,7 @@ export default function PublicationAdmin() {
   const handleOpenDetailModal = (objectData) => {
     setIsDetailModalOpen(true);
     setSelectedObjectData(objectData);
-    console.log(selectedObjectData);
+    // console.log(selectedObjectData);
   };
 
   // Function to close the detail modal
@@ -120,26 +120,10 @@ export default function PublicationAdmin() {
   const handlePublish = async (e) => {
     setIsLoading(true);
     const value = e.target.value; // Ambil nilai dari tombol yang ditekan
-    const {
-      ID,
-      lintang,
-      bujur,
-      deskripsi,
-      site_id,
-      category_id,
-      gambar,
-      nama_objek,
-    } = selectedObjectData || {};
+    const { ID } = selectedObjectData;
 
-    // Buat objek data
     const data = {
-      nama_objek,
-      lintang,
-      bujur,
-      deskripsi,
-      site_id,
-      category_id,
-      gambar,
+      ...selectedObjectData,
       publish: value,
     };
 
@@ -195,8 +179,8 @@ export default function PublicationAdmin() {
       </TitleSection>
       <hr />
 
+      {/* filter & search */}
       <div className="mt-5 w-full px-3">
-        {/* search & button create */}
         <div className="flex justify-between gap-1">
           <FilterObject
             publish={null}
@@ -241,9 +225,9 @@ export default function PublicationAdmin() {
             <TableData
               data={objectData}
               startIndex={startIndex}
-              handleOpenDeleteModal={handleOpenDeleteModal}
               handleOpenDetailModal={handleOpenDetailModal}
               handleOpenUpdateForm={handleOpenUpdateForm}
+              handleOpenDeleteModal={handleOpenDeleteModal}
               searchData={search}
               isLoading={isLoading}
             />
@@ -271,6 +255,7 @@ export default function PublicationAdmin() {
         />
       )}
 
+      {/* detail modal */}
       <DetailModal
         detailList={true}
         openModal={isDetailModalOpen}

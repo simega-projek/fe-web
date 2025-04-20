@@ -5,22 +5,20 @@ import { toView } from "../../../utils/toView";
 import { getAllObject, getOneObject } from "../../../services/object.service";
 import Loading from "../../../components/Elements/Loading/Loading";
 import { Detail } from "../../../components/Fragments/Detail/Detail";
+import { SkletonDetailPage } from "../../../components/Fragments/Skleton/SkletonDetailPage";
 
 export default function ObjekDetail() {
   const { id } = useParams();
-  const [situs, setSitus] = useState(null);
+  const [megalith, setMegalith] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
 
-  function generateRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   const fetchObject = async () => {
     setIsLoading(true);
     try {
       const objects = await getOneObject(id);
 
-      setSitus(objects.data);
+      setMegalith(objects.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -33,27 +31,30 @@ export default function ObjekDetail() {
     toView("top");
   }, [id]);
 
-  // console.log(situs);
+  console.log(megalith);
+
+  // console.log(megalith);
 
   return (
     <>
       <div className="mb-10 flex flex-col md:flex-row md:px-5">
-        <div className="mb-10 w-full px-10">
+        <div className="w-full">
           {isLoading ? (
-            <Loading />
+            <SkletonDetailPage />
           ) : (
-            Object.keys(situs).length > 0 && (
+            // <Loading />
+            Object.keys(megalith).length > 0 && (
               <Detail
-                date={situs?.CreatedAt}
-                title={situs?.nama_objek}
-                img={situs?.gambar}
-                desc={situs?.deskripsi}
-                lintang={situs?.lintang}
-                bujur={situs?.bujur}
-                category={situs?.category?.category}
-                site={situs?.site?.nama_situs}
-                valley={situs?.site?.lembah?.lembah}
-                status={situs?.publish}
+                date={megalith?.CreatedAt}
+                title={megalith?.nama_objek}
+                img={megalith?.gambar}
+                desc={megalith?.deskripsi}
+                lintang={megalith?.lintang}
+                bujur={megalith?.bujur}
+                category={megalith?.category?.category}
+                site={megalith?.site?.nama_megalith}
+                valley={megalith?.site?.lembah?.lembah}
+                status={megalith?.publish}
                 detailList={true}
                 classImage={"w-2/3"}
               />

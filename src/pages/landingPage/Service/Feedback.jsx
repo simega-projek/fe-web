@@ -31,7 +31,7 @@ export default function FeedbackPage() {
     formData.append("email_telp", email);
     formData.append("message", message);
 
-    console.log(formData);
+    // console.log(formData);
 
     try {
       setIsLoading(true);

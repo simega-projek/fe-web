@@ -12,12 +12,14 @@ export const ButtonControls = ({
   if (to) {
     // Jika ada `to`, gunakan `Link` untuk navigasi
     return (
-      <Link
-        to={to}
-        className={`mx-1 block rounded-full bg-primary p-2 text-white duration-300 ease-in-out hover:text-purple-500 dark:hover:text-blue-500 ${className} `}
-      >
-        <Icon className="mx-auto" /> {children}
-      </Link>
+      <Tooltip content={name}>
+        <Link
+          to={to}
+          className={`mx-1 block rounded-full bg-primary p-2 text-white duration-300 ease-in-out hover:text-purple-500 dark:hover:text-blue-500 ${className} `}
+        >
+          <Icon className="mx-auto" /> {children}
+        </Link>
+      </Tooltip>
     );
   } else {
     // Jika tidak ada `to`, gunakan tombol untuk aksi

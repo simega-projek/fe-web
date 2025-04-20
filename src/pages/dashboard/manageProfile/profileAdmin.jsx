@@ -69,7 +69,7 @@ export const ProfileAdmin = () => {
       setIsLoading(true);
       const res = await updateProfile(formData);
 
-      console.log(res);
+      // console.log(res);
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);
@@ -117,7 +117,7 @@ export const ProfileAdmin = () => {
     try {
       setIsLoading(true);
       const res = await changePassword(formData);
-      console.log("change password res: ", res);
+      // console.log("change password res: ", res);
 
       if (res.error) {
         setMessageError(res.message);

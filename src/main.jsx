@@ -27,14 +27,16 @@ import MegalithDetail from "./pages/landingPage/Distribution/megalithDetail.jsx"
 import KegiatanPage from "./pages/landingPage/Events/kegiatan.jsx";
 import KegiatanDetail from "./pages/landingPage/Events/kegiatanDetail.jsx";
 
+import DetailArticle from "./pages/dashboard/manageArticles/DetailArticle.jsx";
 import HomePage from "./pages/landingPage/Home/home.jsx";
-import store from "./redux/store.js";
-import FeedbackPage from "./pages/landingPage/Service/Feedback.jsx";
 import { FunctionsPage } from "./pages/landingPage/Profile/Functions.jsx";
 import { OrganizationPage } from "./pages/landingPage/Profile/Organization.jsx";
 import { VisionPage } from "./pages/landingPage/Profile/Vision.jsx";
 import { ComplaintPage } from "./pages/landingPage/Service/Complaint.jsx";
+import FeedbackPage from "./pages/landingPage/Service/Feedback.jsx";
 import { PermissionPage } from "./pages/landingPage/Service/Permission.jsx";
+import store from "./redux/store.js";
+import DetailEvent from "./pages/dashboard/manageEvents/DetailEvent.jsx";
 
 const route = createBrowserRouter([
   {
@@ -124,6 +126,18 @@ const route = createBrowserRouter([
         element: <ObjekAdmin />,
       },
       {
+        path: "detail-objek/:id/:slug",
+        element: <ObjekDetail />,
+      },
+      {
+        path: "persebaran-objek",
+        element: <ObjectPersebaran />,
+      },
+      {
+        path: "validasi-publikasi/",
+        element: <PublicationAdmin />,
+      },
+      {
         path: "kelola-kategori",
         element: <CategoryAdmin />,
       },
@@ -140,8 +154,16 @@ const route = createBrowserRouter([
         element: <ArticleAdmin />,
       },
       {
+        path: "detail-artikel/:id/:slug",
+        element: <DetailArticle />,
+      },
+      {
         path: "kelola-kegiatan",
         element: <EventAdmin />,
+      },
+      {
+        path: "detail-kegiatan/:id/:slug",
+        element: <DetailEvent />,
       },
       {
         path: "kelola-user",
@@ -151,21 +173,10 @@ const route = createBrowserRouter([
         path: "profil",
         element: <ProfileAdmin />,
       },
-      {
-        path: "persebaran-objek",
-        element: <ObjectPersebaran />,
-      },
-      {
-        path: "validasi-publikasi/",
-        element: <PublicationAdmin />,
-      },
+
       {
         path: "feedback-masyarakat/",
         element: <FeedbackAdmin />,
-      },
-      {
-        path: "detail-objek/:id/:slug",
-        element: <ObjekDetail />,
       },
     ],
   },

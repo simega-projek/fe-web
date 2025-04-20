@@ -93,7 +93,7 @@ export default function CreateArticle({ isOpenCreate, onSuccess, onClose }) {
     try {
       setIsLoading(true);
       let res = await createArticle(formData);
-      console.log(res);
+      // console.log(res);
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);

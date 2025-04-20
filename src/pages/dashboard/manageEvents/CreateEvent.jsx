@@ -108,11 +108,11 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
     formData.append("start_date", formattedStartDate);
     formData.append("end_date", formattedEndDate);
     formData.append("status", status || "Akan Datang");
-    console.log("form data: ", formData);
+    // console.log("form data: ", formData);
     try {
       setIsLoading(true);
       const res = await createEvent(formData);
-      console.log("response create event: ", res);
+      // console.log("response create event: ", res);
       if (res.error) {
         setMessageError(res.message);
         setMessageSuccess(null);
@@ -137,7 +137,7 @@ export default function CreateEvent({ isOpenCreate, onClose, onSuccess }) {
     }
   }, [isOpenCreate]);
 
-  console.log({ image });
+  // console.log({ image });
 
   return (
     <div className={isOpenCreate ? "block" : "hidden"}>

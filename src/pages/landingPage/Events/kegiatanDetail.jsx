@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { useSelector } from "react-redux";
-import Loading from "../../../components/Elements/Loading/Loading";
 import { Detail } from "../../../components/Fragments/Detail/Detail";
 import { OtherPosts } from "../../../components/Fragments/Detail/OtherPosts";
+import { SkletonDetailPage } from "../../../components/Fragments/Skleton/SkletonDetailPage";
 import { getAllEvent, getOneEvent } from "../../../services/event.service";
 import { toView } from "../../../utils/toView";
-import HTMLReactParser from "html-react-parser/lib/index";
 
 export default function KegiatanDetail() {
   const { id } = useParams();
@@ -53,19 +52,30 @@ export default function KegiatanDetail() {
 
   return (
     <>
-      <div className="mb-10 mt-32 flex flex-col md:flex-row md:px-5">
+      <div className="mb-10 mt-32 flex h-full flex-col md:flex-row md:px-5">
         <div className="mb-10 px-5 md:w-8/12">
           {isLoading ? (
-            <Loading />
+            <SkletonDetailPage />
           ) : (
             Object.keys(event).length > 0 && (
+              // <Detail
+              //   linkEvent={event?.registration_link}
+              //   date={event?.start_date}
+              //   title={event?.title}
+              //   img={event?.image}
+              //   desc={event?.description}
+              //   publish={event?.status}
+              // />
               <Detail
-                linkEvent={event?.registration_link}
-                date={event?.start_date}
+                date={event?.CreatedAt}
                 title={event?.title}
                 img={event?.image}
                 desc={event?.description}
-                publish={event?.status}
+                status={event?.status}
+                linkEvent={event?.registration_link}
+                detailList={true}
+                start_date={event?.start_date}
+                end_date={event?.end_date}
               />
             )
           )}

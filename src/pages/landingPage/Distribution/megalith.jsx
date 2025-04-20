@@ -79,8 +79,8 @@ export default function MegalithPage() {
     toView("top");
   }, [pathname]);
 
-  console.log({ location });
-  console.log({ pathname });
+  // console.log({ location });
+  // console.log({ pathname });
 
   return (
     <div className="min-h-screen">

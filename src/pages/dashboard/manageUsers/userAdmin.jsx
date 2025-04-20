@@ -78,7 +78,7 @@ export default function UserAdmin() {
 
   const handleDelete = async () => {
     const res = await deleteAdmin(selectedId);
-    console.log(res);
+    // console.log(res);
     if (res.error) {
       setMessageError(res.message);
       setMessageSuccess(null);
