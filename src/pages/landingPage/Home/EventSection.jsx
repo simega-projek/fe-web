@@ -4,15 +4,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import ButtonLink from "../../../components/Elements/Buttons/ButtonLink";
 import TitleSection from "../../../components/Elements/TitleSection";
 
+import Aos from "aos";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
+import { setDataEvent, setPageEvent } from "../../../redux/slices/eventSlice";
 import { getAllEvent } from "../../../services/event.service";
-import Aos from "aos";
 export const EventSection = ({ data }) => {
-  const [dataEvents, setDataEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const eventsData = useSelector((state) => state.events.data);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Aos.init({
@@ -25,8 +29,11 @@ export const EventSection = ({ data }) => {
     setIsLoading(true);
     try {
       const events = await getAllEvent(10);
-      setDataEvents(events.data);
+      // setDataEvents(events.data);
       // console.log(events.data);
+
+      dispatch(setDataEvent(events?.data));
+      dispatch(setPageEvent(events?.pagination));
     } catch (err) {
       console.log(err);
     } finally {
@@ -77,7 +84,7 @@ export const EventSection = ({ data }) => {
                   <SkletonCardEventHome />
                 </SwiperSlide>
               ))
-            : dataEvents?.map((keg) => (
+            : eventsData?.map((keg) => (
                 <SwiperSlide className="h-96 bg-cover bg-center" key={keg?.ID}>
                   <CardEventHome
                     to={`/kegiatan/${keg?.ID}/${keg?.title}`}

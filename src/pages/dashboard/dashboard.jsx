@@ -11,48 +11,57 @@ import { getAllArticles } from "../../services/article.service";
 import { useSelector } from "react-redux";
 
 export const Dashboard = () => {
-  const [admins, setAdmins] = useState(0);
-  const [valleys, setValleys] = useState(0);
-  const [sites, setSites] = useState(0);
-  const [objects, setObjects] = useState(0);
-  const [events, setEvents] = useState(0);
-  const [articles, setArticles] = useState(0);
-  const [categories, setCategories] = useState(0);
+  const articlesPage = useSelector((state) => state.articles.pagination);
+  const eventsPage = useSelector((state) => state.events.pagination);
+  const megalithPage = useSelector((state) => state.megalith.pagination);
+
+  const [dataPage, setDataPage] = useState({
+    admin: 0,
+    valley: 0,
+    site: 0,
+    object: 0,
+    event: 0,
+    article: 0,
+    categories: 0,
+  });
 
   const role = useSelector((state) => state.auth.userData);
   let roleAuth = role?.info?.role;
   let roleProfile = role?.data?.role;
 
-  const fetchApiData = async () => {
-    try {
-      const admin = await getAllAdmin();
-      setAdmins(admin?.pagination?.totalItems);
-      // console.log(admins);
-      const site = await getAllSite();
-      setSites(site?.pagination?.totalItems);
-
-      const valley = await getAllValley();
-      setValleys(valley?.pagination?.totalItems);
-
-      const objects = await getAllObject();
-      setObjects(objects?.pagination?.totalItems);
-
-      const article = await getAllArticles();
-      setArticles(article?.pagination?.totalItems);
-
-      const category = await getAllCategory();
-      setCategories(category?.pagination?.totalItems);
-
-      const events = await getAllObject();
-      setEvents(events?.pagination?.totalItems);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
-    fetchApiData();
-  }, []);
+    setDataPage((prev) => ({
+      ...prev,
+
+      object: megalithPage?.totalItems,
+      event: eventsPage?.totalItems,
+      article: articlesPage?.totalItems,
+    }));
+  }, [
+    megalithPage?.totalItems,
+    eventsPage?.totalItems,
+    articlesPage?.totalItems,
+  ]);
+
+  // const fetchApiData = async () => {
+  //   try {
+  //     const site = await getAllSite();
+  //     setSites(site?.pagination?.totalItems);
+
+  //     const valley = await getAllValley();
+  //     setValleys(valley?.pagination?.totalItems);
+
+  //     const category = await getAllCategory();
+  //     setCategories(category?.pagination?.totalItems);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchApiData();
+  // }, []);
+
   return (
     <>
       <div>
@@ -64,48 +73,39 @@ export const Dashboard = () => {
       </div>
 
       <div className="-mx-2 my-5 flex flex-wrap">
-        {roleAuth === roleProfile ||
-          (roleProfile === "super-admin" && (
-            <CardDashboard
-              title={"Admin"}
-              lots={admins}
-              icon={FaCity}
-              to={"/admin/kelola-user"}
-            />
-          ))}
         <CardDashboard
           title={"Lembah"}
-          lots={valleys}
+          lots={dataPage.valley}
           icon={FaCity}
           to={`/admin/kelola-lembah`}
         />
         <CardDashboard
           title={"Situs"}
-          lots={sites}
+          lots={dataPage.site}
           icon={FaCity}
           to={`/admin/kelola-situs`}
         />
         <CardDashboard
           title={"Objek"}
-          lots={objects}
+          lots={dataPage.object}
           icon={FaCity}
           to={`/admin/kelola-objek`}
         />
         <CardDashboard
           title={"Jenis Objek"}
-          lots={categories}
+          lots={dataPage.categories}
           icon={FaCity}
           to={`/admin/kelola-kategori`}
         />
         <CardDashboard
           title={"Kegiatan"}
-          lots={events}
+          lots={dataPage.event}
           icon={FaCity}
           to={`/admin/kelola-kegiatan`}
         />
         <CardDashboard
           title={"Artikel & Berita"}
-          lots={articles}
+          lots={dataPage.article}
           icon={FaCity}
           to={`/admin/kelola-artikel`}
         />

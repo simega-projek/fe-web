@@ -260,7 +260,7 @@ export const PermissionPage = () => {
             <TextInput
               className=""
               placeholder="08xx-xxxx-xxxx"
-              autoFocus
+              // autoFocus
               id="phone"
               name="phone"
               type="number"
@@ -284,7 +284,7 @@ export const PermissionPage = () => {
             <TextInput
               className=""
               placeholder="email@gmail.com"
-              autoFocus
+              // autoFocus
               id="email"
               name="email"
               type="email"
@@ -356,7 +356,7 @@ export const PermissionPage = () => {
             {formInput.using === "other" || formInput.using === "use-cb" ? (
               <TextInput
                 placeholder="Detail Pemanfaatan"
-                autoFocus
+                // autoFocus
                 id="detail"
                 name="detail"
                 type="text"
@@ -392,7 +392,7 @@ export const PermissionPage = () => {
             <TextInput
               className=""
               placeholder="Lembah Napu"
-              autoFocus
+              // autoFocus
               id="location"
               name="location"
               type="text"
@@ -414,7 +414,7 @@ export const PermissionPage = () => {
             <TextInput
               className=""
               placeholder="Lembah Napu"
-              autoFocus
+              // autoFocus
               id="date"
               name="date"
               type="date"
@@ -436,7 +436,7 @@ export const PermissionPage = () => {
             <TextInput
               className=""
               placeholder="10"
-              autoFocus
+              // autoFocus
               id="participan"
               name="participan"
               type="number"
@@ -460,7 +460,6 @@ export const PermissionPage = () => {
               rows={4}
               className="scrollbar text-md"
               placeholder="opsional"
-              autoFocus
               id="information"
               name="information"
               type="number"

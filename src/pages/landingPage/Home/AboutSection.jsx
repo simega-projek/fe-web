@@ -1,100 +1,98 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/pagination";
 import "swiper/css/effect-fade";
+import "swiper/css/pagination";
 
 // import required modules
-import { Pagination, Autoplay, EffectFade } from "swiper/modules";
+import { useSelector } from "react-redux";
+import { Autoplay, EffectFade, Pagination } from "swiper/modules";
+import bg from "/public/images/hero-img.jpg";
+import formattedDate from "../../../utils/formattedDate";
 
 export const AboutSection = () => {
+  const articlesData = useSelector((state) => state.articles.data);
+  const eventsData = useSelector((state) => state.events.data);
+  const megalitData = useSelector((state) => state.megalith.data);
+
+  // console.log({ articlesData });
+
   return (
-    // <section
-    //   id="about"
-    //   className="bg-tan bg-[url('/images/bg2.png')] bg-no-repeat py-12"
-    // >
-    //   <div className="container mx-auto w-11/12">
-    //     <div className="flex flex-wrap">
-    //       <div className="w-full px-6 lg:w-1/2">
-    //         <div className="mx-auto flex md:w-5/6 lg:w-5/6">
-    //           <h1 className="block text-left text-2xl font-black text-primary md:pl-10 md:text-4xl lg:pl-4 lg:text-4xl">
-    //             Sulawesi Tengah{" "}
-    //             <span className="block">Negeri 1000 Megalit</span>
-    //           </h1>
-    //         </div>
-
-    //         <div className="group mx-auto mt-6 aspect-square overflow-hidden rounded-xl shadow-2xl md:w-3/4">
-    //           <img
-    //             src="/images/hero-img.jpg"
-    //             className="h-full w-full object-cover object-center transition-all duration-500 group-hover:scale-110"
-    //           ></img>
-    //         </div>
-    //       </div>
-
-    //       <div className="mx-auto w-full px-6 md:w-3/4 lg:w-1/2">
-    //         <h2 className="mt-6 block w-1/2 rounded-lg bg-dark px-5 py-3 text-lg font-bold text-light lg:mt-[100px] lg:text-2xl">
-    //           th. 2022
-    //         </h2>
-
-    //         <p className="mt-4 text-justify text-lg font-medium md:text-xl">
-    //           Sulawesi Tengah dikenal sebagai "Negeri Seribu Megalit", karena
-    //           merupakan rumah bagi ribuan peninggalan batu besar dari peradaban
-    //           megalitik kuno. Situs-situs ini, yang tersebar di seluruh wilayah,
-    //           menyimpan jejak sejarah dan budaya masyarakat purba yang hidup
-    //           ribuan tahun lalu. Melalui upaya pelestarian dan pemanfaatan
-    //           teknologi digital, kita dapat lebih memahami makna dari
-    //           artefak-artefak bersejarah ini serta menjaga warisan budaya yang
-    //           tak ternilai bagi generasi mendatang.
-    //         </p>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </section>
     <Swiper
       pagination={{
         dynamicBullets: true,
       }}
       loop={true}
       autoplay={{
-        delay: 2000,
+        delay: 2000000,
         disableOnInteraction: false,
       }}
       effect={"fade"}
       modules={[Pagination, Autoplay, EffectFade]}
-      className="h-96 w-full bg-tan"
+      className="h-[50vh] w-full bg-tan md:h-96"
     >
       <SwiperSlide>
-        <img
-          src="/public/images/hero-img.jpg"
-          className="h-full w-full object-cover"
-        />
+        <div className="relative h-full w-full">
+          <img
+            src={`/public/images/hero-img.jpg`}
+            className="h-full w-full object-cover brightness-50"
+          />
+          <div className="absolute inset-0 flex items-center p-8">
+            <div className="text-base text-white md:text-lg">
+              <p className="mb-4 font-bold underline">Cagar Budaya Terbaru:</p>
+              {megalitData?.slice(0, 3)?.map((megalith) => (
+                <div
+                  key={megalith?.ID}
+                  className="mb-3 line-clamp-2 break-words"
+                >
+                  {formattedDate(megalith?.CreatedAt)} — {megalith?.nama_objek}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </SwiperSlide>
       <SwiperSlide>
-        <img
-          src="/public/images/1.jpeg"
-          className="h-full w-full object-cover"
-        />
+        <div className="relative h-full w-full">
+          <img
+            src={`/public/images/1.jpeg`}
+            className="h-full w-full object-cover brightness-50"
+          />
+          <div className="absolute inset-0 flex items-center p-8">
+            <div className="text-base text-white md:text-lg">
+              <p className="mb-4 font-bold underline">Artikel Terbaru:</p>
+              {articlesData?.slice(0, 3)?.map((article, index) => (
+                <div
+                  key={article?.ID}
+                  className="mb-3 line-clamp-2 break-words"
+                >
+                  {formattedDate(article?.CreatedAt)} — {article?.title}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </SwiperSlide>
       <SwiperSlide>
-        <img
-          src="/public/images/2.jpeg"
-          className="h-full w-full object-cover"
-        />
-      </SwiperSlide>
-      <SwiperSlide>
-        <img
-          src="/public/images/3.jpeg"
-          className="h-full w-full object-cover"
-        />
-      </SwiperSlide>
-      <SwiperSlide>
-        <img
-          src="/public/images/4.jpeg"
-          className="h-full w-full object-cover"
-        />
+        <div className="relative h-full w-full">
+          <img
+            src={`/public/images/2.jpeg`}
+            className="h-full w-full object-cover brightness-50"
+          />
+          <div className="absolute inset-0 flex items-center p-8">
+            <div className="text-base text-white md:text-lg">
+              <p className="mb-4 font-bold underline">Kegiatan Terbaru:</p>
+              {eventsData?.slice(0, 3)?.map((event) => (
+                <div key={event?.ID} className="mb-3 line-clamp-2 break-words">
+                  {formattedDate(event?.CreatedAt)} — {event?.title}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </SwiperSlide>
     </Swiper>
   );

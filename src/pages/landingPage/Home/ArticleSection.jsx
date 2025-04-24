@@ -1,13 +1,24 @@
+import Aos from "aos";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ButtonLink from "../../../components/Elements/Buttons/ButtonLink";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { CardBlog } from "../../../components/Fragments/Cards/CardBlog";
+import {
+  setDataArticle,
+  setPageArticle,
+} from "../../../redux/slices/articleSlice";
 import { getAllArticles } from "../../../services/article.service";
-import Aos from "aos";
 
+// const CardBlog = lazy(
+//   () => import("../../../components/Fragments/Cards/CardBlog"),
+// );
 export const ArticleSection = () => {
-  const [dataArticles, setDataArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // redux
+  const articlesData = useSelector((state) => state.articles.data);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     Aos.init({
@@ -19,9 +30,11 @@ export const ArticleSection = () => {
   const fetchDataApi = async () => {
     setIsLoading(true);
     try {
-      const articles = await getAllArticles(4);
-      setDataArticles(articles.data);
-      // console.log(articles.data);
+      const articles = await getAllArticles(10);
+      // console.log(articles);
+      // setDataArticles(articles.data);
+      dispatch(setDataArticle(articles.data));
+      dispatch(setPageArticle(articles.pagination));
     } catch (err) {
       console.log(err);
     } finally {
@@ -29,11 +42,13 @@ export const ArticleSection = () => {
     }
   };
 
-  //   console.log(dataArticles);
+  // console.log(dataArticles);
 
   useEffect(() => {
     fetchDataApi();
   }, []);
+
+  // console.log(articlesData);
   return (
     <section
       id="artikel"
@@ -54,16 +69,18 @@ export const ArticleSection = () => {
         {isLoading ? (
           <SkletonCardArticle />
         ) : (
-          dataArticles?.map((article) => (
-            <CardBlog
-              key={article?.ID}
-              to={`/artikel/${article?.ID}/${article?.title}`}
-              img={article?.image}
-              title={article?.title}
-              date={article?.CreatedAt}
-              desc={article?.description}
-            />
-          ))
+          articlesData
+            ?.slice(0, 4)
+            ?.map((article) => (
+              <CardBlog
+                key={article?.ID}
+                to={`/artikel/${article?.ID}/${article?.title}`}
+                img={article?.image}
+                title={article?.title}
+                date={article?.CreatedAt}
+                desc={article?.description}
+              />
+            ))
         )}
       </div>
 

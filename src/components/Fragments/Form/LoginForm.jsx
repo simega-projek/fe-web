@@ -33,7 +33,9 @@ export const LoginForm = () => {
   };
 
   useEffect(() => {
-    if (userData?.access_token) {
+    if (!userData?.access_token) {
+      return;
+    } else {
       navigation("/admin/dashboard");
     }
   }, [userData, navigation]);

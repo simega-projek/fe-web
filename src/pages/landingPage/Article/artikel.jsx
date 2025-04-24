@@ -3,7 +3,7 @@ import "aos/dist/aos.css";
 import { TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import Loading from "../../../components/Elements/Loading/Loading";
@@ -27,9 +27,11 @@ export default function ArtikelPage() {
   const CONTENT_PER_PAGE = 10;
 
   const { pathname } = useLocation();
+
   // redux
 
-  const dispatch = useDispatch();
+  const dataPages = useSelector((state) => state.articles.pagination);
+  console.log(dataPages);
 
   useEffect(() => {
     AOS.init({
@@ -52,7 +54,6 @@ export default function ArtikelPage() {
       setDataArticles(articles?.data);
       setDataPage(articles?.pagination);
       setCurrentPage(articles?.pagination?.currentPage);
-      dispatch(setIsPages(articles?.pagination));
     } catch (err) {
       console.log(err);
     } finally {

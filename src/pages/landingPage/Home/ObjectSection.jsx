@@ -4,10 +4,21 @@ import { Link } from "react-router-dom";
 import ButtonLink from "../../../components/Elements/Buttons/ButtonLink";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { getAllObject } from "../../../services/object.service";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setDataMegalith,
+  setPageMegalith,
+} from "../../../redux/slices/megalithSlice";
 
 export const ObjectSection = () => {
-  const [dataObjects, setDataObjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // redux
+  const megalithData = useSelector((state) => state.megalith.data);
+  const megalithPage = useSelector((state) => state.megalith.pagination);
+  const dispatch = useDispatch();
+
+  console.log(megalithPage);
 
   useEffect(() => {
     Aos.init({
@@ -19,7 +30,9 @@ export const ObjectSection = () => {
     setIsLoading(true);
     try {
       const objects = await getAllObject(4, "", 1, "", "", "", "public");
-      setDataObjects(objects.data);
+      // setDataObjects(objects.data);
+      dispatch(setDataMegalith(objects?.data));
+      dispatch(setPageMegalith(objects?.pagination));
     } catch (err) {
       console.log(err);
     } finally {
@@ -60,7 +73,7 @@ export const ObjectSection = () => {
         {isLoading ? (
           <SkletonCardObjectHome />
         ) : (
-          dataObjects
+          megalithData
             ?.slice(0, window.innerWidth < 640 ? 2 : 4)
             ?.map((obj) => (
               <CardObjectHome
