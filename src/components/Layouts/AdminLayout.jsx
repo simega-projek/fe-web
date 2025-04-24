@@ -9,21 +9,21 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
-  useLogin(); // Invoke useLogin to handle authentication
+  // useLogin(); // Invoke useLogin to handle authentication
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setIsAuthenticated(false);
-      navigate("/admin/login");
-    } else {
-      setIsAuthenticated(true);
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     setIsAuthenticated(false);
+  //     navigate("/admin/login");
+  //   } else {
+  //     setIsAuthenticated(true);
+  //   }
+  // }, [navigate]);
 
-  if (!isAuthenticated) {
-    return null; // Optionally render a loading spinner or nothing while redirecting
-  }
+  // if (!isAuthenticated) {
+  //   return null; // Optionally render a loading spinner or nothing while redirecting
+  // }
   return (
     <div>
       <Header />

@@ -7,7 +7,7 @@ import MainLayout from "./components/Layouts/MainLayout.jsx";
 import "./index.css";
 import ErrorPage from "./pages/404.jsx";
 import Login from "./pages/auth/login.jsx";
-import { Dashboard } from "./pages/dashboard/dashboard.jsx";
+import { Dashboard } from "./pages/dashboard/manageDashboard/dashboard.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
 import EventAdmin from "./pages/dashboard/manageEvents/eventAdmin.jsx";

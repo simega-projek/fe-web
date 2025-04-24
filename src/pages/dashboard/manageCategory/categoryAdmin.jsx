@@ -153,7 +153,7 @@ export default function CategoryAdmin() {
             />
           </div>
           <div className="ml-1 flex w-1/3 flex-col-reverse gap-1 md:w-fit md:flex-row">
-            {/* filter tampilan data */}.
+            {/* filter tampilan data */}
             <FilterPage
               onChange={(e) => setContentPage(e.target.value)}
               value={contentPage}
