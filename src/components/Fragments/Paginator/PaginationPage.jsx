@@ -11,7 +11,7 @@ export const PaginationPage = ({
   return (
     <div>
       <div
-        className={`flex flex-col items-center justify-center gap-3 md:flex-row md:items-baseline ${className}`}
+        className={`mt-3 flex flex-col items-center justify-center gap-3 md:flex-row md:items-baseline ${className}`}
       >
         <button
           onClick={() => {

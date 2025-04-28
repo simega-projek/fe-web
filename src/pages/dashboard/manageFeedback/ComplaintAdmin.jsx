@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BiSolidMessageDetail } from "react-icons/bi";
+import { MdFeedback } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 import TitleSection from "../../../components/Elements/TitleSection";
 import { AlertMessage } from "../../../components/Fragments/Alert/AlertMessage";
@@ -16,7 +16,7 @@ import {
 import { toView } from "../../../utils/toView";
 import { FilterFeedback } from "./FilterFeedback";
 
-export const FeedbackAdmin = () => {
+export const ComplaintAdmin = () => {
   const [dataFeedback, setDataFeedback] = useState([]);
   const [dataPage, setDataPage] = useState(false);
 
@@ -108,7 +108,7 @@ export const FeedbackAdmin = () => {
     <div className="px-3">
       <hr />
       <TitleSection className="my-5 flex underline">
-        <BiSolidMessageDetail /> Umpan Balik Masyarakat
+        <MdFeedback /> Pengaduan Masyarakat
       </TitleSection>
       <hr />
 

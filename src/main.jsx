@@ -7,11 +7,10 @@ import MainLayout from "./components/Layouts/MainLayout.jsx";
 import "./index.css";
 import ErrorPage from "./pages/404.jsx";
 import Login from "./pages/auth/login.jsx";
-import { Dashboard } from "./pages/dashboard/manageDashboard/dashboard.jsx";
 import ArticleAdmin from "./pages/dashboard/manageArticles/articleAdmin.jsx";
 import CategoryAdmin from "./pages/dashboard/manageCategory/categoryAdmin.jsx";
+import { Dashboard } from "./pages/dashboard/manageDashboard/dashboard.jsx";
 import EventAdmin from "./pages/dashboard/manageEvents/eventAdmin.jsx";
-import { FeedbackAdmin } from "./pages/dashboard/manageFeedback/feedbackAdmin.jsx";
 import LembahAdmin from "./pages/dashboard/manageLembah/lembahAdmin.jsx";
 import ObjectPersebaran from "./pages/dashboard/manageObjek/objectPersebaran.jsx";
 import ObjekAdmin from "./pages/dashboard/manageObjek/objekAdmin.jsx";
@@ -28,6 +27,8 @@ import KegiatanPage from "./pages/landingPage/Events/kegiatan.jsx";
 import KegiatanDetail from "./pages/landingPage/Events/kegiatanDetail.jsx";
 
 import DetailArticle from "./pages/dashboard/manageArticles/DetailArticle.jsx";
+import DetailEvent from "./pages/dashboard/manageEvents/DetailEvent.jsx";
+import { ServiceFeedback } from "./pages/dashboard/manageFeedback/serviceFeedback.jsx";
 import HomePage from "./pages/landingPage/Home/home.jsx";
 import { FunctionsPage } from "./pages/landingPage/Profile/Functions.jsx";
 import { OrganizationPage } from "./pages/landingPage/Profile/Organization.jsx";
@@ -36,7 +37,6 @@ import { ComplaintPage } from "./pages/landingPage/Service/Complaint.jsx";
 import FeedbackPage from "./pages/landingPage/Service/Feedback.jsx";
 import { PermissionPage } from "./pages/landingPage/Service/Permission.jsx";
 import store from "./redux/store.js";
-import DetailEvent from "./pages/dashboard/manageEvents/DetailEvent.jsx";
 
 const route = createBrowserRouter([
   {
@@ -176,7 +176,7 @@ const route = createBrowserRouter([
 
       {
         path: "feedback-masyarakat/",
-        element: <FeedbackAdmin />,
+        element: <ServiceFeedback />,
       },
     ],
   },

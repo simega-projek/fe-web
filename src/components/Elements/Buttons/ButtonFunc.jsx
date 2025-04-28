@@ -1,6 +1,6 @@
 export const ButtonFunc = (props) => {
   const {
-    className,
+    className = "",
     type = "submit",
     children = "button",
     onClick = () => {},

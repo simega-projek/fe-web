@@ -1,11 +1,12 @@
-import TitleSection from "../../../components/Elements/TitleSection";
 import { TabItem, Tabs } from "flowbite-react";
-import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
+import { FaCheckDouble } from "react-icons/fa";
+import { HiAdjustments, HiClipboardList } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
+import TitleSection from "../../../components/Elements/TitleSection";
 import { AmountDash } from "./AmountDash";
-import { VissionDash } from "./VissionDash";
 import { StructureDash } from "./StructureDash";
 import { TaskFuncDash } from "./TaskFuncDash";
+import { VissionDash } from "./VissionDash";
 
 export const Dashboard = () => {
   return (
@@ -17,11 +18,11 @@ export const Dashboard = () => {
         </TitleSection>
 
         <Tabs className="mt-3" aria-label="Tabs with icons" variant="underline">
-          <TabItem active title="Dashboard" icon={HiUserCircle}>
+          <TabItem active title="Dashboard" icon={MdDashboard}>
             <AmountDash />
           </TabItem>
 
-          <TabItem title="Visi Misi" icon={MdDashboard}>
+          <TabItem title="Visi Misi" icon={FaCheckDouble}>
             <VissionDash />
           </TabItem>
 

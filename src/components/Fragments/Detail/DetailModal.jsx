@@ -104,7 +104,7 @@ export function DetailModal(props) {
         <ModalFooter>
           {children}
 
-          <ButtonFunc className="bg-light" onClick={handleClose}>
+          <ButtonFunc className="bg-gran text-dark" onClick={handleClose}>
             Tutup
           </ButtonFunc>
         </ModalFooter>

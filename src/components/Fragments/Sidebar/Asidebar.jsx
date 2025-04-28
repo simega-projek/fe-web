@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { BiLibrary, BiSolidMessageDetail } from "react-icons/bi";
+import { BiLibrary } from "react-icons/bi";
 import { FaBookmark, FaHome, FaSitemap, FaUsers } from "react-icons/fa";
 import { GiColombianStatue, GiStoneBust, GiValley } from "react-icons/gi";
 import { GrValidate } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsSidebar } from "../../../redux/slices/sidebarSlice";
 
+import { FaPeopleGroup } from "react-icons/fa6";
 import { MdArticle } from "react-icons/md";
 import { Link } from "react-router-dom";
 export const Asidebars = () => {
@@ -134,9 +135,9 @@ export const Asidebars = () => {
             isOpen={isSidebarOpen}
           />
           <SidebarItem
-            label={"Umpan Balik"}
+            label={"Layanan Masyarakat"}
             to={"feedback-masyarakat"}
-            icon={BiSolidMessageDetail}
+            icon={FaPeopleGroup}
             isOpen={isSidebarOpen}
           />
           {(roleAuth === "superadmin" || roleProfile === "superadmin") && (

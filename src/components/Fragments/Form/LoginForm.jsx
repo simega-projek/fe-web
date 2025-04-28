@@ -32,17 +32,17 @@ export const LoginForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!userData?.access_token) {
-  //     return;
-  //   } else {
-  //     navigation("/admin/dashboard");
-  //   }
-  // }, [userData, navigation]);
+  useEffect(() => {
+    if (!userData?.access_token) {
+      return;
+    } else {
+      navigation("/admin/dashboard");
+    }
+  }, [userData, navigation]);
 
-  // useEffect(() => {
-  //   setMessageLogin(isError);
-  // }, [isError]);
+  useEffect(() => {
+    setMessageLogin(isError);
+  }, [isError]);
 
   return (
     <>
